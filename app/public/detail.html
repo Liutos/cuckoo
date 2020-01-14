@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>标题</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/public/moment-with-locales.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <p>查看单条任务</p>
+      <p>当前任务的ID为{{ id }}</p>
+      <div v-if="task">
+        你看到我说明任务获取成功了
+        <p>任务简述：{{ task.brief }}</p>
+        <p>任务详述：{{ task.detail }}</p>
+        <p>任务提醒时间：{{ task.remind ? task.remind.timestamp : null }}</p>
+        <p>任务重复模式：{{ task.remind && task.remind.repeat ? task.remind.repeat.id : null }}</p>
+      </div>
+    </div>
+    <script>
+var app = new Vue({
+  data: {
+    id: null,
+    task: null
+  },
+  el: '#app',
+  filters: {
+    formatAlarmAt(value) {
+      return moment(value).format('YYYY-MM-DD hh:mm');
+    }
+  },
+  mounted() {
+    // 从页面的URL中提取出任务的ID。我喜欢这个方式，看起来特别地“Java”
+    const params = new URLSearchParams(window.location.search);
+    // 还是用驼峰的命名规范吧
+    const taskId = params.get('id');
+    this.id = taskId;
+    axios.get(`/task/${taskId}`)
+      .then(response => {
+        console.log('response', response);
+        this.task = response.data.task;
+      });
+  }
+})
+    </script>
+  </body>
+</html>

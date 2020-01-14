@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>标题</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/public/moment-with-locales.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <p>所有任务列表</p>
+      <div style="display: flex;">
+        <ol>
+          <li v-for="task in tasks">
+            <a v-bind:id="task.id" v-on:click="selectTask">
+              #{{task.id}} {{ task.brief }} @{{ task.contextName }} {{ task.alarmAt | formatAlarmAt }}
+            </a>
+          </li>
+        </ol>
+        <task v-bind:selected="selected" v-bind:selectedRemindTimestamp="selectedRemindTimestamp"></task>
+      </div>
+    </div>
+    <script src="/public/index.js"></script>
+  </body>
+</html>
