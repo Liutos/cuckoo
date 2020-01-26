@@ -182,3 +182,22 @@ curl -H 'Content-Type: application/json' -X POST --data '{"brief":"test","remind
 ```
 
 这个创建出来的任务将会在2019年9月23日开始的每一天的晚上10点弹出。如果当前的时间已经过了这个时间了，那么这个任务会在下一分钟立刻弹出。
+
+## Emacs插件
+
+cuckoo自带了一个Emacs的插件——org-cuckoo次模式。安装方法如下
+
+```elisp
+(add-to-list 'load-path "/path/to/cuckoo/contrib/emacs/")
+(require 'org-cuckoo)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-cuckoo-mode)))
+(add-hook 'org-after-todo-state-change-hook 'cuckoo-cancelled-state)
+```
+
+这样一来，就可以使用如下的快捷键了：
+
+- `C-c r`用于为当前条目在cuckoo中创建任务和提醒。这要求条目是设置了SCHEDULED属性的；
+- `C-c C-s`用于设置条目的SCHEDULED属性。在使用`C-c C-s`时与org-mode原本的快捷键没有差异，当带有prefix number时，除了会取消当前条目的SCHEDULED属性之后，org-cuckoo还会根据条目的TASK_ID属性，相应地修改cuckoo中条目的状态。
+
