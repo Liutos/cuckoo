@@ -201,3 +201,18 @@ cuckoo自带了一个Emacs的插件——org-cuckoo次模式。安装方法如�
 - `C-c r`用于为当前条目在cuckoo中创建任务和提醒。这要求条目是设置了SCHEDULED属性的；
 - `C-c C-s`用于设置条目的SCHEDULED属性。在使用`C-c C-s`时与org-mode原本的快捷键没有差异，当带有prefix number时，除了会取消当前条目的SCHEDULED属性之后，org-cuckoo还会根据条目的TASK_ID属性，相应地修改cuckoo中条目的状态。
 
+## alerter的优势
+
+cuckoo默认使用AppleScript来弹出提醒，但[alerter](https://github.com/vjeantet/alerter)是一个更好的选择。alerter比起AppleScript的优势在于：
+
+- 支持自定义icon；
+- 支持自定义下拉菜单。基于这个cuckoo实现了推迟提醒的功能；
+- 支持超时自动消失。这个由cuckoo的任务的duration字段控制。
+
+推荐大家使用，只需要在config/config.local.js中添加如下内容即可
+
+```js
+config.reminder = {
+  type: 'alerter'
+};
+```
