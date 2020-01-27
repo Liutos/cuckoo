@@ -55,6 +55,7 @@ class Task {
       detail: this.detail,
       device: this.device,
       icon: this.icon,
+      taskId: this.id,
     });
   }
 

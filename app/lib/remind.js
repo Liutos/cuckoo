@@ -63,17 +63,18 @@ class Remind {
   /**
    * @param {Object} options
    * @param {string} [options.device] - 即将提醒的任务使用的设备
+   * @param {number} options.taskId - 被触发提醒的任务的ID
    */
   async notify(options) {
     const alarmHour = new Date().getHours();
     if (Array.isArray(this.restricted_hours) && this.restricted_hours[alarmHour] === 0) {
-      this.getCtx().logger.info(`restricted_hours为${this.restricted_hours}`);
-      this.getCtx().logger.info(`alarmHour为${alarmHour}`);
-      this.getCtx().logger.info(`当前小时${alarmHour}不在restricted_hours指定的有效范围内，不需要弹出提醒`);
+      this.getCtx().logger.info(`任务${options.taskId}的restricted_hours为${this.restricted_hours}`);
+      this.getCtx().logger.info(`任务${options.taskId}的alarmHour为${alarmHour}`);
+      this.getCtx().logger.info(`当前小时${alarmHour}不在任务${options.taskId}的restricted_hours指定的有效范围内，不需要弹出提醒`);
       return null;
     }
     // 先发微信消息，起码不会卡住
-    if (!this.repeat && options.device === 'mobile phone') {
+    if (options.device === 'mobile phone') {
       try {
         await this.getCtx().service.serverChan.send({
           desp: options.detail,
