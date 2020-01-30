@@ -57,6 +57,9 @@ class Repeat {
       } else if (type.match(/^every_[0-9]+_hours$/)) {
         const nHours = parseInt(type.match(/^every_([0-9]+)_hours$/)[1]);
         nextTime += nHours * 60 * 60 * 1000;
+      } else if (type.match(/^every_[0-9]+_minutes$/)) {
+        const nMinutes = parseInt(type.match(/^every_([0-9]+)_minutes$/)[1]);
+        nextTime += nMinutes * 60 * 1000;
       }
     } while (nextTime < now);
     return nextTime;
