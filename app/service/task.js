@@ -170,6 +170,13 @@ class TaskService extends Service {
           consumeUntil += 12 * 60 * 60 * 1000;
         }
         await service.queue.send(task.id, Math.round(consumeUntil / 1000));
+      } else if (rv && typeof rv.activationValue === 'string' && rv.activationValue.match(/([0-9]+)小时后再提醒/)) {
+        const matches = rv.activationValue.match(/([0-9]+)小时后再提醒/);
+        const hours = parseInt(matches[0]);
+        logger.info(`这里应当往Redis中写入一条${hours}小时后执行的任务`);
+        if (task.remind) {
+          await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60);
+        }
       } else {
         await this.close(task);
       }
