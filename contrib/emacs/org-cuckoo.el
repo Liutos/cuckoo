@@ -83,11 +83,13 @@
   (interactive)
   (let ((brief)
         (detail)
+        (device)
         (remind-id)
         (task-id))
 
     (setq brief (nth 4 (org-heading-components)))
     (setf detail (funcall *org-cuckoo-default-task-detail-extractor*))
+    (setf device (org-entry-get nil "DEVICE"))
 
     ;; 取出旧的任务和提醒并赋值给task-id和remind-id
     (let ((id (org-entry-get nil "TASK_ID")))
@@ -114,6 +116,7 @@
        ;; :data (concat "brief=" (url-encode-url brief) "&detail=" (url-encode-url detail) "&remind_id=" (format "%S" remind-id))
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                       (cons "detail" detail)
+                                                      (cons "device" device)
                                                       (cons "remind_id" (format "%S" remind-id))))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
