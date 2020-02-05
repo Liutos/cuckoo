@@ -15,6 +15,24 @@ class RemindLogService extends Service {
       update_at: new Date(),
     });
   }
+
+  async search(query) {
+    const { mysql } = this.app;
+
+    if (typeof query.sort !== 'string') {
+      query.sort = 'id:desc';
+    }
+
+    const where = {};
+    if (typeof query.task_id === 'string') {
+      where.task_id = query.task_id;
+    }
+    return await mysql.select('t_remind_log', {
+      limit: query.limit || 10,
+      orders: [ query.sort.split(':') ],
+      where,
+    });
+  }
 }
 
 module.exports = RemindLogService;

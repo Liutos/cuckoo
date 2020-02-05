@@ -10,6 +10,7 @@ module.exports = app => {
   router.post('/context', controller.context.create);
   router.post('/queue/poll', controller.queue.poll);
   router.post('/queue/send', controller.queue.send);
+  router.get('/remind/log', controller.remindLog.search);
   router.get('/remind/:id', controller.remind.get);
   router.patch('/remind/:id', controller.remind.update);
   router.post('/remind/:id/close', controller.remind.close);
