@@ -7,6 +7,7 @@ class AlerterReminder {
     const {
       brief,
       detail,
+      duration,
       icon,
     } = options;
     let command = '/usr/local/bin/alerter -actions \'完成,5分钟后再提醒,10分钟后再提醒,1小时后再提醒,8点时再提醒\'';
@@ -15,14 +16,14 @@ class AlerterReminder {
     }
     command += ' -closeLabel \'好的\' -dropdownLabel \'或者\' -json';
     let message = detail;
-    if (typeof this.duration === 'number') {
-      message += `\n持续展示${this.duration}秒`;
+    if (typeof duration === 'number') {
+      message += `\n持续展示${duration}秒`;
     } else {
       message += '\n需要手动关闭';
     }
     command += ` -message '${message}'`;
-    if (typeof this.duration === 'number') {
-      command += ` -timeout ${this.duration}`;
+    if (typeof duration === 'number') {
+      command += ` -timeout ${duration}`;
     }
     command += ` -title '${brief}'`;
     console.log('command', command);

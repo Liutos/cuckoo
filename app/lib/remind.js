@@ -85,7 +85,9 @@ class Remind {
       }
     }
     const { type = 'applescript' } = this.getCtx().app.config.reminder || {};
-    return Reminder.create(type).notify(options);
+    return Reminder.create(type).notify(Object.assign({}, options, {
+      duration: this.duration
+    }));
   }
 
   patch(changes) {
