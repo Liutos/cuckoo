@@ -52,9 +52,24 @@ class TaskController extends Controller {
   }
 
   async getFollowing() {
-    const { ctx, service } = this;
+    const { ctx, logger, service } = this;
+    const { query } = ctx;
 
-    const tasks = await service.task.getFollowing();
+    const { contextId } = query;
+    let context;
+    if (contextId === 'all') {
+      context = null;
+    } else if (typeof contextId === 'string') {
+      context = await service.context.get(parseInt(contextId));
+    } else {
+      const currentContextName = await service.context.getCurrent();
+      logger.info(`使用当前场景名${currentContextName}搜索场景对象`);
+      context = (await service.context.search({
+        name: currentContextName,
+      }))[0];
+    }
+
+    const tasks = await service.task.getFollowing(context);
 
     ctx.body = {
       tasks,

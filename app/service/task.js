@@ -77,12 +77,14 @@ class TaskService extends Service {
     return new Task(ctx, row);
   }
 
-  async getFollowing() {
+  /**
+   * @param {Object} [context] - 场景
+   */
+  async getFollowing(context = null) {
     const { logger, service } = this;
 
     const messages = await service.queue.list();
     const tasks = [];
-    const currentContext = service.context.getCurrent();
     for (const message of messages) {
       const {
         member: id,
@@ -93,8 +95,8 @@ class TaskService extends Service {
         logger.info(`任务${task.id}的状态为${task.state}，接下来不会弹出提醒`);
         continue;
       }
-      if (task.context && task.context.name !== currentContext) {
-        logger.info(`任务${task.id}所要求的场景为${task.context.name}，与当前场景（${currentContext}）不符，接下来不会弹出提醒`);
+      if (context && task.context && task.context.id !== context.id) {
+        logger.info(`任务${task.id}所要求的场景为${task.context.name}（${task.context.id}），与目标场景“${context.name}”（${context.id}）不符，接下来不会弹出提醒`);
         continue;
       }
       const hour = new Date(plan_alarm_at * 1000).getHours();
