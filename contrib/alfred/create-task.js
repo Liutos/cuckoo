@@ -7,7 +7,12 @@ const querystring = require('querystring');
 async function main() {
   // 解析命令行参数
   const query = querystring.parse(process.argv[2], ';');
-  const { type } = query;
+  let { type } = query;
+  type = type.trim();
+  let repeat_type = null;
+  if (type !== '') {
+    repeat_type = type;
+  }
   // 先创建一个提醒
   let timestamp = parseInt(query.timestamp);
   if (Number.isNaN(timestamp)) {
@@ -18,7 +23,7 @@ async function main() {
   }
   let response = await request({
     body: {
-      repeat_type: type,
+      repeat_type,
       timestamp
     },
     json: true,
