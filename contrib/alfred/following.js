@@ -1,12 +1,20 @@
+'use strict';
+
 const config = require('./config');
 
 const dateFormat = require('dateformat');
 const request = require('co-request');
 
 async function main() {
+  const contextId = process.argv[2];
+
+  const qs = {
+    contextId,
+  };
   const url = `${config.origin}/task/following`;
   const response = await request({
     json: true,
+    qs,
     url
   });
   const { tasks } = response.body;
