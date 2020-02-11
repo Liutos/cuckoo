@@ -60,6 +60,8 @@ class Repeat {
       } else if (type.match(/^every_[0-9]+_minutes$/)) {
         const nMinutes = parseInt(type.match(/^every_([0-9]+)_minutes$/)[1]);
         nextTime += nMinutes * 60 * 1000;
+      } else {
+        throw new Error(`${type}不是一个合法的重复模式`);
       }
     } while (nextTime < now);
     return nextTime;
@@ -75,6 +77,25 @@ class Repeat {
       }
     }
     this.update_at = new Date();
+  }
+
+  /**
+   * 检查重复模式是否合法
+   */
+  static validateType(type) {
+    if (['daily', 'end_of_month', 'hourly', 'minutely', 'monthly', 'weekly', 'yearly'].includes(type)) {
+      return;
+    }
+    if (type.match(/^every_[0-9]+_days$/)) {
+      return;
+    }
+    if (type.match(/^every_[0-9]+_hours$/)) {
+      return;
+    }
+    if (type.match(/^every_[0-9]+_minutes$/)) {
+      return;
+    }
+    throw new Error(`${type}不是一个合法的重复模式`);
   }
 }
 

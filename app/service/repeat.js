@@ -9,6 +9,7 @@ class RepeatService extends Service {
     const { app } = this;
     const { mysql } = app;
 
+    Repeat.validateType(type);
     const { insertId } = await mysql.insert('t_repeat', {
       create_at: new Date(),
       type,
