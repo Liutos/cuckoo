@@ -91,16 +91,24 @@ function main() {
 
   // 从brief中提炼出重复模式
   brief = brief.trim();
+  const repeatTypePattern = /\*([^\s]+)/;
   let repeatType = '';
-  if (brief.includes('*')) {
-    const pattern = /^(.+)\s+\*(.+)$/;
-    repeatType = brief.match(pattern)[2];
-    brief = brief.match(pattern)[1];
+  if (brief.match(repeatTypePattern)) {
+    repeatType = brief.match(repeatTypePattern)[1];
+    brief = brief.replace(repeatTypePattern, '').trim();
+  }
+
+  // 从brief中提炼出设备
+  const devicePattern = /\\([^\s]+)/;
+  let device = '';
+  if (brief.match(devicePattern)) {
+    device = brief.match(devicePattern)[1];
+    brief = brief.replace(devicePattern, '').trim();
   }
 
   console.log(JSON.stringify({
     items: [{
-      arg: `delayMinutes=${delayMinutes};message=${brief};timestamp=${timestamp};type=${repeatType}`,
+      arg: `delayMinutes=${delayMinutes};device=${device};message=${brief};timestamp=${timestamp};type=${repeatType}`,
       icon: {
         path: ''
       },

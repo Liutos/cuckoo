@@ -7,7 +7,7 @@ const querystring = require('querystring');
 async function main() {
   // 解析命令行参数
   const query = querystring.parse(process.argv[2], ';');
-  let { type } = query;
+  let { device, type } = query;
   type = type.trim();
   let repeat_type = null;
   if (type !== '') {
@@ -36,6 +36,7 @@ async function main() {
   response = await request({
     body: {
       brief,
+      device: device || null,
       remind_id: remind.id
     },
     json: true,
