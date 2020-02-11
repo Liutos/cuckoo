@@ -74,7 +74,7 @@ class Remind {
       return null;
     }
     // 先发微信消息，起码不会卡住
-    if (options.device === 'mobile phone') {
+    if (options.device === 'mobilePhone') {
       try {
         await this.getCtx().service.serverChan.send({
           desp: options.detail,
