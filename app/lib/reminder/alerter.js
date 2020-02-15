@@ -21,7 +21,7 @@ class AlerterReminder {
     } else {
       message += '\n需要手动关闭';
     }
-    command += ` -message '${message}'`;
+    command += ` -message '${message}' -sound 'default'`;
     if (typeof duration === 'number') {
       command += ` -timeout ${duration}`;
     }
