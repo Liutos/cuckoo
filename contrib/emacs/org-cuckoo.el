@@ -158,23 +158,32 @@
        :sync t))))
 
 ;;;###autoload
-(defun cuckoo-done-state ()
+(cl-defun cuckoo-done-state ()
   "在当前条目切换至DONE的时候，将相应的cuckoo中的任务的状态也修改为done"
   (let ((state org-state))
-    (when (string= state "DONE")
-      ;; 获取当前条目的TASK_ID属性。如果不存在这个属性，说明没有在cuckoo中创建过任务，无须理会
-      (let ((task-id (org-entry-get nil "TASK_ID")))
-        (when task-id
-          (request
-           (concat "http://localhost:7001/task/" task-id)
-           :data (encode-coding-string (json-encode (list (cons "state" "done")))
-                                       'utf-8)
-           :headers '(("Content-Type" . "application/json"))
-           :type "PATCH"
-           :success (cl-function
-                     (lambda (&key data &allow-other-keys)
-                       (message "设置了任务%s为【已完成】" task-id)))
-           :sync t))))))
+    (unless (string= state "DONE")
+      (return-from cuckoo-done-state))
+
+    ;; 获取当前条目的TASK_ID属性。如果不存在这个属性，说明没有在cuckoo中创建过任务，无须理会
+    (let ((scheduled (org-entry-get nil "SCHEDULED"))
+          (task-id (org-entry-get nil "TASK_ID")))
+      (unless task-id
+        (return-from cuckoo-done-state))
+      (when (string-match "\\+[0-9]+.>$" scheduled)
+        (message "当前条目会被重复安排，不需要关闭任务%s" task-id)
+        (return-from cuckoo-done-state))
+
+      (request
+       (concat "http://localhost:7001/task/" task-id)
+       :data (encode-coding-string (json-encode (list (cons "state" "done")))
+                                   'utf-8)
+       :headers '(("Content-Type" . "application/json"))
+       :type "PATCH"
+       :success (cl-function
+                 (lambda (&key data &allow-other-keys)
+                   (message "设置了任务%s为【已完成】" task-id)))
+       :sync t))))
+
 (add-hook 'org-after-todo-state-change-hook 'cuckoo-done-state)
 
 ;;;###autoload
