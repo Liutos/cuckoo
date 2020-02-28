@@ -184,8 +184,6 @@
                    (message "设置了任务%s为【已完成】" task-id)))
        :sync t))))
 
-(add-hook 'org-after-todo-state-change-hook 'cuckoo-done-state)
-
 ;;;###autoload
 (defun cuckoo-cancelled-state ()
   "在当前条目切换至CANCELLED的时候，将相应的cuckoo中的任务的状态也修改为inactive"
@@ -209,7 +207,9 @@
   "开启或关闭org-cuckoo的功能。"
   :keymap (list (cons "\C-cr" 'create-task-in-cuckoo)
                 (cons "\C-c\C-s" 'cuckoo-org-schedule))
-  :lighter " cuckoo")
+  :lighter " cuckoo"
+  (add-hook 'org-after-todo-state-change-hook 'cuckoo-cancelled-state)
+  (add-hook 'org-after-todo-state-change-hook 'cuckoo-done-state))
 
 (provide 'org-cuckoo)
 
