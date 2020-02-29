@@ -1,10 +1,6 @@
 'use strict';
 
-const shell = require('shelljs');
-
 const Service = require('egg').Service;
-
-const path = require('path');
 
 class ContextService extends Service {
   async create({ name }) {
@@ -36,9 +32,15 @@ class ContextService extends Service {
   }
 
   getCurrent() {
-    const script = path.resolve(__dirname, '../../script/get_current_context.scpt');
-    const command = `osascript ${script}`;
-    return shell.exec(command, { silent: true }).stdout.trim();
+    // 根据配置加载不同的场景检测器来获取当前的场景
+    const { config } = this.app;
+    const contextDetectorName = config.context.detector;
+    if (!contextDetectorName) {
+      return '';
+    }
+
+    const clz = require(`../lib/contextDetector/${contextDetectorName}`);
+    return clz.getCurrent();
   }
 
   async search(query) {
