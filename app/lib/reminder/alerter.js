@@ -10,7 +10,7 @@ class AlerterReminder {
       duration,
       icon,
     } = options;
-    let command = '/usr/local/bin/alerter -actions \'完成,5分钟后再提醒,10分钟后再提醒,1小时后再提醒,8点时再提醒\'';
+    let command = '/usr/local/bin/alerter -actions \'5分钟后再提醒,10分钟后再提醒,30分钟后再提醒,1小时后再提醒,8点时再提醒\'';
     if (typeof icon === 'string' && icon !== '') {
       command += ` -appIcon ${icon}`;
     }
