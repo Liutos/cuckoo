@@ -20,14 +20,10 @@ class RemindController extends Controller {
     const { request: { body } } = ctx;
 
     // TODO: 添加对参数的校验
-    let { duration, repeat_type, restricted_hours, timestamp } = body;
+    const { duration, repeat_type, restricted_hours, timestamp } = body;
 
     let repeat_id = null;
     if (typeof repeat_type === 'string') {
-      if (repeat_type !== 'hourly' && !repeat_type.match(/^every_[0-9]+_hours$/) && !restricted_hours) {
-        restricted_hours = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
-        restricted_hours[new Date(timestamp * 1000).getHours()] = 1;
-      }
       repeat_id = (await service.repeat.create({ type: repeat_type })).id;
     }
 
