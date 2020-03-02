@@ -1,6 +1,7 @@
 /**
  * 根据要求往cuckoo中创建任务及其提醒
  */
+'use strict';
 
 // 先将输入的参数拼成一个字符串
 // 逐个匹配输入的字符串中的日期时间的格式
@@ -87,6 +88,17 @@ function main() {
     const minute = parseInt(minuteText);
     timestamp = new Date().setHours(hour, minute, 0, 0);
     subtitle = `在${hour}点${minute}分时提醒`;
+  } else {
+    // 不符合任何一种模式，要求用户重新输入
+    console.log(JSON.stringify({
+      items: [{
+        icon: {
+          path: '',
+        },
+        title: '请输入正确的参数，如：1 test',
+      }],
+    }, null, 2));
+    return;
   }
 
   // 从brief中提炼出重复模式
