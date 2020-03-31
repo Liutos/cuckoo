@@ -41,7 +41,7 @@ class Remind {
    * @return {number} - 将表示不同小时的数组转换后的正整数
    */
   static encodeHours(hours) {
-    return parseInt(hours.reverse().join(''), 2);
+    return parseInt([...hours].reverse().join(''), 2);
   }
 
   /**
