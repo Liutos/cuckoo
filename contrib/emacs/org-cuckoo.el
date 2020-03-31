@@ -139,10 +139,18 @@
   (create-task-in-cuckoo))
 
 ;;;###autoload
-(defun cuckoo-org-schedule (arg)
+(cl-defun cuckoo-org-schedule (arg)
   "调用内置的org-schedule，并在带有一个prefix argument的时候关闭cuckoo中的对应任务"
   (interactive "p")
   (call-interactively 'org-schedule)
+  (when (= arg 1)
+    (message "设置了SCHEDULED属性，将会创建对应的cuckoo任务和提醒。")
+    (let ((scheduled (org-entry-get nil "SCHEDULED")))
+      (unless (string-match " [0-9]+:[0-9]+" scheduled)
+        (message "当前SCHEDULED属性没有小时和分钟，无法创建提醒。")
+        (return-from cuckoo-org-schedule)))
+    (call-interactively 'create-task-in-cuckoo))
+
   (when (= arg 4)
     (message "按下了一个prefix argument，此时应当从cuckoo中删除任务")
     (let ((id (org-entry-get nil "TASK_ID")))
@@ -205,8 +213,6 @@
 
 (define-minor-mode org-cuckoo-mode
   "开启或关闭org-cuckoo的功能。"
-  :keymap (list (cons "\C-cr" 'create-task-in-cuckoo)
-                (cons "\C-c\C-s" 'cuckoo-org-schedule))
   :lighter " cuckoo"
   (add-hook 'org-after-todo-state-change-hook 'cuckoo-cancelled-state)
   (add-hook 'org-after-todo-state-change-hook 'cuckoo-done-state))
