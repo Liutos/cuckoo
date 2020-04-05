@@ -9,13 +9,15 @@
     (+ (* (car lst) (expt 2 16))
        (cadr lst))))
 
-(defun create-remind-in-cuckoo (timestamp)
+(cl-defun create-remind-in-cuckoo (timestamp
+                                   &key duration)
   "往cuckoo中创建一个定时提醒并返回这个刚创建的提醒的ID"
   (let (remind-id)
     (request
      "http://localhost:7001/remind"
      :data (json-encode-alist
-            (list (cons "timestamp" timestamp)))
+            (list (cons "duration" duration)
+                  (cons "timestamp" timestamp)))
      :headers '(("Content-Type" . "application/json"))
      :parser 'buffer-string
      :type "POST"
@@ -84,12 +86,14 @@
   (let ((brief)
         (detail)
         (device)
+        (duration)
         (remind-id)
         (task-id))
 
     (setq brief (nth 4 (org-heading-components)))
     (setf detail (funcall *org-cuckoo-default-task-detail-extractor*))
     (setf device (org-entry-get nil "DEVICE"))
+    (setf duration (org-entry-get nil "DURATION"))
 
     ;; 取出旧的任务和提醒并赋值给task-id和remind-id
     (let ((id (org-entry-get nil "TASK_ID")))
@@ -106,17 +110,17 @@
       ;; 如果有remind-id就更新已有的提醒的触发时刻，否则就创建一个新的
       (if remind-id
           (cuckoo-update-remind remind-id timestamp)
-        (setq remind-id (create-remind-in-cuckoo timestamp))))
+        (setq remind-id (create-remind-in-cuckoo timestamp :duration duration))))
 
     ;; 如果有task-id则同样只是更新，否则就创建一个新的
     (if task-id
         (cuckoo-update-task task-id brief detail)
       (request
        "http://localhost:7001/task"
-       ;; :data (concat "brief=" (url-encode-url brief) "&detail=" (url-encode-url detail) "&remind_id=" (format "%S" remind-id))
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                       (cons "detail" detail)
                                                       (cons "device" device)
+                                                      (cons "duration" duration)
                                                       (cons "remind_id" (format "%S" remind-id))))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
