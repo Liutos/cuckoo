@@ -93,7 +93,7 @@
     (setq brief (nth 4 (org-heading-components)))
     (setf detail (funcall *org-cuckoo-default-task-detail-extractor*))
     (setf device (org-entry-get nil "DEVICE"))
-    (setf duration (org-entry-get nil "DURATION"))
+    (setf duration (or (org-entry-get nil "DURATION") 60))
 
     ;; 取出旧的任务和提醒并赋值给task-id和remind-id
     (let ((id (org-entry-get nil "TASK_ID")))
