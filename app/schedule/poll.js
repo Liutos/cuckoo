@@ -19,7 +19,9 @@ class Poll extends Subscription {
         member: id,
         score: alarmAt,
       } = message;
-      await service.task.remind(id, alarmAt);
+      setImmediate(async () => {
+        await service.task.remind(id, alarmAt);
+      });
       message = await service.queue.poll();
     }
   }
