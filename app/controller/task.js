@@ -38,6 +38,24 @@ class TaskController extends Controller {
     ctx.status = 204;
   }
 
+  async duplicate() {
+    const { ctx, service } = this;
+    const { params } = ctx;
+
+    const { id } = params;
+
+    let task = await service.task.get(id);
+    if (!task) {
+      throw new Error(`任务${id}不存在`);
+    }
+
+    task = await service.task.duplicate(task);
+
+    ctx.body = {
+      task
+    };
+  }
+
   async get() {
     const { ctx, service } = this;
     const { params } = ctx;

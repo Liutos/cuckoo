@@ -40,6 +40,20 @@ class RemindService extends Service {
     logger.info(`删除t_remind表中id列为${id}的行`);
   }
 
+  async duplicate(remind) {
+    const { service } = this;
+
+    let repeatId = null;
+    if (remind.repeat) {
+      const repeat = await service.repeat.duplicate(remind.repeat);
+      repeatId = repeat.id;
+    }
+
+    return await this.create(Object.assign({}, remind, {
+      repeat_id: repeatId
+    }));
+  }
+
   async get(id) {
     const { app, ctx, service } = this;
     const { mysql } = app;

@@ -27,6 +27,10 @@ class RepeatService extends Service {
     logger.info(`删除t_repeat表中id列为${id}的行`);
   }
 
+  async duplicate(repeat) {
+    return await this.create(repeat);
+  }
+
   async get(id) {
     const { app, ctx } = this;
     const { mysql } = app;

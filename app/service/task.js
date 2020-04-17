@@ -58,6 +58,21 @@ class TaskService extends Service {
     logger.info(`删除t_task表中id列为${id}的行`);
   }
 
+  async duplicate(task) {
+    const { service } = this;
+
+    let remindId = null;
+    if (task.remind) {
+      const remind = await service.remind.duplicate(task.remind);
+      remindId = remind.id;
+    }
+
+    return await this.create(Object.assign({}, task, {
+      detail: `复制自${task.id} ` + task.detail,
+      remind_id: remindId
+    }));
+  }
+
   async get(id) {
     const { app, ctx, service } = this;
     const { mysql } = app;
