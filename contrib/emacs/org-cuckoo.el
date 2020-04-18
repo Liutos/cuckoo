@@ -215,6 +215,29 @@
                        (message "设置了任务%s为【不使用】" task-id)))
            :sync t))))))
 
+(defun org-cuckoo--get-task-id ()
+  "获取光标所在的条目的TASK_ID属性。"
+  (org-entry-get nil "TASK_ID"))
+
+(cl-defun org-cuckoo-view-task ()
+  "查看当前条目对应的任务的信息。"
+  (interactive)
+  (let ((task-id (org-cuckoo--get-task-id)))
+    (unless task-id
+      (message "当前条目没有对应的任务。")
+      (return-from org-cuckoo-view-task))
+    (request
+     (concat "http://localhost:7001/task/" task-id)
+     :parser 'buffer-string
+     :success (cl-function
+               (lambda (&key data &allow-other-keys)
+                 (message "请求完毕")
+                 (let ((task (json-read-from-string (decode-coding-string data 'utf-8))))
+                   (message "任务：\n- 标题：%s\n- 详情：%s"
+                            (cdr (assoc 'brief (cdr (car task))))
+                            (cdr (assoc 'detail (cdr (car task))))))))
+     :sync t)))
+
 (define-minor-mode org-cuckoo-mode
   "开启或关闭org-cuckoo的功能。"
   :lighter " cuckoo"
