@@ -13,7 +13,8 @@
     "egg-validate": "2.0.2",
     "left-pad": "1.3.0",
     "node-notifier": "7.0.0",
-    "shelljs": "0.8.3"
+    "shelljs": "0.8.3",
+    "sqlite3": "4.2.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -34,7 +35,7 @@
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
+    "test-local": "egg-bin test test/app/service",
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
