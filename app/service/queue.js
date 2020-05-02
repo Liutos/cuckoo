@@ -1,69 +1,155 @@
-'use strict';
-
 const Service = require('egg').Service;
+const sqlite3 = require('sqlite3').verbose();
 
-class QueueService extends Service {
+const path = require('path');
+
+const FILE_NAME = path.resolve(__dirname, '../../run/cuckoo.db');
+
+class SqliteQueueService extends Service {
+  constructor(ctx) {
+    super(ctx);
+    this.db = null;
+    this.hasInit = false;
+  }
+
+  /**
+   * @param {number} member - 任务ID
+   */
   async getScore(member) {
-    const { redis } = this.app;
-
-    const key = [ 'cuckoo', 'task', 'queue' ].join(':');
-    const score = await redis.zscore(key, member);
-    return score ? parseInt(score) : score;
+    const db = this._getDb();
+    return new Promise((resolve, reject) => {
+      db.get('SELECT next_trigger_time FROM task_queue WHERE task_id = ?', [member], (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row && row.next_trigger_time);
+        }
+      });
+    });
   }
 
   async list() {
-    const { app } = this;
-    const { redis } = app;
+    const db = this._getDb();
+    return new Promise((resolve, reject) => {
+      db.all('SELECT * FROM task_queue', [], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows.map(({ next_trigger_time, task_id }) => {
+            return {
+              member: task_id,
+              score: next_trigger_time
+            };
+          }));
+        }
+      });
+    });
+  }
 
-    const key = [ 'cuckoo', 'task', 'queue' ].join(':');
-    const stop = await redis.zcard(key);
-    const memberScores = await redis.zrange(key, 0, stop, 'WITHSCORES');
-    const messages = [];
-    for (let i = 0; i < memberScores.length; i += 2) {
-      messages.push({
-        member: parseInt(memberScores[i]),
-        score: parseInt(memberScores[i + 1]),
+  /**
+   * 取出第一个待处理的任务
+   */
+  async poll() {
+    const db = this._getDb();
+    const max = Math.round(Date.now() / 1000);
+    return new Promise((resolve, reject) => {
+      db.get('SELECT * FROM task_queue WHERE next_trigger_time < ? ORDER BY next_trigger_time ASC LIMIT 1', [max], (err, row) => {
+        if (err) {
+          reject(err);
+        } else if (!row) {
+          resolve(null);
+        } else {
+          db.run('DELETE FROM task_queue WHERE id = ?', [row.id], (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve({
+                member: row.task_id,
+                score: row.next_trigger_time
+              });
+            }
+          })
+        }
+      });
+    });
+  }
+
+  /**
+   * @param {number} message - 任务ID
+   */
+  async remove(message) {
+    const db = this._getDb();
+    return new Promise((resolve, reject) => {
+      db.run('DELETE FROM task_queue WHERE task_id = ?', [message], (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * @param {number} message - 任务ID
+   * @param {number} consumeUntil - 下一次被触发的时刻
+   */
+  async send(message, consumeUntil) {
+    const db = this._getDb();
+    const oldRow = await this._getTask(message);
+    if (oldRow) {
+      return new Promise((resolve, reject) => {
+        db.run('UPDATE task_queue SET next_trigger_time = ? WHERE task_id = ?', [consumeUntil, message], (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        db.run('INSERT INTO task_queue(create_at, next_trigger_time, task_id, update_at) VALUES(?, ?, ?, ?)', [Date.now(), consumeUntil, message, Date.now()], (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
       });
     }
-    return messages;
   }
 
-  async poll() {
-    const { app } = this;
-    const { redis } = app;
+  /**
+   * @param {number} taskId - 任务ID
+   */
+  async _getTask(taskId) {
+    const db = this._getDb();
+    return new Promise((resolve, reject) => {
+      db.get('SELECT * FROM task_queue WHERE task_id = ?', [taskId], (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      })
+    });
+  }
 
-    const key = [ 'cuckoo', 'task', 'queue' ].join(':');
-    const max = Math.round(Date.now() / 1000);
-    const messages = await redis.zrangebyscore(key, 0, max, 'LIMIT', 0, 1);
-    if (messages.length === 0) {
-      return null;
+  _getDb() {
+    if (!this.db) {
+      this._init();
     }
-    const member = messages[0];
-    const score = await redis.zscore(key, member);
-    await redis.zrem(key, member);
-    return {
-      member,
-      score,
-    };
+    return this.db;
   }
 
-  async remove(message) {
-    const { logger, redis } = this.app;
-
-    const key = [ 'cuckoo', 'task', 'queue' ].join(':');
-    await redis.zrem(key, message);
-    logger.info(`删除Redis中有序集合${key}中的member ${message}`);
-  }
-
-  async send(message, consumeUntil) {
-    const { app } = this;
-    const { redis } = app;
-
-    const key = [ 'cuckoo', 'task', 'queue' ].join(':');
-    const member = message;
-    const score = consumeUntil;
-    await redis.zadd(key, score, member);
+  _init() {
+    if (this.hasInit) {
+      return;
+    }
+    this.db = new sqlite3.Database(FILE_NAME);
+    this.hasInit = true;
   }
 }
 
-module.exports = QueueService;
+module.exports = SqliteQueueService;
