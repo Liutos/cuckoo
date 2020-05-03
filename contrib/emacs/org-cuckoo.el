@@ -34,6 +34,8 @@
 
 (defvar *org-cuckoo-default-task-detail-extractor* 'org-cuckoo--extract-task-detail
   "默认的、提取创建cuckoo中的任务时需要的detail参数的值的函数。")
+(defvar *org-cuckoo-default-icon-file* nil
+  "默认的、创建任务时传给icon_file参数的图片文件路径。")
 
 (defun cuckoo-get-task (id)
   "获取ID这个任务"
@@ -82,11 +84,13 @@
   t)
 
 (defun create-task-in-cuckoo ()
+  "根据光标所在条目创建一个cuckoo中的任务。"
   (interactive)
   (let ((brief)
         (detail)
         (device)
         (duration)
+        (icon-file *org-cuckoo-default-icon-file*)
         (remind-id)
         (task-id))
 
@@ -121,6 +125,7 @@
                                                       (cons "detail" detail)
                                                       (cons "device" device)
                                                       (cons "duration" duration)
+                                                      (cons "icon_file" icon-file)
                                                       (cons "remind_id" (format "%S" remind-id))))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
