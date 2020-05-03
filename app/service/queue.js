@@ -31,7 +31,7 @@ class SqliteQueueService extends Service {
   async list() {
     const db = this._getDb();
     return new Promise((resolve, reject) => {
-      db.all('SELECT * FROM task_queue', [], (err, rows) => {
+      db.all('SELECT * FROM task_queue ORDER BY next_trigger_time ASC', [], (err, rows) => {
         if (err) {
           reject(err);
         } else {
