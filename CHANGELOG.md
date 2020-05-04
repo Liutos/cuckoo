@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.2.0] - 2020-05-04
+
+### Added
+
+- Support setting a default icon file when creating tasks from Emacs org-mode;
+
+### Changed
+
+- Replace Redis by using SQLite for implementing the queue, made it much easier for deployment;
+
 ## [1.1.0] - 2020-04-19
 
 ### Added

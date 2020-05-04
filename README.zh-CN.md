@@ -1,3 +1,5 @@
+[English](https://github.com/Liutos/cuckoo/blob/master/README.md)
+
 # cuckoo
 
 定时提醒工具
@@ -5,9 +7,7 @@
 ## 依赖
 
 - mysql
-- redis
 - ControlPlane
-- alerter（可选）
 
 ## 安装及配置
 
@@ -27,7 +27,7 @@ npm i
 mysql -u <用户名> -p cuckoo < ./sql/cuckoo.sql
 ```
 
-然后需要配置cuckoo使用MySQL和redis。在项目根目录的config目录下，新建一个文件config.local.js，内容如下
+然后需要配置cuckoo使用MySQL。在项目根目录的config目录下，新建一个文件config.local.js，内容如下
 
 ```js
 'use strict';
@@ -42,15 +42,6 @@ module.exports = appInfo => {
       password: '此处填你的MySQL密码',
       port: '3306',
       user: '此处填你的MySQL用户名',
-    },
-  };
-
-  config.redis = {
-    client: {
-      db: 0,
-      host: '127.0.0.1',
-      password: '',
-      port: 6379,
     },
   };
 
