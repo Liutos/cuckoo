@@ -1,9 +1,4 @@
 const Service = require('egg').Service;
-const sqlite3 = require('sqlite3').verbose();
-
-const path = require('path');
-
-const FILE_NAME = path.resolve(__dirname, '../../run/cuckoo.db');
 
 class SqliteQueueService extends Service {
   constructor(ctx) {
@@ -137,38 +132,7 @@ class SqliteQueueService extends Service {
   }
 
   _getDb() {
-    if (!this.db) {
-      this._init();
-    }
-    return this.db;
-  }
-
-  _init() {
-    if (this.hasInit) {
-      return;
-    }
-    this.db = new sqlite3.Database(FILE_NAME);
-    this.db.get('select name from sqlite_master where type=\'table\'', [], (err, row) => {
-      if (err) {
-        throw err;
-      } else if (!row) {
-        // 建表
-        const createTableSQL = 'CREATE TABLE task_queue (\n      create_at INTEGER,\n      id INTEGER PRIMARY KEY,\n      next_trigger_time INTEGER,\n      task_id INTEGER,\n      update_at INTEGER\n    )';
-        this.db.run(createTableSQL, [], (err) => {
-          if (err) {
-            throw err;
-          }
-          // 创建索引
-          const createIndexSQL = 'CREATE INDEX ntt ON task_queue(next_trigger_time)';
-          this.db.run(createIndexSQL, [], (err) => {
-            if (err) {
-              throw err;
-            }
-          });
-        });
-      }
-    });
-    this.hasInit = true;
+    return this.app.sqlite;
   }
 }
 
