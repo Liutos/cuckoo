@@ -4,6 +4,48 @@ const path = require('path');
 
 const FILE_NAME = path.resolve(__dirname, './run/cuckoo.db');
 
+class MySQLite {
+  constructor(db) {
+    this.db = db;
+  }
+
+  async all(sql, values) {
+    return new Promise((resolve, reject) => {
+      this.db.all(sql, values, (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  async get(sql, values) {
+    return new Promise((resolve, reject) => {
+      this.db.get(sql, values, (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      });
+    });
+  }
+
+  async run(sql, values) {
+    return new Promise((resolve, reject) => {
+      this.db.run(sql, values, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this);
+        }
+      });
+    });
+  }
+}
+
 class AppBootHook {
   constructor(app) {
     this.app = app;
@@ -32,7 +74,7 @@ class AppBootHook {
         });
       }
     });
-    this.app.sqlite = db;
+    this.app.sqlite = new MySQLite(db);
   }
 }
 
