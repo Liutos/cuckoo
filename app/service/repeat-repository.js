@@ -3,6 +3,7 @@
 const Repeat = require('../lib/repeat');
 
 const Service = require('egg').Service;
+const dateFormat = require('dateformat');
 
 class RepeatService extends Service {
   async create({ type }) {
@@ -34,9 +35,9 @@ class RepeatService extends Service {
 
   async put(repeat) {
     const { app } = this;
-    const { mysql } = app;
+    const { sqlite } = app;
 
-    await mysql.run('UPDATE t_repeat SET type = ?, update_at = ? WHERE id = ?', [
+    await sqlite.run('UPDATE t_repeat SET type = ?, update_at = ? WHERE id = ?', [
       repeat.type,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       repeat.id,
