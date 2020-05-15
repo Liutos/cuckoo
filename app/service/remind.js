@@ -12,32 +12,34 @@ class RemindService extends Service {
   }
 
   async create({ duration, repeat_id, restricted_hours, timestamp }) {
-    const { app } = this;
-    const { mysql } = app;
+    // const { app } = this;
+    // const { mysql } = app;
 
-    const { insertId } = await mysql.insert('t_remind', {
-      create_at: new Date(),
-      duration,
-      repeat_id,
-      restricted_hours: Array.isArray(restricted_hours) ? Remind.encodeHours(restricted_hours) : null,
-      timestamp,
-      update_at: new Date(),
-    });
-    return await this.get(insertId);
+    // const { insertId } = await mysql.insert('t_remind', {
+    //   create_at: new Date(),
+    //   duration,
+    //   repeat_id,
+    //   restricted_hours: Array.isArray(restricted_hours) ? Remind.encodeHours(restricted_hours) : null,
+    //   timestamp,
+    //   update_at: new Date(),
+    // });
+    // return await this.get(insertId);
+    return await this.ctx.service.remindRepository.create({ duration, repeat_id, restricted_hours, timestamp });
   }
 
   async delete(id) {
-    const { app, logger, service } = this;
-    const { mysql } = app;
+    // const { app, logger, service } = this;
+    // const { mysql } = app;
 
-    const remind = await this.get(id);
-    if (remind && remind.repeat_id) {
-      await service.repeat.delete(remind.repeat_id);
-    }
-    await mysql.delete('t_remind', {
-      id,
-    });
-    logger.info(`删除t_remind表中id列为${id}的行`);
+    // const remind = await this.get(id);
+    // if (remind && remind.repeat_id) {
+    //   await service.repeat.delete(remind.repeat_id);
+    // }
+    // await mysql.delete('t_remind', {
+    //   id,
+    // });
+    // logger.info(`删除t_remind表中id列为${id}的行`);
+    await this.ctx.service.remindRepository.delete(id);
   }
 
   async duplicate(remind) {
@@ -55,39 +57,41 @@ class RemindService extends Service {
   }
 
   async get(id) {
-    const { app, ctx, service } = this;
-    const { mysql } = app;
+    // const { app, ctx, service } = this;
+    // const { mysql } = app;
 
-    const row = await mysql.get('t_remind', {
-      id,
-    });
-    if (!row) {
-      return null;
-    }
-    if (row.repeat_id) {
-      row.repeat = await service.repeat.get(row.repeat_id);
-    }
-    return new Remind(ctx, row);
+    // const row = await mysql.get('t_remind', {
+    //   id,
+    // });
+    // if (!row) {
+    //   return null;
+    // }
+    // if (row.repeat_id) {
+    //   row.repeat = await service.repeat.get(row.repeat_id);
+    // }
+    // return new Remind(ctx, row);
+    return await this.ctx.service.remindRepository.get(id);
   }
 
   async put(remind) {
-    const { app, service } = this;
-    const { mysql } = app;
+    // const { app, service } = this;
+    // const { mysql } = app;
 
-    if (remind.repeat) {
-      await service.repeat.put(remind.repeat);
-    }
-    await mysql.update('t_remind', {
-      duration: remind.duration,
-      repeat_id: remind.repeat && remind.repeat.id,
-      restricted_hours: remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),
-      timestamp: remind.timestamp,
-      update_at: new Date(),
-    }, {
-      where: {
-        id: remind.id,
-      },
-    });
+    // if (remind.repeat) {
+    //   await service.repeat.put(remind.repeat);
+    // }
+    // await mysql.update('t_remind', {
+    //   duration: remind.duration,
+    //   repeat_id: remind.repeat && remind.repeat.id,
+    //   restricted_hours: remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),
+    //   timestamp: remind.timestamp,
+    //   update_at: new Date(),
+    // }, {
+    //   where: {
+    //     id: remind.id,
+    //   },
+    // });
+    await this.ctx.service.remindRepository.put(remind);
   }
 }
 
