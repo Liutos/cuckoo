@@ -18,44 +18,46 @@ class TaskService extends Service {
   }
 
   async create({ brief, context_id, detail, device, icon, icon_file, remind_id }) {
-    const { app, service } = this;
-    const { mysql } = app;
+    // const { app, service } = this;
+    // const { mysql } = app;
 
-    const { insertId } = await mysql.insert('t_task', {
-      brief,
-      context_id,
-      create_at: new Date(),
-      detail,
-      device,
-      icon,
-      icon_file,
-      remind_id,
-      state: 'active',
-      update_at: new Date(),
-    });
+    // const { insertId } = await mysql.insert('t_task', {
+    //   brief,
+    //   context_id,
+    //   create_at: new Date(),
+    //   detail,
+    //   device,
+    //   icon,
+    //   icon_file,
+    //   remind_id,
+    //   state: 'active',
+    //   update_at: new Date(),
+    // });
 
-    const task = await this.get(insertId);
+    // const task = await this.get(insertId);
 
-    if (task.remind) {
-      await service.queue.send(task.id, task.remind.timestamp);
-    }
+    // if (task.remind) {
+    //   await service.queue.send(task.id, task.remind.timestamp);
+    // }
 
-    return task;
+    // return task;
+    return await this.ctx.service.taskRepository.create({ brief, context_id, detail, device, icon, icon_file, remind_id });
   }
 
   async delete(id) {
-    const { app, logger, service } = this;
-    const { mysql } = app;
+    // const { app, logger, service } = this;
+    // const { mysql } = app;
 
-    const task = await this.get(id);
-    if (task && task.remind) {
-      await service.queue.remove(id);
-      await service.remind.delete(task.remind.id);
-    }
-    await mysql.delete('t_task', {
-      id,
-    });
-    logger.info(`删除t_task表中id列为${id}的行`);
+    // const task = await this.get(id);
+    // if (task && task.remind) {
+    //   await service.queue.remove(id);
+    //   await service.remind.delete(task.remind.id);
+    // }
+    // await mysql.delete('t_task', {
+    //   id,
+    // });
+    // logger.info(`删除t_task表中id列为${id}的行`);
+    await this.ctx.service.taskRepository.delete(id);
   }
 
   async duplicate(task) {
@@ -74,22 +76,23 @@ class TaskService extends Service {
   }
 
   async get(id) {
-    const { app, ctx, service } = this;
-    const { mysql } = app;
+    // const { app, ctx, service } = this;
+    // const { mysql } = app;
 
-    const row = await mysql.get('t_task', {
-      id,
-    });
-    if (!row) {
-      return null;
-    }
-    if (row.context_id) {
-      row.context = await service.context.get(row.context_id);
-    }
-    if (row.remind_id) {
-      row.remind = await service.remind.get(row.remind_id);
-    }
-    return new Task(ctx, row);
+    // const row = await mysql.get('t_task', {
+    //   id,
+    // });
+    // if (!row) {
+    //   return null;
+    // }
+    // if (row.context_id) {
+    //   row.context = await service.context.get(row.context_id);
+    // }
+    // if (row.remind_id) {
+    //   row.remind = await service.remind.get(row.remind_id);
+    // }
+    // return new Task(ctx, row);
+    return await this.ctx.service.taskRepository.get(id);
   }
 
   /**
@@ -129,27 +132,28 @@ class TaskService extends Service {
   }
 
   async put(task) {
-    const { app, service } = this;
-    const { mysql } = app;
+    // const { app, service } = this;
+    // const { mysql } = app;
 
-    if (task.remind) {
-      await service.remind.put(task.remind);
-    }
-    await mysql.update('t_task', {
-      brief: task.brief,
-      context_id: task.context && task.context.id,
-      detail: task.detail,
-      device: task.device,
-      icon: task.icon,
-      icon_file: task.icon_file,
-      remind_id: task.remind ? task.remind.id : null,
-      state: task.state,
-      update_at: task.update_at,
-    }, {
-      where: {
-        id: task.id,
-      },
-    });
+    // if (task.remind) {
+    //   await service.remind.put(task.remind);
+    // }
+    // await mysql.update('t_task', {
+    //   brief: task.brief,
+    //   context_id: task.context && task.context.id,
+    //   detail: task.detail,
+    //   device: task.device,
+    //   icon: task.icon,
+    //   icon_file: task.icon_file,
+    //   remind_id: task.remind ? task.remind.id : null,
+    //   state: task.state,
+    //   update_at: task.update_at,
+    // }, {
+    //   where: {
+    //     id: task.id,
+    //   },
+    // });
+    await this.ctx.service.taskRepository.put(task);
   }
 
   async remind(id, alarmAt) {
@@ -205,43 +209,44 @@ class TaskService extends Service {
   }
 
   async search(query) {
-    const { app } = this;
-    const { logger, mysql } = app;
+    // const { app } = this;
+    // const { logger, mysql } = app;
 
-    if (typeof query.sort !== 'string') {
-      query.sort = 'id:desc';
-    }
+    // if (typeof query.sort !== 'string') {
+    //   query.sort = 'id:desc';
+    // }
 
-    const conditions = [ '1 = 1' ];
-    const values = [];
-    if (typeof query.brief === 'string') {
-      conditions.push('brief LIKE ?');
-      values.push(`%${query.brief}%`);
-    }
-    if (typeof query.context_id === 'string') {
-      conditions.push('context_id = ?');
-      values.push(query.context_id);
-    }
-    if (typeof query.detail === 'string') {
-      conditions.push('detail LIKE ?');
-      values.push(`%${query.detail}%`);
-    }
-    if (typeof query.state === 'string') {
-      conditions.push('state = ?');
-      values.push(query.state);
-    }
-    if (typeof query.remind_id === 'number') {
-      conditions.push('remind_id = ?');
-      values.push(query.remind_id);
-    }
+    // const conditions = [ '1 = 1' ];
+    // const values = [];
+    // if (typeof query.brief === 'string') {
+    //   conditions.push('brief LIKE ?');
+    //   values.push(`%${query.brief}%`);
+    // }
+    // if (typeof query.context_id === 'string') {
+    //   conditions.push('context_id = ?');
+    //   values.push(query.context_id);
+    // }
+    // if (typeof query.detail === 'string') {
+    //   conditions.push('detail LIKE ?');
+    //   values.push(`%${query.detail}%`);
+    // }
+    // if (typeof query.state === 'string') {
+    //   conditions.push('state = ?');
+    //   values.push(query.state);
+    // }
+    // if (typeof query.remind_id === 'number') {
+    //   conditions.push('remind_id = ?');
+    //   values.push(query.remind_id);
+    // }
 
-    const sql = 'SELECT `id` FROM `t_task` WHERE ' + conditions.join(' AND ');
-    logger.info(`即将被执行的SQL语句为：${sql}`);
-    logger.info('用于填充到SQL中的值为：', values);
-    const ids = await mysql.query(sql, values);
-    return await Promise.all(ids.map(async ({ id }) => {
-      return await this.get(id);
-    }));
+    // const sql = 'SELECT `id` FROM `t_task` WHERE ' + conditions.join(' AND ');
+    // logger.info(`即将被执行的SQL语句为：${sql}`);
+    // logger.info('用于填充到SQL中的值为：', values);
+    // const ids = await mysql.query(sql, values);
+    // return await Promise.all(ids.map(async ({ id }) => {
+    //   return await this.get(id);
+    // }));
+    return await this.ctx.service.taskRepository.search(query);
   }
 }
 
