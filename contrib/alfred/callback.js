@@ -118,9 +118,17 @@ function main() {
     brief = brief.replace(devicePattern, '').trim();
   }
 
+  const durationPattern = /~([0-9]+)/;
+  let duration = '';
+  if (brief.match(durationPattern)) {
+    duration = brief.match(durationPattern)[1];
+    brief = brief.replace(durationPattern, '').trim();
+    subtitle += ` 持续展示${duration}秒`;
+  }
+
   console.log(JSON.stringify({
     items: [{
-      arg: `delayMinutes=${delayMinutes};device=${device};message=${brief};timestamp=${timestamp};type=${repeatType}`,
+      arg: `delayMinutes=${delayMinutes};device=${device};duration=${duration};message=${brief};timestamp=${timestamp};type=${repeatType}`,
       icon: {
         path: ''
       },

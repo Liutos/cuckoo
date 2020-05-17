@@ -7,8 +7,14 @@ const querystring = require('querystring');
 async function main() {
   // 解析命令行参数
   const query = querystring.parse(process.argv[2], ';');
-  let { device, type } = query;
-  type = type.trim();
+  let { device, duration = null, type } = query;
+  if (typeof duration === 'string') {
+    duration = parseInt(duration, 10);
+  }
+  if (isNaN(duration)) {
+    duration = null;
+  }
+  type = typeof type === 'string' && type.trim();
   let repeat_type = null;
   if (type !== '') {
     repeat_type = type;
@@ -23,6 +29,7 @@ async function main() {
   }
   let response = await request({
     body: {
+      duration,
       repeat_type,
       timestamp
     },
