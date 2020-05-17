@@ -69,7 +69,7 @@ class TaskService extends Service {
     if (task.remind) {
       await service.remind.put(task.remind);
     }
-    await sqlite.run('UPDATE t_task SET brief = ?, context_id = ?, detail = ?, device = ?, icon = ?, icon_file = ?, remind_id = ?, state = ?, update_at = ?', [
+    await sqlite.run('UPDATE t_task SET brief = ?, context_id = ?, detail = ?, device = ?, icon = ?, icon_file = ?, remind_id = ?, state = ?, update_at = ? WHERE id = ?', [
       task.brief,
       task.context && task.context.id,
       task.detail,

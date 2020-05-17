@@ -60,12 +60,8 @@ class RemindService extends Service {
       remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),
       remind.timestamp,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
-      id,
-    ], {
-      where: {
-        id: remind.id,
-      },
-    });
+      remind.id,
+    ]);
   }
 }
 
