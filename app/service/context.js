@@ -4,33 +4,14 @@ const Service = require('egg').Service;
 
 class ContextService extends Service {
   async create({ name }) {
-    // const { mysql } = this.app;
-
-    // const { insertId } = await mysql.insert('t_context', {
-    //   create_at: new Date(),
-    //   name,
-    //   update_at: new Date(),
-    // });
-    // return await this.get(insertId);
     return await this.ctx.service.contextRepository.create({ name });
   }
 
   async delete(id) {
-    // const { logger, mysql } = this.app;
-
-    // await mysql.delete('t_context', {
-    //   id,
-    // });
-    // logger.info(`删除t_context表中id列为${id}的行`);
     return await this.ctx.service.contextRepository.delete(id);
   }
 
   async get(id) {
-    // const { mysql } = this.app;
-
-    // return await mysql.get('t_context', {
-    //   id,
-    // });
     return await this.ctx.service.contextRepository.get(id);
   }
 
@@ -47,20 +28,6 @@ class ContextService extends Service {
   }
 
   async search(query) {
-    // const { mysql } = this.app;
-
-    // if (typeof query.sort !== 'string') {
-    //   query.sort = 'id:desc';
-    // }
-
-    // const where = {};
-    // if (typeof query.name === 'string') {
-    //   where.name = query.name;
-    // }
-    // return await mysql.select('t_context', {
-    //   orders: [ query.sort.split(':') ],
-    //   where,
-    // });
     return await this.ctx.service.contextRepository.search(query);
   }
 }
