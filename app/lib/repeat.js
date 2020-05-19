@@ -4,7 +4,26 @@ const dateMath = require('date-arithmetic');
 
 const ctxKey = Symbol();
 
+/**
+ * 重复模式
+ * @typedef {Object} Repeat
+ * @property {string} create_at - 该行的创建时刻
+ * @property {number} id - 该行的主键
+ * @property {string} type - 重复模式
+ * @property {string} update_at - 该行的最后一次修改的时刻
+ */
+
 class Repeat {
+  /**
+   * Create a repeat.
+   * @param {Object} ctx - 请求上下文
+   * @param {Object} row - 从数据库返回的一行
+   * @param {string} row.create_at - 该行的创建时刻
+   * @param {number} row.id - 该行的主键
+   * @param {string} row.type - 重复模式
+   * @param {string} row.update_at - 该行的最后一次修改的时刻
+   * @returns {Repeat}
+   */
   constructor(ctx, row) {
     const {
       create_at,

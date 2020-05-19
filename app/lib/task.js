@@ -2,7 +2,25 @@
 
 const ctxKey = Symbol();
 
+/**
+ * @typedef {Object} Task
+ * @property {string} brief - 任务简述
+ * @property {Context} context - 该任务适用的场景
+ * @property {string} create_at - 任务的创建时刻
+ * @property {string} detail - 任务详情
+ * @property {string} device - 任务依赖的设备
+ * @property {string} icon - 弹出提醒时的图标
+ * @property {string} icon_file - 用于Alfred Workflow展示的图片路径
+ * @property {id} id - 任务主键
+ * @property {Remind} remind - 任务的提醒配置
+ * @property {string} state - 任务的状态
+ * @property {string} update_at - 任务的最后一次修改的时刻
+ */
+
 class Task {
+  /**
+   * @returns {Task}
+   */
   constructor(ctx, row) {
     const {
       brief,

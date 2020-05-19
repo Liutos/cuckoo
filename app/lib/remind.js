@@ -7,7 +7,30 @@ const shell = require('shelljs');
 
 const ctxKey = Symbol();
 
+/**
+ * @typedef {Object} Remind
+ * @property {string} create_at - 该行的创建时刻
+ * @property {number} duration - 提醒的持续展示时间，单位为秒
+ * @property {number} id - 该行的主键
+ * @property {Repeat} repeat - 提醒的重复模式，类型参见 {@link Repeat}
+ * @property {number[]} restricted_hours - 允许该提醒弹出的小时（24小时制）
+ * @property {number} timestamp - 弹出该提醒的具体时刻
+ * @property {string} update_at - 该行的最后一次修改的时刻
+ */
+
 class Remind {
+  /**
+   * Create a remind.
+   * @param {Object} row - 从数据库返回的一行
+   * @param {string} row.create_at - 该行的创建时刻
+   * @param {number} row.duration - 提醒的持续展示时间，单位为秒
+   * @param {number} row.id - 该行的主键
+   * @param {Repeat} row.repeat - 提醒的重复模式，类型参见 {@link Repeat}
+   * @param {number[]} row.restricted_hours - 允许该提醒弹出的小时（24小时制）
+   * @param {number} row.timestamp - 弹出该提醒的具体时刻
+   * @param {string} row.update_at - 该行的最后一次修改的时刻
+   * @returns {Remind}
+   */
   constructor(ctx, row) {
     const {
       create_at,
