@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.3.0] - 2020-05-20
+
+### Added
+
+- Can customize the duration of a remind in Alfred Workflow;
+
+### Changed
+
+- Completely migrate from MySQL to SQLite for storing repeats, reminds, tasks, and so on. Remove the dependencies on MySQL and Redis, easy to deploy.
+
 ## [1.2.0] - 2020-05-04
 
 ### Added
