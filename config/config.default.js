@@ -14,25 +14,6 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = [];
 
-  config.mysql = {
-    client: {
-      database: '',
-      host: '',
-      password: '',
-      port: '',
-      user: '',
-    },
-  };
-
-  config.redis = {
-    client: {
-      db: 0,
-      host: '',
-      password: '',
-      port: 6379,
-    },
-  };
-
   config.reminder = {
     type: 'applescript'
   };

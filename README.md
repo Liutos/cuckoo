@@ -25,34 +25,6 @@ cd cuckoo
 npm i
 ```
 
-Then create the tables for storing data in MySQL
-
-```shell
-mysql -u <username> -p cuckoo < ./sql/cuckoo.sql
-```
-
-Specifies the configuration for connecting to MySQL in `config/config.local.js`
-
-```js
-'use strict';
-
-module.exports = appInfo => {
-  const config = exports = {};
-
-  config.mysql = {
-    client: {
-      database: 'cuckoo',
-      host: 'localhost',
-      password: 'your password',
-      port: '3306',
-      user: 'your username',
-    },
-  };
-
-  return config;
-};
-```
-
 Finally, start the application
 
 ```shell
