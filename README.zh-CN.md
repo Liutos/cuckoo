@@ -6,8 +6,8 @@
 
 ## 依赖
 
-- mysql
 - ControlPlane
+- SQLite
 
 ## 安装及配置
 
@@ -19,34 +19,6 @@
 git clone git@github.com:Liutos/cuckoo.git
 cd cuckoo
 npm i
-```
-
-接着在MySQL中创建所需要的表，示例代码如下
-
-```bash
-mysql -u <用户名> -p cuckoo < ./sql/cuckoo.sql
-```
-
-然后需要配置cuckoo使用MySQL。在项目根目录的config目录下，新建一个文件config.local.js，内容如下
-
-```js
-'use strict';
-
-module.exports = appInfo => {
-  const config = exports = {};
-
-  config.mysql = {
-    client: {
-      database: 'cuckoo',
-      host: 'localhost',
-      password: '此处填你的MySQL密码',
-      port: '3306',
-      user: '此处填你的MySQL用户名',
-    },
-  };
-
-  return config;
-};
 ```
 
 现在可以启动cuckoo了，示例代码如下
