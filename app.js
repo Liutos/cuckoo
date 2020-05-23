@@ -1,9 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const path = require('path');
-
-const FILE_NAME = path.resolve(__dirname, './run/cuckoo.db');
-
 class MySQLite {
   constructor(db) {
     this.db = db;
@@ -52,8 +48,9 @@ class AppBootHook {
   }
 
   async configDidLoad() {
+    const fileName = this.app.config.sqlite.db.path;
     // 初始化SQLite连接
-    const db = new sqlite3.Database(FILE_NAME);
+    const db = new sqlite3.Database(fileName);
     db.get('select name from sqlite_master where type=\'table\'', [], (err, row) => {
       if (err) {
         throw err;

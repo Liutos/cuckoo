@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 module.exports = appInfo => {
   const config = exports = {};
 
@@ -22,6 +24,12 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
+  };
+
+  config.sqlite = {
+    db: {
+      path: path.resolve(__dirname, '../run/cuckoo.db')
+    }
   };
 
   return config;
