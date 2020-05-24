@@ -1,5 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 
+const fs = require('fs');
+const path = require('path');
+
 class MySQLite {
   constructor(db) {
     this.db = db;
@@ -48,30 +51,31 @@ class AppBootHook {
   }
 
   async configDidLoad() {
+    const { logger } = this.app;
+
     const fileName = this.app.config.sqlite.db.path;
     // 初始化SQLite连接
     const db = new sqlite3.Database(fileName);
-    db.get('select name from sqlite_master where type=\'table\'', [], (err, row) => {
-      if (err) {
-        throw err;
-      } else if (!row) {
-        // 建表
-        const createTableSQL = 'CREATE TABLE task_queue (\n      create_at INTEGER,\n      id INTEGER PRIMARY KEY,\n      next_trigger_time INTEGER,\n      task_id INTEGER,\n      update_at INTEGER\n    )';
-        this.db.run(createTableSQL, [], (err) => {
-          if (err) {
-            throw err;
-          }
-          // 创建索引
-          const createIndexSQL = 'CREATE INDEX ntt ON task_queue(next_trigger_time)';
-          this.db.run(createIndexSQL, [], (err) => {
-            if (err) {
-              throw err;
-            }
-          });
-        });
+    const sqlite = new MySQLite(db);
+    this.app.sqlite = sqlite;
+
+    // 检测表是否存在并创建
+    const sqlFiles = fs.readdirSync(path.resolve(__dirname, './sql/sqlite/'));
+    for (const sqlFile of sqlFiles) {
+      const tableName = path.basename(sqlFile, '.sql');
+      const isTableExist = await this._checkIsTableExist(tableName);
+      if (!isTableExist) {
+        const createStatement = fs.readFileSync(path.resolve(__dirname, './sql/sqlite/', sqlFile), 'utf-8');
+        logger.info(`表${tableName}不存在，将会自动创建。`);
+        await sqlite.run(createStatement, []);
       }
-    });
-    this.app.sqlite = new MySQLite(db);
+    }
+  }
+
+  async _checkIsTableExist(tableName) {
+    const { sqlite } = this.app;
+    const names = await sqlite.all('SELECT name FROM sqlite_master WHERE type = \'table\'', []);
+    return names.find(({ name }) => name === tableName);
   }
 }
 
