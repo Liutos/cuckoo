@@ -51,16 +51,19 @@ curl -i -H Content-Type\:\ application/json -XPOST http\://localhost\:7001/conte
 
 ## 如何在开机时自动启动cuckoo？
 
-如果想要在开机后自动自动启动cuckoo，可以通过macOS的launchd来实现。首先创建一个cuckoo的启动脚本，示例代码如下
+### macOS
+
+如果想要在开机后自动自动启动cuckoo，可以通过`launchd`来实现。首先创建一个cuckoo的启动脚本，示例代码如下
 
 ```shell
 #!/bin/bash
 # 启动cuckoo
+cd /path/to/cuckoo/ # 将此处修改为你本地的cuckoo项目的路径
 export PATH=/usr/local/bin:${PATH} # 将node命令加入到搜索路径中
-NODE_ENV=local npm run dev
+npm run start
 ```
 
-然后在用户目录下的launchd配置目录中创建相应的配置文件，示例代码如下
+然后在`~/Library/LaunchAgents`中创建相应的配置文件，示例代码如下
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
