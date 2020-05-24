@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.2] - 2020-05-24
+
+### Added
+
+- When starts, auto creates tables in SQLite database file if they're missing.
+
 ## [1.3.0] - 2020-05-20
 
 ### Added
