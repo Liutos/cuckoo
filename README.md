@@ -15,21 +15,36 @@ The complete manual can be found [here](https://github.com/Liutos/cuckoo/wiki).
 
 ## Getting Started
 
-### Installation and Configuration
+## Dependencies
 
-Clone this repository to your local machine
+- Node.js
+
+### Installation
+
+Clone this repository
 
 ```shell
 git clone git@github.com:Liutos/cuckoo.git
-cd cuckoo
+```
+
+Enter the `cuckoo` directory, and download all its dependencies
+
+```shell
 npm i
 ```
+
+Before starting, you can modify the file `config/config.default.js` for customizing something includes:
+
+1. The context detecting method. Nowadays, `cuckoo` only supports using [ControlPlane](https://www.controlplaneapp.com/), just setting `context.detector` to `'controlPlane'` in configuration file;
+2. The notifying method, by customizing the `reminder.type`. This configuration item supports `'applescript'`, `'alerter'`, and `'node-notifier'`. I prefer using `'alerter'`.
 
 Finally, start the application
 
 ```shell
-NODE_ENV=local npm run dev
+npm run start
 ```
+
+By default, `cuckoo` listens on port 7701 and run as daemon.
 
 ### How to use?
 

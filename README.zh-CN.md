@@ -4,28 +4,38 @@
 
 定时提醒工具
 
+# 开始使用
+
 ## 依赖
 
-- ControlPlane
-- SQLite
+- Node.js
 
-## 安装及配置
+## 安装
 
-请先确保自己的系统上已经安装了《依赖》一节中提到的几个软件。
-
-首先将本项目下载到本地
+克隆本项目
 
 ```bash
 git clone git@github.com:Liutos/cuckoo.git
-cd cuckoo
+```
+
+克隆完成后进入`cuckoo`目录，安装所需要的依赖
+
+```shell
 npm i
 ```
 
-现在可以启动cuckoo了，示例代码如下
+在启动前，你可以通过修改`config/config.default.js`来定制一些东西：
+
+1. 定制场景检测工具。目前`cuckoo`仅支持使用[ControlPlane](https://www.controlplaneapp.com/)来检测场景，只需要将配置文件中的`context.detector`设定为`'controlPlane'`即可；
+2. 通过设定`reminder.type`来定制提醒方式。目前支持`'applescript'`、`'alerter'`，以及`'node-notifier'`。我个人喜欢用`'alerter'`。
+
+终于可以启动了
 
 ```bash
-NODE_ENV=local npm run dev
+npm run start
 ```
+
+启动后`cuckoo`默认监听7001端口，并以守护进程的方式运行。
 
 ## 创建所需要的场景
 
