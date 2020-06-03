@@ -38,6 +38,7 @@ class Remind {
       id,
       repeat,
       restricted_hours,
+      restricted_wdays,
       timestamp,
       update_at,
     } = row;
@@ -47,6 +48,7 @@ class Remind {
     this.id = id;
     this.repeat = repeat;
     this.restricted_hours = typeof restricted_hours === 'number' ? Remind.decodeHours(restricted_hours) : null;
+    this.restrictedWdays = typeof restricted_wdays === 'number' ? Remind.decodeHours(restricted_wdays) : null;
     this.timestamp = timestamp;
     this.update_at = update_at;
   }
@@ -96,6 +98,13 @@ class Remind {
       this.getCtx().logger.info(`当前小时${alarmHour}不在任务${options.taskId}的restricted_hours指定的有效范围内，不需要弹出提醒`);
       return null;
     }
+    const alarmDay = new Date().getDay();
+    if (Array.isArray(this.restrictedWdays) && this.restrictedWdays[alarmDay] === 0) {
+      this.getCtx().logger.info(`任务${options.taskId}的restrictedWdays为${this.restrictedWdays}`);
+      this.getCtx().logger.info(`任务${options.taskId}的alarmDay为${alarmDay}`);
+      this.getCtx().logger.info(`今天${alarmDay}不在任务${options.taskId}的restrictedWdays指定的有效范围内，不需要弹出提醒`);
+      return null;
+    }
     // 先发微信消息，起码不会卡住
     if (options.device === 'mobilePhone') {
       try {
@@ -118,6 +127,7 @@ class Remind {
       'duration',
       'repeat',
       'restricted_hours',
+      'restrictedWdays',
       'timestamp',
     ];
     for (const field of FIELDS) {

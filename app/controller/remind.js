@@ -20,7 +20,7 @@ class RemindController extends Controller {
     const { request: { body } } = ctx;
 
     // TODO: 添加对参数的校验
-    const { duration, repeat_type, restricted_hours, timestamp } = body;
+    const { duration, repeat_type, restricted_hours, restrictedWdays, timestamp } = body;
 
     let repeat_id = null;
     if (typeof repeat_type === 'string') {
@@ -31,6 +31,7 @@ class RemindController extends Controller {
       duration,
       repeat_id,
       restricted_hours,
+      restrictedWdays,
       timestamp,
     });
 
@@ -66,6 +67,11 @@ class RemindController extends Controller {
       changes.restricted_hours = null;
     } else if (Array.isArray(body.restricted_hours)) {
       changes.restricted_hours = body.restricted_hours;
+    }
+    if (body.restrictedWdays === null) {
+      changes.restrictedWdays = null;
+    } else if (Array.isArray(body.restrictedWdays)) {
+      changes.restrictedWdays = body.restrictedWdays;
     }
     if (typeof body.timestamp === 'number') {
       changes.timestamp = body.timestamp;

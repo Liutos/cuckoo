@@ -6,15 +6,16 @@ const Service = require('egg').Service;
 const dateFormat = require('dateformat');
 
 class RemindService extends Service {
-  async create({ duration, repeat_id, restricted_hours, timestamp }) {
+  async create({ duration, repeat_id, restricted_hours, restrictedWdays, timestamp }) {
     const { app } = this;
     const { sqlite } = app;
 
-    const result = await sqlite.run('INSERT INTO t_remind(create_at, duration, repeat_id, restricted_hours, timestamp, update_at) VALUES(?, ?, ?, ?, ?, ?)', [
+    const result = await sqlite.run('INSERT INTO t_remind(create_at, duration, repeat_id, restricted_hours, restricted_wdays, timestamp, update_at) VALUES(?, ?, ?, ?, ?, ?, ?)', [
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       duration,
       repeat_id,
       Array.isArray(restricted_hours) ? Remind.encodeHours(restricted_hours) : null,
+      Array.isArray(restrictedWdays) ? Remind.encodeHours(restrictedWdays) : null,
       timestamp,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
     ]);
@@ -54,10 +55,11 @@ class RemindService extends Service {
     if (remind.repeat) {
       await service.repeat.put(remind.repeat);
     }
-    await sqlite.run('UPDATE t_remind SET duration = ?, repeat_id = ?, restricted_hours = ?, timestamp = ?, update_at = ? WHERE id = ?', [
+    await sqlite.run('UPDATE t_remind SET duration = ?, repeat_id = ?, restricted_hours = ?, restricted_wdays = ?, timestamp = ?, update_at = ? WHERE id = ?', [
       remind.duration,
       remind.repeat && remind.repeat.id,
       remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),
+      remind.restrictedWdays && Remind.encodeHours(remind.restrictedWdays),
       remind.timestamp,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       remind.id,
