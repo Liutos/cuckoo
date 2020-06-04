@@ -34,7 +34,7 @@ class RemindLogService extends Service {
       sql += ' WHERE ' + columns.map(column => `${column} = ?`).join(' AND ');
     }
     sql += ` ORDER BY ${query.sort.split(':')[0]} ${query.sort.split(':')[1]}`;
-    sql += ' LIMIT ${query.limit || 10}';
+    sql += ` LIMIT ${query.limit || 10}`;
 
     return await sqlite.all(sql, values);
   }
