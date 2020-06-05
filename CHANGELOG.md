@@ -1,5 +1,19 @@
 # Change Log
 
+## [1.4.0] - 2020-06-05
+
+### Added
+
+- A new Alfred Workflow, triggered by keyword `delay`, can use for delaying a task's remind for specific interval;
+- By means of the parameter `restrictedWdays`, the user can specify which days the remind should show;
+- A new Alfred Workflow, triggered by keyword `rlog`, can show the recent 10 remind logs;
+
+### Changed
+
+- In the Workflow triggered by keyword `following`, the dates inserted into the result list;
+- Indicates that the remind will be notify in WeChat account when using `callback`;
+- A new column named `restricted_wdays` appears in table `t_remind`.
+
 ## [1.3.2] - 2020-05-24
 
 ### Added
