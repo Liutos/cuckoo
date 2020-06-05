@@ -116,6 +116,9 @@ function main() {
   if (brief.match(devicePattern)) {
     device = brief.match(devicePattern)[1];
     brief = brief.replace(devicePattern, '').trim();
+    if (device === 'mobilePhone') {
+      subtitle += '，将会发往微信帐号';
+    }
   }
 
   const durationPattern = /~([0-9]+)/;
