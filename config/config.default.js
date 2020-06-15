@@ -16,6 +16,15 @@ module.exports = appInfo => {
   // add your config here
   config.middleware = [];
 
+  config.mobilePhone = {
+    push: {
+      serverChan: {
+        // 使用方糖推送所必须的参数
+        sckey: ''
+      }
+    }
+  };
+
   config.reminder = {
     type: 'applescript'
   };
