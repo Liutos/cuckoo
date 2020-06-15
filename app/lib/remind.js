@@ -2,9 +2,6 @@
 
 const Reminder = require('./reminder.js');
 
-const leftPad = require('left-pad');
-const shell = require('shelljs');
-
 const ctxKey = Symbol();
 
 /**
@@ -75,7 +72,7 @@ class Remind {
    * @return {number[]} - 以数组形式表达的允许弹出通知的小时
    */
   static decodeHours(hours) {
-    return leftPad(hours.toString(2), 24, 0).split('').reverse()
+    return hours.toString(2).padStart(24, 0).split('').reverse()
       .map(c => {
         return c === '0' ? 0 : 1;
       });
