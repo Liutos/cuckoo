@@ -7,6 +7,7 @@
     "date-arithmetic": "3.1.0",
     "dateformat": "3.0.3",
     "egg": "^2.2.1",
+    "egg-multipart": "2.10.3",
     "egg-scripts": "^2.5.0",
     "egg-validate": "2.0.2",
     "node-notifier": "7.0.0",

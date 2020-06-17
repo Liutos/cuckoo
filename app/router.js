@@ -8,6 +8,7 @@ module.exports = app => {
   router.get('/context', controller.context.search);
   router.get('/context/current', controller.context.getCurrent);
   router.post('/context', controller.context.create);
+  router.post('/icon/file', controller.icon.uploadFile);
   router.post('/queue/poll', controller.queue.poll);
   router.post('/queue/send', controller.queue.send);
   router.get('/remind/log', controller.remindLog.search);
