@@ -3,6 +3,14 @@
  */
 'use strict';
 
+/**
+ * 计算出时间戳的当天是星期几
+ * @param {number} timestamp - 时间戳
+ */
+function getDay(timestamp) {
+  return Intl.DateTimeFormat('zh-CN', { weekday: 'long' }).format(new Date(timestamp));
+}
+
 // 先将输入的参数拼成一个字符串
 // 逐个匹配输入的字符串中的日期时间的格式
 // 计算出要延迟的分钟数
@@ -47,7 +55,7 @@ function main() {
         break;
     }
     timestamp = new Date().setHours(hour, minute, 0, 0) + n * hours * 60 * 60 * 1000;
-    subtitle = `在${n}${unitName}后的${hour}点${minute}分提醒`;
+    subtitle = `在${n}${unitName}后（${getDay(timestamp)}）的${hour}点${minute}分提醒`;
   } else if (totalInput.match(YMDHM_PATTERN)) {
     // 表示在指定的年份、月份、日期和时刻提醒
     brief = totalInput.match(YMDHM_PATTERN)[6];
@@ -57,7 +65,7 @@ function main() {
     const hour = parseInt(totalInput.match(YMDHM_PATTERN)[4]);
     const minute = parseInt(totalInput.match(YMDHM_PATTERN)[5]);
     timestamp = new Date(new Date().setFullYear(year, month - 1, day)).setHours(hour, minute, 0, 0);
-    subtitle = `在${year}年${month}月${day}号${hour}点${minute}分时提醒`;
+    subtitle = `在${year}年${month}月${day}号（${getDay(timestamp)}）${hour}点${minute}分时提醒`;
   } else if (totalInput.match(MDHM_PATTERN)) {
     // 表示在指定的月份、日期和时刻提醒
     brief = totalInput.match(MDHM_PATTERN)[5];
@@ -66,7 +74,7 @@ function main() {
     const hour = parseInt(totalInput.match(MDHM_PATTERN)[3]);
     const minute = parseInt(totalInput.match(MDHM_PATTERN)[4]);
     timestamp = new Date(new Date().setMonth(month - 1, day)).setHours(hour, minute, 0, 0);
-    subtitle = `在${month}月${day}号${hour}点${minute}分时提醒`;
+    subtitle = `在${month}月${day}号（${getDay(timestamp)}）${hour}点${minute}分时提醒`;
   } else if (totalInput.match(DHM_PATTERN)) {
     // 表示在指定的日期和时刻提醒
     brief = totalInput.match(DHM_PATTERN)[4];
@@ -74,7 +82,7 @@ function main() {
     const hour = parseInt(totalInput.match(DHM_PATTERN)[2]);
     const minute = parseInt(totalInput.match(DHM_PATTERN)[3]);
     timestamp = new Date(new Date().setDate(day)).setHours(hour, minute, 0, 0);
-    subtitle = `在本月${day}号${hour}点${minute}分时提醒`;
+    subtitle = `在本月${day}号（${getDay(timestamp)}）${hour}点${minute}分时提醒`;
   } else if (totalInput.match(MINUTE_PATTERN)) {
     // 表示在指定的分钟后提醒
     brief = totalInput.match(MINUTE_PATTERN)[2];
