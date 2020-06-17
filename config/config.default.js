@@ -29,6 +29,13 @@ module.exports = appInfo => {
     type: 'applescript'
   };
 
+  config.schedule = {
+    poll: {
+      // The running interval of app/schedule/poll.js
+      interval: '30s'
+    }
+  };
+
   config.security = {
     csrf: {
       enable: false,

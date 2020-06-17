@@ -1,30 +1,25 @@
 'use strict';
 
-const Subscription = require('egg').Subscription;
-
-class Poll extends Subscription {
-  static get schedule() {
-    return {
-      interval: '1m',
+module.exports = app => {
+  return {
+    schedule: {
+      interval: app.config.schedule.poll.interval,
       type: 'worker',
-    };
-  }
+    },
+    async task(ctx) {
+      const { service } = ctx;
 
-  async subscribe() {
-    const { service } = this;
-
-    let message = await service.queue.poll();
-    while (message) {
-      const {
-        member: id,
-        score: alarmAt,
-      } = message;
-      setImmediate(async () => {
-        await service.task.remind(id, alarmAt);
-      });
-      message = await service.queue.poll();
+      let message = await service.queue.poll();
+      while (message) {
+        const {
+          member: id,
+          score: alarmAt,
+        } = message;
+        setImmediate(async () => {
+          await service.task.remind(id, alarmAt);
+        });
+        message = await service.queue.poll();
+      }
     }
-  }
-}
-
-module.exports = Poll;
+  };
+};
