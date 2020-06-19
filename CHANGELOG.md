@@ -1,5 +1,18 @@
 # Change Log
 
+## [1.5.0] - 2020-06-19
+
+### Added
+
+- Can customizing the running interval of polling tasks from queue;
+- Displaying the day of a remind when using the Workflow triggered by keyword `callback`;
+- A new API for uploading icon files to cuckoo. After uploading, they can be accessed under the `/public/icon/` path;
+- A new trivial Web UI for creating tasks and their reminds.
+
+### Changed
+
+- Use a configuration item for setting the key of [ServerChan](http://sc.ftqq.com/3.version), instead of using environment variable;
+
 ## [1.4.0] - 2020-06-05
 
 ### Added
