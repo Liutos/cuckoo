@@ -8,6 +8,21 @@
   </head>
   <body>
     <div id="app">
+      <!-- 用最基础的方式来提交表单创建新任务 -->
+      <p>创建新提醒</p>
+      <form>
+        <label for="remindTimestamp">提醒时刻</label>
+        <input id="remindTimestamp" name="timestamp">
+        <input onclick="createRemind()" type="button" value="创建提醒">
+      </form>
+      <p>创建新任务</p>
+      <form>
+        <label for="taskBrief">任务简述</label>
+        <input id="taskBrief" name="brief">
+        <label for="taskRemindId">任务提醒</label>
+        <input disabled id="taskRemindId" name="remind_id">
+        <input onclick="createTask()" type="button" value="创建任务">
+      </form>
       <p>所有任务列表</p>
       <div style="display: flex;">
         <ol>

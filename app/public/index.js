@@ -1,3 +1,5 @@
+const CUCKOO_PORT = 7001;
+
 const { tasks } = {
   "tasks": []
 };
@@ -5,7 +7,7 @@ const { tasks } = {
 Vue.component('task', {
   methods: {
     updateRemindTimestamp: function (event) {
-      const url = `http://localhost:7001/remind/${this.selected.remind.id}`;
+      const url = `http://localhost:${CUCKOO_PORT}/remind/${this.selected.remind.id}`;
       console.log(`准备请求：${url}`);
       axios
         .patch(url, {
@@ -50,7 +52,7 @@ var app = new Vue({
     selectTask: function (event) {
       const taskId = event.target.id;
       axios
-        .get(`http://localhost:7001/task/${taskId}`)
+        .get(`http://localhost:${CUCKOO_PORT}/task/${taskId}`)
         .then(response => {
           this.selected = response.data.task;
           this.selectedRemindTimestamp = this.selected.remind ? this.selected.remind.timestamp : null;
@@ -60,10 +62,44 @@ var app = new Vue({
   },
   mounted() {
     axios
-      .get('http://localhost:7001/task?state=active')
+      .get(`http://localhost:${CUCKOO_PORT}/task?state=active`)
       .then(response => {
         console.log('response', response);
         this.tasks = response.data.tasks;
       })
   }
 })
+
+window.createRemind = async function () {
+  // 通过ID取出提醒的时间戳，然后创建提醒。
+  let timestamp = document.getElementById('remindTimestamp').value;
+  timestamp = parseInt(timestamp);
+  if (!Number.isInteger(timestamp)) {
+    alert('提醒时刻必须是整数。');
+    return;
+  }
+  // 创建提醒
+  const response = await axios.post(`http://localhost:${CUCKOO_PORT}/remind`, {
+    timestamp
+  });
+  const { remind } = response.data;
+  console.log('remind', remind);
+  // 把提醒的ID填充到创建任务的表单中
+  document.getElementById('taskRemindId').value = remind.id;
+};
+
+window.createTask = async function () {
+  const brief = document.getElementById('taskBrief').value;
+  let remindId = document.getElementById('taskRemindId').value;
+  remindId = parseInt(remindId);
+  if (!Number.isInteger(remindId)) {
+    alert('请先创建提醒。');
+    return;
+  }
+  const response = await axios.post(`http://localhost:${CUCKOO_PORT}/task`, {
+    brief,
+    remind_id: remindId
+  });
+  const { task } = response.data;
+  console.log('任务创建完毕', task);
+};
