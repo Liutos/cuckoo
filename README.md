@@ -1,4 +1,4 @@
-[简体中文](https://github.com/Liutos/cuckoo/blob/master/README.zh-CN.md)
+[简体中文版文档](https://github.com/Liutos/cuckoo/blob/master/README.zh-CN.md)
 
 # cuckoo
 
@@ -12,6 +12,26 @@ Cuckoo is a task reminder, it runs mainly on macOS, provides functionalities inc
 - easy use in macOS by providing an Alfred Workflow for manipulating tasks.
 
 The complete manual can be found [here](https://github.com/Liutos/cuckoo/wiki).
+
+## Screenshots
+
+### Using Alfred Workflow
+
+Creating a new task and remind.
+
+<video controls>
+  <source src="https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.mp4" type="video/mp4">
+</video>
+
+### Using Emacs `org-cuckoo` Extension
+
+<video controls>
+  <source src="https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/EmacsExtensionExample.mp4" type="video/mp4">
+</video>
+
+### Notify by `alerter`
+
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/alerterNotifyExample.jpg)
 
 ## Getting Started
 
