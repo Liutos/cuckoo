@@ -19,15 +19,11 @@ The complete manual can be found [here](https://github.com/Liutos/cuckoo/wiki).
 
 Creating a new task and remind.
 
-<video controls>
-  <source src="https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.mp4" type="video/mp4">
-</video>
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.gif)
 
 ### Using Emacs `org-cuckoo` Extension
 
-<video controls>
-  <source src="https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/EmacsExtensionExample.mp4" type="video/mp4">
-</video>
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/EmacsExtensionExample.gif)
 
 ### Notify by `alerter`
 
