@@ -4,6 +4,22 @@
 
 定时提醒工具
 
+# 预览
+
+## 使用Alfred Workflow
+
+创建一个任务和提醒
+
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.gif)
+
+## 使用Emacs扩展`org-cuckoo`
+
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/EmacsExtensionExample.gif)
+
+## 使用`alerter`提醒
+
+![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/alerterNotifyExample.jpg)
+
 # 开始使用
 
 ## 依赖
