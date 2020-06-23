@@ -13,6 +13,11 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1543899096465_7258';
 
+  config.logger = {
+    // 避免在生产模式中运行时，日志输出到了用户的主目录下。
+    dir: path.resolve(appInfo.baseDir, 'logs/cuckoo/')
+  };
+
   // add your config here
   config.middleware = [];
 
