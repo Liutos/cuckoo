@@ -33,6 +33,9 @@ module.exports = appInfo => {
     poll: {
       // The running interval of app/schedule/poll.js
       interval: '30s'
+    },
+    sync: {
+      cron: '0 45 */6 * * *'
     }
   };
 
