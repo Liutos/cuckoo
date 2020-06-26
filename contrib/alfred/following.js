@@ -29,7 +29,7 @@ async function main() {
       lastDate = currentDate;
       items.push({
         icon: { path: '' },
-        title: `下列为${lastDate}的提醒`
+        title: `------------------${lastDate}的提醒------------------`
       });
     }
     // subtitle展示的是任务下一次提醒的时刻，以及它的重复模式
