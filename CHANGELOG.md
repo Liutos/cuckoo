@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.6.0] - 2020-06-28
+
+### Added
+
+- A new scheduled task `sync.js` for synchronizing tasks between database and queue;
+- Add icons for Alfred Workflow triggered by keywords `callback` and `following`;
+
+### Changed
+
+- Highlight the date spliting line in result list of `following` Workflow;
+
+### Fixed
+
+- Logs should be output to files under `logs/cuckoo/` directory, not under the `${HOME}`;
+
 ## [1.5.0] - 2020-06-19
 
 ### Added
