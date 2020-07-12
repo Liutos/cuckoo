@@ -1,3 +1,5 @@
+'use strict';
+
 const sqlite3 = require('sqlite3').verbose();
 
 const fs = require('fs');
@@ -69,6 +71,12 @@ class AppBootHook {
         logger.info(`表${tableName}不存在，将会自动创建。`);
         await sqlite.run(createStatement, []);
       }
+    }
+
+    // 确保用于存放图标的目录存在
+    const dir = path.resolve(__dirname, './app/public/icon/');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
     }
   }
 

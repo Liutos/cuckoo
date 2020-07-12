@@ -218,6 +218,29 @@ class TaskController extends Controller {
     ctx.body = '';
     ctx.status = 204;
   }
+
+  async updateIcon() {
+    const { ctx } = this;
+    const { params, service } = ctx;
+
+    const { id } = params;
+
+    const stream = await ctx.getFileStream();
+    const {
+      icon,
+      iconFile,
+    } = await service.icon.writeIconFile(stream);
+
+    const task = await service.task.get(id);
+    task.patch({
+      icon,
+      icon_file: iconFile,
+    });
+    await service.task.put(task);
+
+    ctx.body = '';
+    ctx.status = 204;
+  }
 }
 
 module.exports = TaskController;

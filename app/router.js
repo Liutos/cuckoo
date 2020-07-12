@@ -23,6 +23,7 @@ module.exports = app => {
   router.get('/task/following', controller.task.getFollowing);
   router.get('/task/:id', controller.task.get);
   router.patch('/task/:id', controller.task.update);
+  router.patch('/task/:id/icon', controller.task.updateIcon);
   router.post('/task/sync', controller.task.sync);
   router.post('/task/:id/duplicate', controller.task.duplicate);
   router.post('/task/:id/remind', controller.task.remind);

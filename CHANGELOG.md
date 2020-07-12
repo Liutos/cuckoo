@@ -1,5 +1,11 @@
 # Change Log
 
+## Unreleased
+
+### Added
+
+- A new HTTP API for setting a task's `icon` and `icon_file` simultaneously by uploading file.
+
 ## [1.6.0] - 2020-06-28
 
 ### Added
