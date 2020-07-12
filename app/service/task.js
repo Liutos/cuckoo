@@ -13,7 +13,7 @@ class TaskService extends Service {
     if (task.isRepeated()) {
       task.activate();
       await this.put(task);
-      await service.queue.send(task.id, task.remind.timestamp);
+      await service.queue.send(task.id, task.remind.timestamp, task.remind.id);
     }
   }
 

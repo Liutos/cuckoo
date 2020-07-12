@@ -1,3 +1,5 @@
+'use strict';
+
 const Service = require('egg').Service;
 
 class SqliteQueueService extends Service {
@@ -55,14 +57,15 @@ class SqliteQueueService extends Service {
   /**
    * @param {number} message - 任务ID
    * @param {number} consumeUntil - 下一次被触发的时刻
+   * @param {null|number} [remindId] - 导致本次提醒的remind对象的ID
    */
-  async send(message, consumeUntil) {
+  async send(message, consumeUntil, remindId = null) {
     const { sqlite } = this.app;
     const oldRow = await this._getTask(message);
     if (oldRow) {
-      await sqlite.run('UPDATE task_queue SET next_trigger_time = ? WHERE task_id = ?', [consumeUntil, message]);
+      await sqlite.run('UPDATE task_queue SET next_trigger_time = ?, remind_id = ? WHERE task_id = ?', [consumeUntil, remindId, message]);
     } else {
-      await sqlite.run('INSERT INTO task_queue(create_at, next_trigger_time, task_id, update_at) VALUES(?, ?, ?, ?)', [Date.now(), consumeUntil, message, Date.now()]);
+      await sqlite.run('INSERT INTO task_queue(create_at, next_trigger_time, remind_id, task_id, update_at) VALUES(?, ?, ?, ?, ?)', [Date.now(), consumeUntil, remindId, message, Date.now()]);
     }
   }
 

@@ -96,7 +96,7 @@ class RemindController extends Controller {
       });
       for (const task of tasks) {
         const consumeUntil = body.timestamp;
-        await service.queue.send(task.id, consumeUntil);
+        await service.queue.send(task.id, consumeUntil, id);
         logger.info(`设置延时队列中的任务${task.id}在${consumeUntil}后才被消费`);
       }
     }

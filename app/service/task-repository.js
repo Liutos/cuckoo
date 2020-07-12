@@ -26,7 +26,7 @@ class TaskService extends Service {
     const task = await this.get(result.lastID);
 
     if (task.remind) {
-      await service.queue.send(task.id, task.remind.timestamp);
+      await service.queue.send(task.id, task.remind.timestamp, task.remind.id);
     }
 
     return task;

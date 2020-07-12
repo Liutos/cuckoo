@@ -149,16 +149,16 @@ class TaskController extends Controller {
       }
       const { remind } = task;
       const score = await service.queue.getScore(task.id);
-      let { repeat, timestamp } = remind;
+      let { remindId, repeat, timestamp } = remind;
       if (repeat && timestamp * 1000 < Date.now()) {
         timestamp = Math.round(repeat.nextTimestamp(timestamp * 1000) / 1000);
       }
       if (!score) {
         logger.info(`将任务${task.id}补充到延迟队列中`);
-        await service.queue.send(task.id, timestamp);
+        await service.queue.send(task.id, timestamp, remindId);
       } else if (score !== timestamp) {
         logger.info(`调整任务${task.id}在延迟队列中的提醒时间，从${score}调整为${timestamp}`);
-        await service.queue.send(task.id, timestamp);
+        await service.queue.send(task.id, timestamp, remindId);
       }
     }
 
