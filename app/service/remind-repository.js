@@ -55,11 +55,12 @@ class RemindService extends Service {
     if (remind.repeat) {
       await service.repeat.put(remind.repeat);
     }
-    await sqlite.run('UPDATE t_remind SET duration = ?, repeat_id = ?, restricted_hours = ?, restricted_wdays = ?, timestamp = ?, update_at = ? WHERE id = ?', [
+    await sqlite.run('UPDATE t_remind SET duration = ?, repeat_id = ?, restricted_hours = ?, restricted_wdays = ?, task_id = ?, timestamp = ?, update_at = ? WHERE id = ?', [
       remind.duration,
       remind.repeat && remind.repeat.id,
       remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),
       remind.restrictedWdays && Remind.encodeHours(remind.restrictedWdays),
+      remind.taskId,
       remind.timestamp,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       remind.id,

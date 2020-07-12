@@ -1,0 +1,1 @@
+ALTER TABLE t_remind ADD COLUMN task_id INTEGER;

@@ -4,7 +4,8 @@
 
 ### Added
 
-- A new HTTP API for setting a task's `icon` and `icon_file` simultaneously by uploading file.
+- A new HTTP API for setting a task's `icon` and `icon_file` simultaneously by uploading file;
+- A new column `task_id` in table `t_remind` for storing the id of the task a remind belongs to.
 
 ## [1.6.0] - 2020-06-28
 

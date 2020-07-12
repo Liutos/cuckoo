@@ -24,6 +24,7 @@ class Remind {
    * @param {number} row.id - 该行的主键
    * @param {Repeat} row.repeat - 提醒的重复模式，类型参见 {@link Repeat}
    * @param {number[]} row.restricted_hours - 允许该提醒弹出的小时（24小时制）
+   * @param {number|null} row.task_id - 该提醒所属的任务的ID
    * @param {number} row.timestamp - 弹出该提醒的具体时刻
    * @param {string} row.update_at - 该行的最后一次修改的时刻
    * @returns {Remind}
@@ -36,6 +37,7 @@ class Remind {
       repeat,
       restricted_hours,
       restricted_wdays,
+      task_id,
       timestamp,
       update_at,
     } = row;
@@ -46,6 +48,7 @@ class Remind {
     this.repeat = repeat;
     this.restricted_hours = typeof restricted_hours === 'number' ? Remind.decodeHours(restricted_hours) : null;
     this.restrictedWdays = typeof restricted_wdays === 'number' ? Remind.decodeHours(restricted_wdays) : null;
+    this.taskId = task_id;
     this.timestamp = timestamp;
     this.update_at = update_at;
   }
@@ -125,6 +128,7 @@ class Remind {
       'repeat',
       'restricted_hours',
       'restrictedWdays',
+      'taskId',
       'timestamp',
     ];
     for (const field of FIELDS) {
