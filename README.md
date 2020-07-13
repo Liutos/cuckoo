@@ -31,10 +31,6 @@ Creating a new task and remind.
 
 ## Getting Started
 
-## Dependencies
-
-- Node.js
-
 ### Installation
 
 Clone this repository
