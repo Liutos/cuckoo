@@ -1,0 +1,23 @@
+#followingArea {
+  display: flex;
+  flex-direction: column;
+}
+
+#outmostContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+#taskArea {
+  display: flex;
+  flex-direction: column;
+}
+
+#wholeArea {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  display: flex;
+}
