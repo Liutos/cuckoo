@@ -1,51 +1,7 @@
 'use strict';
 
-const sqlite3 = require('sqlite3').verbose();
-
 const fs = require('fs');
 const path = require('path');
-
-class MySQLite {
-  constructor(db) {
-    this.db = db;
-  }
-
-  async all(sql, values) {
-    return new Promise((resolve, reject) => {
-      this.db.all(sql, values, (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
-  }
-
-  async get(sql, values) {
-    return new Promise((resolve, reject) => {
-      this.db.get(sql, values, (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-    });
-  }
-
-  async run(sql, values) {
-    return new Promise((resolve, reject) => {
-      this.db.run(sql, values, function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(this);
-        }
-      });
-    });
-  }
-}
 
 class AppBootHook {
   constructor(app) {
@@ -53,13 +9,19 @@ class AppBootHook {
   }
 
   async configDidLoad() {
-    const { logger } = this.app;
+    // 确保用于存放图标的目录存在
+    const dir = path.resolve(__dirname, './app/public/icon/');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+  }
 
-    const fileName = this.app.config.sqlite.db.path;
-    // 初始化SQLite连接
-    const db = new sqlite3.Database(fileName);
-    const sqlite = new MySQLite(db);
-    this.app.sqlite = sqlite;
+  /**
+   * 只有在willReady，即插件启动后，才可以使用app.sqlite。
+   * @see {@link https://eggjs.org/zh-cn/advanced/loader.html#life-cycles}
+   */
+  async willReady() {
+    const { logger, sqlite } = this.app;
 
     // 检测表是否存在并创建
     const sqlFiles = fs.readdirSync(path.resolve(__dirname, './sql/sqlite/'));
@@ -71,12 +33,6 @@ class AppBootHook {
         logger.info(`表${tableName}不存在，将会自动创建。`);
         await sqlite.run(createStatement, []);
       }
-    }
-
-    // 确保用于存放图标的目录存在
-    const dir = path.resolve(__dirname, './app/public/icon/');
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
     }
   }
 

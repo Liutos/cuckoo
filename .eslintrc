@@ -5,6 +5,7 @@
   "extends": "eslint-config-egg",
   "rules": {
     "array-bracket-spacing": ["off"],
-    "no-unused-vars": ["error"]
+    "no-unused-vars": ["error"],
+    "space-before-function-paren": ["off"]
   }
 }
