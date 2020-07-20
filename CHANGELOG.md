@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.8.0] - 2020-07-20
+
+### Changed
+
+- A new and ugly Web UI for viewing tasks;
+- Extract the code about operating on SQLite to be a embedded egg-js plugin in `cuckoo`.
+
+### Fixed
+
+- Correctly recognize the SCHEDULED property of an org-mode entry even there's Chinese words.
+
 ## [1.7.0] - 2020-07-13
 
 ### Added
