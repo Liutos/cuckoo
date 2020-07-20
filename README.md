@@ -1,102 +1,72 @@
-[简体中文版文档](https://github.com/Liutos/cuckoo/blob/master/README.zh-CN.md)
+> A reminder designed for programmers.
 
-# cuckoo
-
-## Overview
-
-Cuckoo is a task reminder, it runs mainly on macOS, provides functionalities include:
-
-- create tasks, setting their reminding time, repeating pattern, context and so on;
-- send notification to Wechat account;
-- integrate with Emacs by providing an extension;
-- easy use in macOS by providing an Alfred Workflow for manipulating tasks.
-
-The complete manual can be found [here](https://github.com/Liutos/cuckoo/wiki).
-
-## Screenshots
-
-### Using Alfred Workflow
-
-Creating a new task and remind.
+Create a notification triggered after 1 minute by means of Alfred Workflow.
 
 ![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.gif)
 
-### Using Emacs `org-cuckoo` Extension
+Create a notification at 9 pm for entry in `org-mode` by Emacs extension.
 
 ![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/EmacsExtensionExample.gif)
 
-### Notify by `alerter`
+The notification triggered by `alerter`
 
 ![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/alerterNotifyExample.jpg)
 
-## Getting Started
+# Features
 
-### Installation
+- Repeated task notification;
+- Notify based on context;
+- Push notification to WeChat account;
+- Integration with Alfred and Emacs;
 
-Clone this repository
+# Installation
 
 ```shell
 git clone git@github.com:Liutos/cuckoo.git
-```
-
-Enter the `cuckoo` directory, and download all its dependencies
-
-```shell
+cd cuckoo
 npm i
-```
-
-Before starting, you can modify the file `config/config.default.js` for customizing something includes:
-
-1. The context detecting method. Nowadays, `cuckoo` only supports using [ControlPlane](https://www.controlplaneapp.com/), just setting `context.detector` to `'controlPlane'` in configuration file;
-2. The notifying method, by customizing the `reminder.type`. This configuration item supports `'applescript'`, `'alerter'`, and `'node-notifier'`. I prefer using `'alerter'`.
-
-Finally, start the application
-
-```shell
 npm run start
 ```
 
-By default, `cuckoo` listens on port 7701 and run as daemon.
+# Example
 
-### How to use?
-
-Cuckoo provides many APIs for manipulating tasks, reminds, and repeats. However, the recommended ways for using cuckoo is:
-
-- The [Emacs extension](https://github.com/Liutos/cuckoo/wiki/Emacs%E6%AC%A1%E6%A8%A1%E5%BC%8Forg-cuckoo), or
-- The [Alfred Workflow](https://github.com/Liutos/cuckoo/wiki/Alfred-Workflow)
-
-The following sub-chapters give some examples about using the APIs directly.
-
-#### Create Remind
+Create a task reminded at 2020-06-01 00:00:00.
 
 ```shell
-curl -H 'Content-Type: application/json' -X POST --data '{"repeat_type":"daily","timestamp":1588575600}' 'http://localhost:7001/remind'
+timestamp=$(date -f '%Y-%m-%d %T' -j '2020-06-01 00:00:00' '+%s')
+remind_id=$(curl -H 'Content-Type: application/json' -X POST -d "{\"timestamp\":${timestamp}}" 'http://localhost:7002/remind' | jq '.remind.id')
+curl -H 'Content-Type: application/json' -X POST -d "{\"brief\":\"Hello, cuckoo!\",\"remind_id\":${remind_id}}" 'http://localhost:7002/task'
 ```
 
-#### Create Task
+Create a task reminded at 10 am every day.
 
 ```shell
-curl -H 'Content-Type: application/json' -X POST --data '{"brief":"test","remind_id":2242}' 'http://localhost:7001/task'
+timestamp=$(date -f '%Y-%m-%d %T' -j '2020-06-01 10:00:00' '+%s')
+remind_id=$(curl -H 'Content-Type: application/json' -X POST -d "{\"repeat_type\":\"daily\",\"timestamp\":${timestamp}}" 'http://localhost:7002/remind' | jq '.remind.id')
+curl -H 'Content-Type: application/json' -X POST -d "{\"brief\":\"Sign up.\",\"remind_id\":${remind_id}}" 'http://localhost:7002/task'
 ```
 
-#### Create Context
+For more usage about `cuckoo`'s HTTP API, see [API使用指南](https://github.com/Liutos/cuckoo/wiki/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97).
 
-```shell
-curl -H 'Content-Type: application/json' -X POST --data '{"name":"home"}' 'http://localhost:7001/context'
-```
+# Configuration
 
-#### Set Task's Context ID
+`cuckoo` can be customized through file `config/config.prod.js`.
 
-```shell
-curl -H 'Content-Type: application/json' -X PATCH --data '{"context_id":5}' 'http://localhost:7001/task/2216'
-```
+If `context.detector` is set to `controlPlane`, `cuckoo` will use [`ControlPlane`](https://github.com/dustinrue/ControlPlane) for detecting current context.
 
-After setting a task's target context, it will be reminded only when your machine is in this context.
+If `mobilePhone.push.serverChan.sckey` is set, it must be a valid key acquire from [`Server酱`](http://sc.ftqq.com/3.version). After set, `cuckoo` will be able to push notification to WeChat account.
 
-#### Other Aspects about Using
+The default `reminder.type` is `applescript`, and can be change to `alerter`(Using [`alerter`](https://github.com/vjeantet/alerter)) or `node-notifier`(Using [`node-notifier`](https://github.com/mikaelbr/node-notifier)).
 
-Here are some advanced topics about using cuckoo:
+By default, `cuckoo` pull tasks from queue every 30 seconds. This can be customized by setting `schedule.poll.interval`.
 
-- Its full API document: https://github.com/Liutos/cuckoo/wiki/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97
-- Send notification to phone through Wechat: https://github.com/Liutos/cuckoo/wiki/%E5%8F%91%E9%80%81%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92
-- Auto launch when login in on macOS: https://github.com/Liutos/cuckoo/wiki/%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E8%BF%90%E8%A1%8C
+# Integration
+
+`cuckoo` can be integrated with `Alfred` and `Emacs`.
+
+- For integrating with Alfred, see [Alfred Workflow](https://github.com/Liutos/cuckoo/wiki/Alfred-Workflow).
+- For using inside Emacs `org-mode`, see [Emacs次模式org-mode](https://github.com/Liutos/cuckoo/wiki/Emacs%E6%AC%A1%E6%A8%A1%E5%BC%8Forg-cuckoo).
+
+# Release History
+
+See [CHANGELOG.md](CHANGELOG.md).
