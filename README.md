@@ -46,7 +46,7 @@ remind_id=$(curl -H 'Content-Type: application/json' -X POST -d "{\"repeat_type\
 curl -H 'Content-Type: application/json' -X POST -d "{\"brief\":\"Sign up.\",\"remind_id\":${remind_id}}" 'http://localhost:7002/task'
 ```
 
-For more usage about `cuckoo`'s HTTP API, see [API使用指南](https://github.com/Liutos/cuckoo/wiki/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97).
+For more usage about `cuckoo`'s HTTP API, see [API使用指南](https://github.com/Liutos/cuckoo/wiki/API-reference).
 
 # Configuration
 
@@ -65,7 +65,7 @@ By default, `cuckoo` pull tasks from queue every 30 seconds. This can be customi
 `cuckoo` can be integrated with `Alfred` and `Emacs`.
 
 - For integrating with Alfred, see [Alfred Workflow](https://github.com/Liutos/cuckoo/wiki/Alfred-Workflow).
-- For using inside Emacs `org-mode`, see [Emacs次模式org-mode](https://github.com/Liutos/cuckoo/wiki/Emacs%E6%AC%A1%E6%A8%A1%E5%BC%8Forg-cuckoo).
+- For using inside Emacs `org-mode`, see [Emacs extension org cuckoo](https://github.com/Liutos/cuckoo/wiki/Emacs-extension-org-cuckoo).
 
 # Release History
 
