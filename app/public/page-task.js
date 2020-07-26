@@ -21,4 +21,5 @@ window.uploadIcon = async function (id) {
   });
   console.log('response', response);
   alert('任务图标更新成功。');
+  location.reload();
 };
