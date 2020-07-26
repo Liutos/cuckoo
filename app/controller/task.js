@@ -201,6 +201,7 @@ class TaskController extends Controller {
         Joi.number(),
         null,
       ],
+      state: Joi.string(),
     });
     await schema.validateAsync(body);
 
