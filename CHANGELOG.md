@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.9.0] - 2020-07-26
+
+### Added
+
+- A new trivial Web page for viewing task's information and for uploading icon files.
+
+### Changed
+
+- Ajust the error responding format;
+- Remove the hand-coding port number in server-side code.
+
 ## [1.8.0] - 2020-07-20
 
 ### Changed
