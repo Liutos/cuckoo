@@ -30,6 +30,16 @@ module.exports = appInfo => {
     }
   };
 
+  config.onerror = {
+    all(err, ctx) {
+      ctx.body = JSON.stringify({
+        message: err.message,
+      });
+      ctx.set('Content-Type', 'application/json');
+      ctx.status = 400;
+    },
+  };
+
   config.reminder = {
     type: 'applescript'
   };
