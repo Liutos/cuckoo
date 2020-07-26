@@ -1,13 +1,24 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const Joi = require('@hapi/joi');
 
 class TaskController extends Controller {
   async create() {
     const { ctx, service } = this;
     const { request: { body } } = ctx;
 
-    // TODO: 添加对参数的校验
+    const schema = Joi.object({
+      brief: Joi.string().required(),
+      context_id: Joi.number(),
+      detail: Joi.string(),
+      device: Joi.string(),
+      icon: Joi.string(),
+      icon_file: Joi.string(),
+      remind_id: Joi.number(),
+    });
+    await schema.validateAsync(body);
+
     const { brief, context_id, detail = '', device, icon, icon_file, remind_id } = body;
 
     const task = await service.task.create({
@@ -169,6 +180,29 @@ class TaskController extends Controller {
   async update() {
     const { ctx, service } = this;
     const { params, request: { body } } = ctx;
+
+    const schema = Joi.object({
+      brief: Joi.string(),
+      context_id: [
+        Joi.number(),
+        null,
+      ],
+      detail: Joi.string(),
+      device: Joi.string(),
+      icon: [
+        Joi.string(),
+        null,
+      ],
+      icon_file: [
+        Joi.string(),
+        null,
+      ],
+      remind_id: [
+        Joi.number(),
+        null,
+      ],
+    });
+    await schema.validateAsync(body);
 
     const { id } = params;
     const changes = {};

@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const Joi = require('@hapi/joi');
 
 class RemindController extends Controller {
   async close() {
@@ -19,7 +20,15 @@ class RemindController extends Controller {
     const { ctx, service } = this;
     const { request: { body } } = ctx;
 
-    // TODO: 添加对参数的校验
+    const schema = Joi.object({
+      duration: Joi.number(),
+      repeat_type: Joi.string(),
+      restricted_hours: Joi.array().items(Joi.number()).length(24),
+      restrictedWdays: Joi.array().items(Joi.number()).length(24),
+      timestamp: Joi.number().required(),
+    });
+    await schema.validateAsync(body);
+
     const { duration, repeat_type, restricted_hours, restrictedWdays, timestamp } = body;
 
     let repeat_id = null;
@@ -57,6 +66,24 @@ class RemindController extends Controller {
   async update() {
     const { ctx, service } = this;
     const { logger, params, request: { body } } = ctx;
+
+    const schema = Joi.object({
+      duration: [
+        Joi.number(),
+        null,
+      ],
+      repeat_type: Joi.string(),
+      restricted_hours: [
+        Joi.array().items(Joi.number()).length(24),
+        null,
+      ],
+      restrictedWdays: [
+        Joi.array().items(Joi.number()).length(24),
+        null,
+      ],
+      timestamp: Joi.number().required(),
+    });
+    await schema.validateAsync(body);
 
     const { id } = params;
     const changes = {};
