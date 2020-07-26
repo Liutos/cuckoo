@@ -12,13 +12,15 @@ class IconService extends Service {
    * @return {string} icon文件的磁盘路径
    */
   async writeIconFile(stream) {
+    const { port } = this.app;
+
     const dir = path.resolve(__dirname, '../public/icon/');
     const target = path.resolve(dir, stream.filename);
     stream.pipe(fs.createWriteStream(target));
     return await new Promise(resolve => {
       stream.on('end', () => {
         resolve({
-          icon: `http://localhost:7001/public/icon/${stream.filename}`,
+          icon: `http://localhost:${port}/public/icon/${stream.filename}`,
           iconFile: target,
         });
       });

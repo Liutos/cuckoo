@@ -6,6 +6,13 @@ const path = require('path');
 class AppBootHook {
   constructor(app) {
     this.app = app;
+    /**
+     * 获取应用所监听的端口
+     * @see {@link https://github.com/eggjs/egg/issues/2652}
+     */
+    app.messenger.on('egg-ready', info => {
+      app.port = info.port;
+    });
   }
 
   async configDidLoad() {

@@ -11,7 +11,8 @@ module.exports = app => {
     },
     async task(ctx) {
       const { logger } = ctx;
-      await ctx.curl('http://localhost:7001/task/sync', {
+      const { port } = app;
+      await ctx.curl(`http://localhost:${port}/task/sync`, {
         method: 'POST'
       });
       logger.info('任务同步完毕。');
