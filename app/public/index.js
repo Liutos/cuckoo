@@ -14,7 +14,7 @@ const allTaskTemplate = `
 {{#each tasks}}
   <tr>
     <td>{{this.id}}</td>
-    <td>{{this.brief}}</td>
+    <td><a href="/page/task/{{this.id}}">{{this.brief}}</a></td>
     <td>{{this.remind.timestamp}}</td>
     <td>
     {{#if this.context}}

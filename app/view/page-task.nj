@@ -1,0 +1,16 @@
+<html>
+  <body>
+    <p>任务简述：{{ brief }}</p>
+    <p>任务详情：{{ detail }}</p>
+    <p>任务图标：<img height="32" src="{{ icon }}" width="32"></img><p>
+    <p>场景要求：{{ contextName }}</p>
+    <div>
+      <h2>该任务的提醒</h2>
+      {% for remind in reminds %}
+      <div>
+        <p>提醒时刻为：{{ remind.readableTimestamp }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

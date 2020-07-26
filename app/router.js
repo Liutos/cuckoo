@@ -9,6 +9,9 @@ module.exports = app => {
   router.get('/context/current', controller.context.getCurrent);
   router.post('/context', controller.context.create);
   router.post('/icon/file', controller.icon.uploadFile);
+  // Web pages
+  router.get('/page/task/:id', controller.page.task.get);
+
   router.post('/queue/poll', controller.queue.poll);
   router.post('/queue/send', controller.queue.send);
   router.get('/remind/log', controller.remindLog.search);
