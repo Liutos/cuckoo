@@ -1,8 +1,17 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="/public/page-task.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
   <body>
     <p>任务简述：{{ brief }}</p>
     <p>任务详情：{{ detail }}</p>
-    <p>任务图标：<img height="32" src="{{ icon }}" width="32"></img><p>
+    <p>任务图标：<img height="32" src="{{ icon }}" width="32"></img>
+      <input id="iconFile" type="file" value="选择图标文件">
+      <input id="uploadIconButton" onclick="uploadIcon({{ id }})" type="button" value="上传新的图标">
+    <p>
     <p>场景要求：{{ contextName }}</p>
     <div>
       <h2>该任务的提醒</h2>
