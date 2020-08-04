@@ -81,7 +81,7 @@ class RemindController extends Controller {
         Joi.array().items(Joi.number()).length(24),
         null,
       ],
-      timestamp: Joi.number().required(),
+      timestamp: Joi.number(),
     });
     await schema.validateAsync(body);
 
