@@ -107,7 +107,14 @@ class TaskService extends Service {
         real_alarm_at: Math.round(Date.now() / 1000),
         task_id: id,
       });
-      const result = await task.notify(alarmAt);
+      const result = await task.remind.notify({
+        alarmAt,
+        brief: `#${task.id} ${task.brief}`,
+        detail: task.detail,
+        device: task.device,
+        icon: task.icon,
+        taskId: task.id,
+      });
       const stdout = result && result.stdout;
       let rv;
       if (typeof stdout === 'string' && stdout.length > 0) {
