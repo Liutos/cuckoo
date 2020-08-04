@@ -1,7 +1,5 @@
 'use strict';
 
-const Reminder = require('./reminder.js');
-
 const ctxKey = Symbol();
 
 /**
@@ -83,43 +81,6 @@ class Remind {
 
   getCtx() {
     return this[ctxKey];
-  }
-
-  /**
-   * @param {Object} options
-   * @param {string} [options.device] - 即将提醒的任务使用的设备
-   * @param {number} options.taskId - 被触发提醒的任务的ID
-   */
-  async notify(options) {
-    const alarmHour = new Date().getHours();
-    if (Array.isArray(this.restricted_hours) && this.restricted_hours[alarmHour] === 0) {
-      this.getCtx().logger.info(`任务${options.taskId}的restricted_hours为${this.restricted_hours}`);
-      this.getCtx().logger.info(`任务${options.taskId}的alarmHour为${alarmHour}`);
-      this.getCtx().logger.info(`当前小时${alarmHour}不在任务${options.taskId}的restricted_hours指定的有效范围内，不需要弹出提醒`);
-      return null;
-    }
-    const alarmDay = new Date().getDay();
-    if (Array.isArray(this.restrictedWdays) && this.restrictedWdays[alarmDay] === 0) {
-      this.getCtx().logger.info(`任务${options.taskId}的restrictedWdays为${this.restrictedWdays}`);
-      this.getCtx().logger.info(`任务${options.taskId}的alarmDay为${alarmDay}`);
-      this.getCtx().logger.info(`今天${alarmDay}不在任务${options.taskId}的restrictedWdays指定的有效范围内，不需要弹出提醒`);
-      return null;
-    }
-    // 先发微信消息，起码不会卡住
-    if (options.device === 'mobilePhone') {
-      try {
-        await this.getCtx().service.serverChan.send({
-          desp: options.detail,
-          text: options.brief,
-        });
-      } catch (e) {
-        this.getCtx().logger.warn(`向微信推送任务的消息失败：${e.message}`);
-      }
-    }
-    const { type = 'applescript' } = this.getCtx().app.config.reminder || {};
-    return Reminder.create(type).notify(Object.assign({}, options, {
-      duration: this.duration
-    }));
   }
 
   patch(changes) {
