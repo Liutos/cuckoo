@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.9.1] - 2020-08-04
+
+### Fixed
+
+- timestamp in update API is not required.
+
 ## [1.9.0] - 2020-07-26
 
 ### Added
