@@ -66,17 +66,6 @@ class Task {
     return this.remind && !!this.remind.repeat;
   }
 
-  async notify(alarmAt) {
-    return await this.remind.notify({
-      alarmAt,
-      brief: `#${this.id} ${this.brief}`,
-      detail: this.detail,
-      device: this.device,
-      icon: this.icon,
-      taskId: this.id,
-    });
-  }
-
   patch(changes) {
     if (typeof changes['state'] === 'string' && !['active', 'done', 'inactive'].includes(changes['state'])) {
       throw new Error(`${changes['state']}不是state字段的一个有效值`);
