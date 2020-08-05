@@ -12,7 +12,7 @@ class TaskController extends Controller {
       brief: Joi.string().required(),
       context_id: Joi.number(),
       detail: Joi.string(),
-      device: Joi.string(),
+      device: [Joi.string(), null],
       icon: Joi.string(),
       icon_file: Joi.string(),
       remind_id: Joi.number(),
