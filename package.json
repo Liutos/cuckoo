@@ -35,7 +35,7 @@
     "dev": "egg-bin dev --port 7002",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test test/app/service",
+    "test-local": "egg-bin test test/app",
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
