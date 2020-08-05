@@ -12,3 +12,4 @@ run/
 *.un~
 config.local.js
 app/public/icon/
+.nyc_output/
