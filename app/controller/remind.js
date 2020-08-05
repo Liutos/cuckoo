@@ -21,8 +21,8 @@ class RemindController extends Controller {
     const { request: { body } } = ctx;
 
     const schema = Joi.object({
-      duration: Joi.number(),
-      repeat_type: Joi.string(),
+      duration: [Joi.number(), null],
+      repeat_type: [Joi.string(), null],
       restricted_hours: Joi.array().items(Joi.number()).length(24),
       restrictedWdays: Joi.array().items(Joi.number()).length(24),
       timestamp: Joi.number().required(),
