@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.9.2] - 2020-08-05
+
+### Fixed
+
+- Allow some fields in API nullable.
+
 ## [1.9.1] - 2020-08-04
 
 ### Fixed
