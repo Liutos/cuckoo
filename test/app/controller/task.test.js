@@ -10,6 +10,7 @@ describe('test/app/controller/task.test.js', () => {
       .post('/task')
       .send({
         brief: 'test',
+        detail: '',
         device: null,
         remind_id: 2912,
       })

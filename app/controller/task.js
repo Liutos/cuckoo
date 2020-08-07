@@ -11,7 +11,7 @@ class TaskController extends Controller {
     const schema = Joi.object({
       brief: Joi.string().required(),
       context_id: Joi.number(),
-      detail: Joi.string(),
+      detail: Joi.string().allow(''),
       device: [Joi.string(), null],
       icon: Joi.string(),
       icon_file: Joi.string(),

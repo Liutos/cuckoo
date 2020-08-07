@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.9.3] - 2020-08-07
+
+### Fixed
+
+- `detail` can be blank when creating task;
+- No need to pass `duration` when creating task from Emacs extension.
+
 ## [1.9.2] - 2020-08-05
 
 ### Fixed

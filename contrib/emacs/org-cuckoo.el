@@ -124,7 +124,6 @@
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                       (cons "detail" detail)
                                                       (cons "device" device)
-                                                      (cons "duration" duration)
                                                       (cons "icon_file" icon-file)
                                                       (cons "remind_id" (format "%S" remind-id))))
                                    'utf-8)
