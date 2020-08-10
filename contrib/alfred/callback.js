@@ -42,7 +42,7 @@ function main() {
         unitName = '天';
         break;
       case 'h':
-        hours  = 1;
+        hours = 1;
         unitName = '小时';
         break;
       case 'm':

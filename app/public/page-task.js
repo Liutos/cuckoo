@@ -1,7 +1,5 @@
 'use strict';
 
-const CUCKOO_PORT = 7002;
-
 /**
  * @param {number} id - 要更新图标的任务的id
  */

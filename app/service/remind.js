@@ -1,6 +1,5 @@
 'use strict';
 
-const Remind = require('../lib/remind');
 const Reminder = require('../lib/reminder');
 
 const Service = require('egg').Service;

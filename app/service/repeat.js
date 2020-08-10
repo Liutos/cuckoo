@@ -1,7 +1,5 @@
 'use strict';
 
-const Repeat = require('../lib/repeat');
-
 const Service = require('egg').Service;
 
 class RepeatService extends Service {

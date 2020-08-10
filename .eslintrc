@@ -3,9 +3,21 @@
     "browser": true
   },
   "extends": "eslint-config-egg",
+  "globals": {
+    "Handlebars": "readonly",
+    "axios": "readonly"
+  },
   "rules": {
     "array-bracket-spacing": ["off"],
+    "comma-dangle": ["off"],
+    "default-case": ["off"],
+    "dot-notation": ["off"],
+    "newline-per-chained-call": ["off"],
+    "no-alert": ["off"],
     "no-unused-vars": ["error"],
-    "space-before-function-paren": ["off"]
+    "prefer-const": ["off"],
+    "space-before-function-paren": ["off"],
+    "strict": ["off"],
+    "valid-jsdoc": ["off"]
   }
 }

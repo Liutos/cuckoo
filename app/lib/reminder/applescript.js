@@ -9,7 +9,6 @@ class AppleScriptReminder {
       alarmAt,
       brief,
       detail,
-      icon,
     } = options;
     let command = `/usr/bin/osascript -e 'display notification "预定弹出时间为${dateFormat(alarmAt * 1000, 'yyyy-mm-dd HH:MM:ss')}" with title "${brief}" subtitle "${detail}"'`;
     console.log('command', command);

@@ -1,35 +1,6 @@
 /**
  * 说明将会如何推迟一个任务的提醒
  */
-const config = require('./config');
-
-const request = require('co-request');
-
-/**
- * 根据ID获取指定任务
- */
-async function fetchTask(id) {
-  const response = await request({
-    json: true,
-    url: `${config.origin}/task/${id}`
-  });
-  return response.body.task;
-}
-
-/**
- * 修改指定ID的提醒的触发时间
- */
-async function updateRemindTimestamp(id, timestamp) {
-  await request({
-    body: {
-      timestamp
-    },
-    json: true,
-    method: 'patch',
-    url: `${config.origin}/remind/${id}`
-  });
-}
-
 async function main() {
   // 解析命令行参数
   // 参数的顺序依次为：任务ID、推迟的时间。比如123 1d表示将ID为123的任务的提醒时间延迟1天。
@@ -61,8 +32,6 @@ async function main() {
   } else if (unit === 'm') {
     label = '分钟';
   }
-  // 查询这个任务
-  const task = await fetchTask(taskId);
   // 修改提醒的触发时间
   console.log(JSON.stringify({
     items: [

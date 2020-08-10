@@ -5,7 +5,6 @@ class RemindLogController extends Controller {
     const { ctx, service } = this;
     const { query } = ctx;
 
-    const { name } = query;
     const { limit = 10, sort = 'create_at:desc', task_id } = query;
     const remindLogs = await service.remindLog.search({
       limit,

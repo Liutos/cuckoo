@@ -1,7 +1,5 @@
 'use strict';
 
-const Task = require('../lib/task');
-
 const Service = require('egg').Service;
 
 class TaskService extends Service {
