@@ -187,7 +187,7 @@ class TaskController extends Controller {
         Joi.number(),
         null,
       ],
-      detail: Joi.string(),
+      detail: Joi.string().allow(''),
       device: Joi.string(),
       icon: [
         Joi.string(),
