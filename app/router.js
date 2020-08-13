@@ -11,6 +11,8 @@ module.exports = app => {
   router.post('/icon/file', controller.icon.uploadFile);
   // Web pages
   router.get('/page/task/:id', controller.page.task.get);
+  // Shortcuts
+  router.post('/shortcut/task', controller.shortcut.task.create);
 
   router.post('/queue/poll', controller.queue.poll);
   router.post('/queue/send', controller.queue.send);
