@@ -37,7 +37,7 @@ describe('test/app/controller/shortcut/task.test.js', () => {
     assert(task.context);
     assert(task.context.name === 'test');
     assert(task.remind);
-    assert(task.remind.timestamp === 1597277160000);
+    assert(task.remind.timestamp === new Date('2020-08-13 08:06:00').getTime());
     assert(task.remind.repeat);
     assert(task.remind.repeat.type === 'daily');
   });
