@@ -33,20 +33,29 @@ npm run start
 Create a task reminded at 2020-06-01 00:00:00.
 
 ```shell
-timestamp=$(date -f '%Y-%m-%d %T' -j '2020-06-01 00:00:00' '+%s')
-remind_id=$(curl -H 'Content-Type: application/json' -X POST -d "{\"timestamp\":${timestamp}}" 'http://localhost:7002/remind' | jq '.remind.id')
-curl -H 'Content-Type: application/json' -X POST -d "{\"brief\":\"Hello, cuckoo!\",\"remind_id\":${remind_id}}" 'http://localhost:7002/task'
+read -r -d '' data <<EOF
+{
+  "brief": "Hello, cuckoo!",
+  "dateTime": "2020-06-01 00:00:00"
+}
+EOF
+curl -H 'Content-Type: application/json' -X POST -d "${data}" 'http://localhost:7001/shortcut/task'
 ```
 
 Create a task reminded at 10 am every day.
 
 ```shell
-timestamp=$(date -f '%Y-%m-%d %T' -j '2020-06-01 10:00:00' '+%s')
-remind_id=$(curl -H 'Content-Type: application/json' -X POST -d "{\"repeat_type\":\"daily\",\"timestamp\":${timestamp}}" 'http://localhost:7002/remind' | jq '.remind.id')
-curl -H 'Content-Type: application/json' -X POST -d "{\"brief\":\"Sign up.\",\"remind_id\":${remind_id}}" 'http://localhost:7002/task'
+read -r -d '' data <<EOF
+{
+  "brief": "Sign up.",
+  "dateTime": "2020-06-01 10:00:00",
+  "repeatType": "daily"
+}
+EOF
+curl -H 'Content-Type: application/json' -X POST -d "${data}" 'http://localhost:7001/shortcut/task'
 ```
 
-For more usage about `cuckoo`'s HTTP API, see [API使用指南](https://github.com/Liutos/cuckoo/wiki/API-reference).
+For more usage about `cuckoo`'s HTTP API, see [API reference](https://github.com/Liutos/cuckoo/wiki/API-reference).
 
 # Configuration
 

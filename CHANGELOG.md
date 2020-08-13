@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.10.0] - 2020-08-13
+
+### Added
+
+- A new API for creating task and its remind easily.
+
+### Fixed
+
+- `detail` is allowed to be empty when updating task.
+
 ## [1.9.3] - 2020-08-07
 
 ### Fixed
