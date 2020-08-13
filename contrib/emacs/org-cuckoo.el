@@ -1,3 +1,16 @@
+(cl-defun org-cuckoo--request (path success &rest args &key data headers type)
+  "封装对cuckoo的API的访问。"
+  ;; 先构造URL
+  ;; 再构造要传给request函数的整个参数列表
+  ;; 最后用apply来调用request。
+  (let ((url (format "http://localhost:7001%s" path)))
+    (apply #'request
+           url
+           :parser 'buffer-string
+           :success success
+           :sync t
+           args)))
+
 ;;; 在cuckoo中创建光标所在任务的定时提醒
 (defun scheduled-to-time (scheduled)
   "将TODO条目的SCHEDULED属性转换为UNIX时间戳"
@@ -13,20 +26,18 @@
                                    &key duration)
   "往cuckoo中创建一个定时提醒并返回这个刚创建的提醒的ID"
   (let (remind-id)
-    (request
-     "http://localhost:7001/remind"
+    (org-cuckoo--request
+     "/remind"
+     (cl-function
+      (lambda (&key data &allow-other-keys)
+        (message "返回内容为：%S" data)
+        (let ((remind (json-read-from-string data)))
+          (setq remind-id (cdr (assoc 'id (cdr (car remind))))))))
      :data (json-encode-alist
             (list (cons "duration" duration)
                   (cons "timestamp" timestamp)))
      :headers '(("Content-Type" . "application/json"))
-     :parser 'buffer-string
-     :type "POST"
-     :success (cl-function
-               (lambda (&key data &allow-other-keys)
-                 (message "返回内容为：%S" data)
-                 (let ((remind (json-read-from-string data)))
-                   (setq remind-id (cdr (assoc 'id (cdr (car remind))))))))
-     :sync t)
+     :type "POST")
     remind-id))
 
 (defun org-cuckoo--extract-task-detail ()
@@ -40,47 +51,42 @@
 (defun cuckoo-get-task (id)
   "获取ID这个任务"
   (let (task)
-    (request
-     (concat "http://localhost:7001/task/" id)
-     :parser 'buffer-string
-     :success (cl-function
-               (lambda (&key data &allow-other-keys)
-                 ;; 这里的神来之笔就是对decode-coding-string的使用了
-                 ;; 灵感来自于这篇文章：https://emacs-china.org/t/topic/2443/7
-                 (setq data (decode-coding-string data 'utf-8))
-                 (message "返回的内容为：%S" data)
-                 (setq task (json-read-from-string data))))
-     :sync t)
+    (org-cuckoo--request
+     (concat "/task/" id)
+     (cl-function
+      (lambda (&key data &allow-other-keys)
+        ;; 这里的神来之笔就是对decode-coding-string的使用了
+        ;; 灵感来自于这篇文章：https://emacs-china.org/t/topic/2443/7
+        (setq data (decode-coding-string data 'utf-8))
+        (message "返回的内容为：%S" data)
+        (setq task (json-read-from-string data)))))
     (cdr (car task))))
 
 (defun cuckoo-update-remind (id timestamp)
   "更新指定的提醒的触发时间戳为TIMESTAMP"
-  (request
-   (concat "http://localhost:7001/remind/" (number-to-string id))
+  (org-cuckoo--request
+   (concat "/remind/" (number-to-string id))
+   (cl-function
+    (lambda (&key data &allow-other-keys)
+      (message "更新了提醒的触发时刻")))
    :data (json-encode (list (cons "timestamp" timestamp)))
    :headers '(("Content-Type" . "application/json"))
-   :type "PATCH"
-   :success (cl-function
-             (lambda (&key data &allow-other-keys)
-               (message "更新了提醒的触发时刻")))
-   :sync t)
+   :type "PATCH")
   t)
 
 (defun cuckoo-update-task (id brief detail)
   "更新指定的任务的简述为BRIEF，详情为DETAIL"
-  (request
-   (concat "http://localhost:7001/task/" (number-to-string id))
-   ;; :data (concat "brief=" (url-encode-url brief) "&detail=" (url-encode-url detail) "&state=active")
+  (org-cuckoo--request
+   (concat "/task/" (number-to-string id))
+   (cl-function
+    (lambda (&key data &allow-other-keys)
+      (message "更新了任务的简述和详情")))
    :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                   (cons "detail" detail)
                                                   (cons "state" "active")))
                                'utf-8)
    :headers '(("Content-Type" . "application/json"))
-   :type "PATCH"
-   :success (cl-function
-             (lambda (&key data &allow-other-keys)
-               (message "更新了任务的简述和详情")))
-   :sync t)
+   :type "PATCH")
   t)
 
 (defun create-task-in-cuckoo ()
@@ -119,8 +125,14 @@
     ;; 如果有task-id则同样只是更新，否则就创建一个新的
     (if task-id
         (cuckoo-update-task task-id brief detail)
-      (request
-       "http://localhost:7001/task"
+      (org-cuckoo--request
+       "/task"
+       (cl-function
+        (lambda (&key data &allow-other-keys)
+          (message "data: %S" data)
+          (let ((task (json-read-from-string data)))
+            (setq task-id (cdr (assoc 'id (cdr (car task)))))
+            (message "任务%S创建完毕" task-id))))
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                       (cons "detail" detail)
                                                       (cons "device" device)
@@ -128,15 +140,7 @@
                                                       (cons "remind_id" (format "%S" remind-id))))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
-       :parser 'buffer-string
-       :type "POST"
-       :success (cl-function
-                 (lambda (&key data &allow-other-keys)
-                   (message "data: %S" data)
-                   (let ((task (json-read-from-string data)))
-                     (setq task-id (cdr (assoc 'id (cdr (car task)))))
-                     (message "任务%S创建完毕" task-id))))
-       :sync t))
+       :type "POST"))
     (org-set-property "TASK_ID" (number-to-string task-id))))
 
 ;;;###autoload
@@ -162,16 +166,15 @@
   (when (= arg 4)
     (message "按下了一个prefix argument，此时应当从cuckoo中删除任务")
     (let ((id (org-entry-get nil "TASK_ID")))
-      (request
-       (concat "http://localhost:7001/task/" id)
+      (org-cuckoo--request
+       (concat "/task/" id)
+       (cl-function
+        (lambda (&key data &allow-other-keys)
+          (message "设置了任务%s为【不使用的】" id)))
        :data (encode-coding-string (json-encode (list (cons "state" "inactive")))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
-       :type "PATCH"
-       :success (cl-function
-                 (lambda (&key data &allow-other-keys)
-                   (message "设置了任务%s为【不使用的】" id)))
-       :sync t))))
+       :type "PATCH"))))
 
 ;;;###autoload
 (cl-defun cuckoo-done-state ()
@@ -189,16 +192,15 @@
         (message "当前条目会被重复安排，不需要关闭任务%s" task-id)
         (return-from cuckoo-done-state))
 
-      (request
-       (concat "http://localhost:7001/task/" task-id)
+      (org-cuckoo--request
+       (concat "/task/" task-id)
+       (cl-function
+        (lambda (&key data &allow-other-keys)
+          (message "设置了任务%s为【已完成】" task-id)))
        :data (encode-coding-string (json-encode (list (cons "state" "done")))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
-       :type "PATCH"
-       :success (cl-function
-                 (lambda (&key data &allow-other-keys)
-                   (message "设置了任务%s为【已完成】" task-id)))
-       :sync t))))
+       :type "PATCH"))))
 
 ;;;###autoload
 (defun cuckoo-cancelled-state ()
@@ -208,16 +210,15 @@
       ;; 获取当前条目的TASK_ID属性。如果不存在这个属性，说明没有在cuckoo中创建过任务，无须理会
       (let ((task-id (org-entry-get nil "TASK_ID")))
         (when task-id
-          (request
-           (concat "http://localhost:7001/task/" task-id)
+          (org-cuckoo--request
+           (concat "/task/" task-id)
+           (cl-function
+            (lambda (&key data &allow-other-keys)
+              (message "设置了任务%s为【不使用】" task-id)))
            :data (encode-coding-string (json-encode (list (cons "state" "inactive")))
                                        'utf-8)
            :headers '(("Content-Type" . "application/json"))
-           :type "PATCH"
-           :success (cl-function
-                     (lambda (&key data &allow-other-keys)
-                       (message "设置了任务%s为【不使用】" task-id)))
-           :sync t))))))
+           :type "PATCH"))))))
 
 (defun org-cuckoo--get-task-id ()
   "获取光标所在的条目的TASK_ID属性。"
@@ -230,17 +231,15 @@
     (unless task-id
       (message "当前条目没有对应的任务。")
       (return-from org-cuckoo-view-task))
-    (request
-     (concat "http://localhost:7001/task/" task-id)
-     :parser 'buffer-string
-     :success (cl-function
-               (lambda (&key data &allow-other-keys)
-                 (message "请求完毕")
-                 (let ((task (json-read-from-string (decode-coding-string data 'utf-8))))
-                   (message "任务：\n- 标题：%s\n- 详情：%s"
-                            (cdr (assoc 'brief (cdr (car task))))
-                            (cdr (assoc 'detail (cdr (car task))))))))
-     :sync t)))
+    (org-cuckoo--request
+     (concat "/task/" task-id)
+     (cl-function
+      (lambda (&key data &allow-other-keys)
+        (message "请求完毕")
+        (let ((task (json-read-from-string (decode-coding-string data 'utf-8))))
+          (message "任务：\n- 标题：%s\n- 详情：%s"
+                   (cdr (assoc 'brief (cdr (car task))))
+                   (cdr (assoc 'detail (cdr (car task)))))))))))
 
 (define-minor-mode org-cuckoo-mode
   "开启或关闭org-cuckoo的功能。"
