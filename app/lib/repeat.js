@@ -2,8 +2,6 @@
 
 const dateMath = require('date-arithmetic');
 
-const ctxKey = Symbol();
-
 /**
  * 重复模式
  * @typedef {Object} Repeat
@@ -16,7 +14,6 @@ const ctxKey = Symbol();
 class Repeat {
   /**
    * Create a repeat.
-   * @param {Object} ctx - 请求上下文
    * @param {Object} row - 从数据库返回的一行
    * @param {string} row.create_at - 该行的创建时刻
    * @param {number} row.id - 该行的主键
@@ -24,23 +21,18 @@ class Repeat {
    * @param {string} row.update_at - 该行的最后一次修改的时刻
    * @returns {Repeat}
    */
-  constructor(ctx, row) {
+  constructor(row) {
     const {
       create_at,
       id,
       type,
       update_at,
     } = row;
-    this[ctxKey] = ctx;
     this.create_at = create_at;
     this.id = id;
     // TODO: 检查type是否为合法的字符串
     this.type = type;
     this.update_at = update_at;
-  }
-
-  getCtx() {
-    return this[ctxKey];
   }
 
   /**

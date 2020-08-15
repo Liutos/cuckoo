@@ -45,7 +45,7 @@ class RemindService extends Service {
     if (row.repeat_id) {
       row.repeat = await service.repeat.get(row.repeat_id);
     }
-    return new Remind(ctx, row);
+    return new Remind(row);
   }
 
   async put(remind) {

@@ -1,7 +1,5 @@
 'use strict';
 
-const ctxKey = Symbol();
-
 /**
  * @typedef {Object} Remind
  * @property {string} create_at - 该行的创建时刻
@@ -27,7 +25,7 @@ class Remind {
    * @param {string} row.update_at - 该行的最后一次修改的时刻
    * @returns {Remind}
    */
-  constructor(ctx, row) {
+  constructor(row) {
     const {
       create_at,
       duration,
@@ -39,7 +37,6 @@ class Remind {
       timestamp,
       update_at,
     } = row;
-    this[ctxKey] = ctx;
     this.create_at = create_at;
     this.duration = duration;
     this.id = id;
@@ -77,10 +74,6 @@ class Remind {
       .map(c => {
         return c === '0' ? 0 : 1;
       });
-  }
-
-  getCtx() {
-    return this[ctxKey];
   }
 
   patch(changes) {

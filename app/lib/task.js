@@ -1,7 +1,5 @@
 'use strict';
 
-const ctxKey = Symbol();
-
 /**
  * @typedef {Object} Task
  * @property {string} brief - 任务简述
@@ -21,7 +19,7 @@ class Task {
   /**
    * @returns {Task}
    */
-  constructor(ctx, row) {
+  constructor(row) {
     const {
       brief,
       context,
@@ -35,7 +33,6 @@ class Task {
       state,
       update_at,
     } = row;
-    this[ctxKey] = ctx;
     this.brief = brief;
     this.context = context;
     this.create_at = create_at;

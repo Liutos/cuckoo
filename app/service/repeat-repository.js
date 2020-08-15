@@ -26,11 +26,11 @@ class RepeatService extends Service {
   }
 
   async get(id) {
-    const { app, ctx } = this;
+    const { app } = this;
     const { sqlite } = app;
 
     const row = await sqlite.get('SELECT * FROM t_repeat WHERE id = ?', [id]);
-    return new Repeat(ctx, row);
+    return new Repeat(row);
   }
 
   async put(repeat) {

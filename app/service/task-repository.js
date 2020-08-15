@@ -46,7 +46,7 @@ class TaskService extends Service {
   }
 
   async get(id) {
-    const { app, ctx, service } = this;
+    const { app, service } = this;
     const { sqlite } = app;
 
     const row = await sqlite.get('SELECT * FROM t_task WHERE id = ?', [id]);
@@ -59,7 +59,7 @@ class TaskService extends Service {
     if (row.remind_id) {
       row.remind = await service.remind.get(row.remind_id);
     }
-    return new Task(ctx, row);
+    return new Task(row);
   }
 
   async put(task) {
