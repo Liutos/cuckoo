@@ -26,6 +26,8 @@ describe('test/app/controller/remind.test.js', () => {
     assert(body.remind);
     remind = body.remind;
     assert(body.remind.repeat);
+    assert(!body.remind.repeat.id);
+    assert(!body.remind.repeatId);
     assert(body.remind.repeat.type === 'daily');
     assert(body.remind.repeatType === 'daily');
     assert(body.remind.timestamp === 1596631200);
@@ -50,6 +52,8 @@ describe('test/app/controller/remind.test.js', () => {
     const { body: { remind: _remind } } = response;
     assert(_remind);
     assert(_remind.repeat);
+    assert(!_remind.repeat.id);
+    assert(!_remind.repeatId);
     assert(_remind.repeat.type === 'weekly');
     assert(_remind.repeatType === 'weekly');
   });

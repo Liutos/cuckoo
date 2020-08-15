@@ -1,5 +1,7 @@
 'use strict';
 
+const Repeat = require('./repeat');
+
 /**
  * @typedef {Object} Remind
  * @property {string} create_at - 该行的创建时刻
@@ -31,6 +33,7 @@ class Remind {
       duration,
       id,
       repeat,
+      repeat_id,
       repeat_type,
       restricted_hours,
       restricted_wdays,
@@ -43,6 +46,10 @@ class Remind {
     this.id = id;
     this.repeat = repeat;
     this.repeatType = repeat_type;
+    if (typeof repeat_type === 'string') {
+      this.repeat = new Repeat({ type: repeat_type });
+    }
+    this.repeatId = repeat_id;
     this.restricted_hours = typeof restricted_hours === 'number' ? Remind.decodeHours(restricted_hours) : null;
     this.restrictedWdays = typeof restricted_wdays === 'number' ? Remind.decodeHours(restricted_wdays) : null;
     this.taskId = task_id;

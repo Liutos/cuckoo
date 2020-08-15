@@ -30,18 +30,11 @@ class TaskController extends Controller {
         throw new Error(`无效的场景名称：${body.contextName}`);
       }
     }
-    // 先创建重复模式
-    let repeat = null;
-    if (body.repeatType) {
-      repeat = await service.repeat.create({ type: body.repeatType });
-    }
     // 再创建提醒
     const remindMaterial = {
+      repeatType: body.repeatType,
       timestamp: new Date(body.dateTime).getTime()
     };
-    if (repeat) {
-      remindMaterial.repeat_id = repeat.id;
-    }
     const remind = await service.remind.create(remindMaterial);
     // 最后创建任务
     const taskMaterial = {

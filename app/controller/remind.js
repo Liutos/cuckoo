@@ -31,14 +31,8 @@ class RemindController extends Controller {
 
     const { duration, repeat_type, restricted_hours, restrictedWdays, timestamp } = body;
 
-    let repeat_id = null;
-    if (typeof repeat_type === 'string') {
-      repeat_id = (await service.repeat.create({ type: repeat_type })).id;
-    }
-
     const remind = await service.remind.create({
       duration,
-      repeat_id,
       repeatType: repeat_type,
       restricted_hours,
       restrictedWdays,
