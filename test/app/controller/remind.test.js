@@ -3,6 +3,12 @@
 const { app, assert } = require('egg-mock/bootstrap');
 
 describe('test/app/controller/remind.test.js', () => {
+  let remind = null;
+
+  after(async () => {
+    const ctx = app.mockContext();
+    await ctx.service.remind.delete(remind.id);
+  });
 
   it('创建提醒', async function () {
     app.mockCsrf();
@@ -10,7 +16,7 @@ describe('test/app/controller/remind.test.js', () => {
       .post('/remind')
       .send({
         duration: null,
-        repeat_type: null,
+        repeat_type: 'daily',
         timestamp: 1596631200,
       })
       .expect(201);
@@ -18,6 +24,9 @@ describe('test/app/controller/remind.test.js', () => {
     const { body } = response;
     assert(body);
     assert(body.remind);
+    remind = body.remind;
+    assert(body.remind.repeat);
+    assert(body.remind.repeat.type === 'daily');
     assert(body.remind.timestamp === 1596631200);
   });
 });
