@@ -11,8 +11,8 @@ class RemindService extends Service {
     await this.put(remind);
   }
 
-  async create({ duration, repeat_id, restricted_hours, restrictedWdays, timestamp }) {
-    return await this.ctx.service.remindRepository.create({ duration, repeat_id, restricted_hours, restrictedWdays, timestamp });
+  async create({ duration, repeat_id, repeatType, restricted_hours, restrictedWdays, timestamp }) {
+    return await this.ctx.service.remindRepository.create({ duration, repeat_id, repeatType, restricted_hours, restrictedWdays, timestamp });
   }
 
   async delete(id) {

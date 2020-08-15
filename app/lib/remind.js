@@ -31,6 +31,7 @@ class Remind {
       duration,
       id,
       repeat,
+      repeat_type,
       restricted_hours,
       restricted_wdays,
       task_id,
@@ -41,6 +42,7 @@ class Remind {
     this.duration = duration;
     this.id = id;
     this.repeat = repeat;
+    this.repeatType = repeat_type;
     this.restricted_hours = typeof restricted_hours === 'number' ? Remind.decodeHours(restricted_hours) : null;
     this.restrictedWdays = typeof restricted_wdays === 'number' ? Remind.decodeHours(restricted_wdays) : null;
     this.taskId = task_id;
@@ -80,6 +82,7 @@ class Remind {
     const FIELDS = [
       'duration',
       'repeat',
+      'repeatType',
       'restricted_hours',
       'restrictedWdays',
       'taskId',

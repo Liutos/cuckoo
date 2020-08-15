@@ -39,6 +39,7 @@ class RemindController extends Controller {
     const remind = await service.remind.create({
       duration,
       repeat_id,
+      repeatType: repeat_type,
       restricted_hours,
       restrictedWdays,
       timestamp,

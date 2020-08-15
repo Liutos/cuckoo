@@ -27,6 +27,30 @@ describe('test/app/controller/remind.test.js', () => {
     remind = body.remind;
     assert(body.remind.repeat);
     assert(body.remind.repeat.type === 'daily');
+    assert(body.remind.repeatType === 'daily');
     assert(body.remind.timestamp === 1596631200);
+  });
+
+  it('修改提醒的重复模式', async () => {
+    app.mockCsrf();
+    await app.httpRequest()
+      .patch(`/remind/${remind.id}`)
+      .send({
+        repeat_type: 'weekly'
+      })
+      .expect(204);
+  });
+
+  it('查看提醒', async () => {
+    app.mockCsrf();
+    const response = await app.httpRequest()
+      .get(`/remind/${remind.id}`)
+      .expect(200);
+
+    const { body: { remind: _remind } } = response;
+    assert(_remind);
+    assert(_remind.repeat);
+    assert(_remind.repeat.type === 'weekly');
+    assert(_remind.repeatType === 'weekly');
   });
 });
