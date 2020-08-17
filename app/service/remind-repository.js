@@ -36,7 +36,7 @@ class RemindService extends Service {
   }
 
   async get(id) {
-    const { app, ctx, service } = this;
+    const { app, service } = this;
     const { sqlite } = app;
 
     const row = await sqlite.get('SELECT * FROM t_remind WHERE id = ?', [id]);

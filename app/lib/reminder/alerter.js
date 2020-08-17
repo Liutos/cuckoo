@@ -1,9 +1,11 @@
 'use strict';
 
-const shell = require('shelljs');
-
 class AlerterReminder {
-  notify(options) {
+  constructor(shellGateway) {
+    this.shellGateway = shellGateway;
+  }
+
+  async notify(options) {
     const {
       brief,
       detail,
@@ -27,15 +29,7 @@ class AlerterReminder {
     }
     command += ` -title '${brief}'`;
     console.log('command', command);
-    return new Promise(resolve => {
-      shell.exec(command, { silent: true }, (code, stdout, stderr) => {
-        resolve({
-          code,
-          stderr,
-          stdout,
-        });
-      });
-    });
+    return await this.shellGateway.exec(command, { silent: true });
   }
 }
 

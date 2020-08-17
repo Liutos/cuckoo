@@ -73,7 +73,7 @@ class RemindService extends Service {
       }
     }
     const { type = 'applescript' } = app.config.reminder || {};
-    return Reminder.create(type).notify(Object.assign({}, options, {
+    return await Reminder.create(type, service.gateway.shell).notify(Object.assign({}, options, {
       duration: remind.duration,
     }));
   }

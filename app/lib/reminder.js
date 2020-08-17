@@ -1,9 +1,9 @@
 'use strict';
 
 class Reminder {
-  static create(type) {
+  static create(type, shellGateway) {
     const clz = require(`./reminder/${type}`);
-    return new clz();
+    return new clz(shellGateway);
   }
 }
 
