@@ -33,7 +33,7 @@ class TaskController extends Controller {
     // 再创建提醒
     const remindMaterial = {
       repeatType: body.repeatType,
-      timestamp: new Date(body.dateTime).getTime()
+      timestamp: Math.trunc(new Date(body.dateTime).getTime() / 1000)
     };
     const remind = await service.remind.create(remindMaterial);
     // 最后创建任务
