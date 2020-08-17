@@ -16,15 +16,15 @@ describe('test/app/service/remind.test.js', () => {
     const ctx = app.mockContext();
     // 创建一个指定日期和一个指定小时的提醒
     const restricted_hours = new Array(24);
-    restricted_hours.fill(0, 0, 24);
-    restricted_hours[(new Date().getHours() + 1) % 24] = 1;
+    restricted_hours.fill(1, 0, 24);
+    restricted_hours[new Date().getHours()] = 0;
     remind1 = await ctx.service.remind.create({
       restricted_hours,
       timestamp: Date.now()
     });
     const restrictedWdays = new Array(7);
-    restrictedWdays.fill(0, 0, 7);
-    restrictedWdays[(new Date().getDay() + 1) % 7] = 1;
+    restrictedWdays.fill(1, 0, 7);
+    restrictedWdays[new Date().getDay()] = 0;
     remind2 = await ctx.service.remind.create({
       restrictedWdays,
       timestamp: Date.now()

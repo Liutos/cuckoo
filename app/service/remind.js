@@ -45,20 +45,7 @@ class RemindService extends Service {
   async notify(remind, options) {
     const { app, ctx: { logger }, service } = this;
 
-    const { restricted_hours, restrictedWdays } = remind;
-    const { taskId } = options;
-    const alarmHour = new Date().getHours();
-    if (Array.isArray(restricted_hours) && restricted_hours[alarmHour] === 0) {
-      logger.info(`任务${taskId}的restricted_hours为${restricted_hours}`);
-      logger.info(`任务${taskId}的alarmHour为${alarmHour}`);
-      logger.info(`当前小时${alarmHour}不在任务${taskId}的restricted_hours指定的有效范围内，不需要弹出提醒`);
-      return null;
-    }
-    const alarmDay = new Date().getDay();
-    if (Array.isArray(restrictedWdays) && restrictedWdays[alarmDay] === 0) {
-      logger.info(`任务${taskId}的restrictedWdays为${restrictedWdays}`);
-      logger.info(`任务${taskId}的alarmDay为${alarmDay}`);
-      logger.info(`今天${alarmDay}不在任务${taskId}的restrictedWdays指定的有效范围内，不需要弹出提醒`);
+    if (!remind.isExecutable(Date.now())) {
       return null;
     }
     // 先发微信消息，起码不会卡住

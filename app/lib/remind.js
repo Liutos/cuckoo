@@ -85,6 +85,23 @@ class Remind {
       });
   }
 
+  /**
+   * 判断该提醒在指定的时刻是否需要触发。
+   * @param {number} timestamp - 秒级单位的时间戳
+   */
+  isExecutable(timestamp) {
+    const { restricted_hours, restrictedWdays } = this;
+    const alarmHour = new Date(timestamp).getHours();
+    if (Array.isArray(restricted_hours) && restricted_hours[alarmHour] === 0) {
+      return false;
+    }
+    const alarmDay = new Date(timestamp).getDay();
+    if (Array.isArray(restrictedWdays) && restrictedWdays[alarmDay] === 0) {
+      return false;
+    }
+    return true;
+  }
+
   patch(changes) {
     const FIELDS = [
       'duration',
