@@ -17,9 +17,12 @@
       <h2>该任务的提醒</h2>
       {% for remind in reminds %}
       <div>
-        <p>提醒时刻为：{{ remind.readableTimestamp }}</p>
+        <span>提醒时刻为：</span>
+        <input id="remindDateTime" type="datetime-local" value="{{ remind.readableTimestamp }}"/>
+        <button onclick="updateRemindTimestamp({{ remind.id }})">更新提醒时刻</button>
       </div>
       {% endfor %}
     </div>
+    <script src="/public/index.js"></script>
   </body>
 </html>

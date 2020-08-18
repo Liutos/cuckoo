@@ -1,7 +1,5 @@
 'use strict';
 
-const CUCKOO_PORT = 7001;
-
 const allTaskTemplate = `
 <table>
   <tr>
@@ -40,7 +38,7 @@ const allTaskTemplate = `
  */
 async function fetchAllTaskAndShow() {
   // 请求接口获取任务列表
-  const url = `http://localhost:${CUCKOO_PORT}/task`;
+  const url = '/task';
   const response = await fetch(url);
   const body = await response.json();
   const { tasks } = body;
@@ -53,7 +51,7 @@ async function fetchAllTaskAndShow() {
 
 async function main() {
   // 请求接口获取任务列表
-  const url = `http://localhost:${CUCKOO_PORT}/task/following`;
+  const url = '/task/following';
   const response = await fetch(url);
   const body = await response.json();
   const { tasks } = body;
@@ -99,6 +97,25 @@ async function main() {
 
   await fetchAllTaskAndShow();
 }
+window.main = main;
 
-main();
-
+async function updateRemindTimestamp(id) {
+  // 计算出对应的时间戳
+  let timestamp = document.getElementById('remindDateTime').valueAsNumber;
+  // 减去8个小时的时区修正
+  timestamp -= 8 * 60 * 60 * 1000;
+  timestamp = Math.trunc(timestamp / 1000);
+  // 更新指定id的提醒的时刻
+  const url = `/remind/${id}`;
+  await fetch(url, {
+    body: JSON.stringify({
+      timestamp
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'PATCH'
+  });
+  alert('提醒时刻修改完毕。');
+}
+window.updateRemindTimestamp = updateRemindTimestamp;

@@ -18,9 +18,10 @@ class TaskPageController extends Controller {
       detail: task.detail,
       icon: task.icon,
       id: task.id,
-      reminds: [task.remind].map(remind => {
+      reminds: (task.remind ? [task.remind] : []).map(remind => {
         return {
-          readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd HH:MM:ss'),
+          id: remind.id,
+          readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd\'T\'HH:MM:ss'),
         };
       }),
     });
