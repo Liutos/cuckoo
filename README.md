@@ -1,5 +1,7 @@
 > A reminder designed for programmers.
 
+[![Build Status](https://travis-ci.com/Shylock-Hg/ABI.svg?branch=master)](https://travis-ci.org/github/Liutos/cuckoo)
+
 Create a notification triggered after 1 minute by means of Alfred Workflow.
 
 ![](https://raw.githubusercontent.com/Liutos/cuckoo/master/docs/AlfredWorkflowExample.gif)
