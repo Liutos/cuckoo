@@ -1,5 +1,20 @@
 # Change Log
 
+## [1.11.0] - 2020-08-20
+
+### Added
+
+- A new column `repeat_type` inside table `t_remind`, for storing repeated pattern;
+- Print error messages when encountered errors in `org-cuckoo`.
+
+### Deprecated
+
+- All API endpoints operating on `repeat` object.
+
+### Fixed
+
+- Compute `timestamp` correctly in `POST /shortcut/task`.
+
 ## [1.10.0] - 2020-08-13
 
 ### Added
