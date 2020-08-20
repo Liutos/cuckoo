@@ -6,6 +6,12 @@
   (let ((url (format "http://localhost:7001%s" path)))
     (apply #'request
            url
+           :error (cl-function (lambda (&rest args &key data response &allow-other-keys)
+                                 (let ((status-code (request-response-status-code response)))
+                                   (if (= status-code 400)
+                                       (let ((data (json-read-from-string data)))
+                                         (message "%s" (cdr (assoc 'message data))))
+                                       (message "Got error: %S" status-code)))))
            :parser 'buffer-string
            :success success
            :sync t
