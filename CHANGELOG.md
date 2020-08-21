@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.12.0] - 2020-08-21
+
+### Fixed
+
+- Generate icon's URL correctly in `PATCH /task/:id/icon` API.
+
 ## [1.11.0] - 2020-08-20
 
 ### Added
