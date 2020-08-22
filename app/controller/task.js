@@ -126,18 +126,6 @@ class TaskController extends Controller {
     ctx.set('Access-Control-Allow-Origin', '*');
   }
 
-  async remind() {
-    const { ctx, service } = this;
-    const { params } = ctx;
-
-    const { id } = params;
-
-    await service.task.remind(id, Math.round(Date.now() / 1000));
-
-    ctx.body = '';
-    ctx.status = 204;
-  }
-
   async sync() {
     const { ctx, logger, service } = this;
 

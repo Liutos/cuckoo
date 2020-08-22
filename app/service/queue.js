@@ -43,6 +43,7 @@ class SqliteQueueService extends Service {
     await sqlite.run('DELETE FROM task_queue WHERE id = ?', [row.id]);
     return {
       member: row.task_id,
+      remind_id: row.remind_id,
       score: row.next_trigger_time
     };
   }

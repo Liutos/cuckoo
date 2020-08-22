@@ -91,7 +91,13 @@ class TaskService extends Service {
     await this.ctx.service.taskRepository.put(task);
   }
 
-  async remind(id, alarmAt) {
+  /**
+   * 触发一次指定任务的提醒
+   * @param {number} id - 任务的ID
+   * @param {number} alarmAt - 触发提醒的时刻，单位为秒
+   * @param {Object} remind - 导致本次触发的提醒对象
+   */
+  async remind(id, alarmAt, remind) {
     const { logger, service } = this;
 
     logger.info(`开始处理任务${id}的提醒流程`);
@@ -105,7 +111,7 @@ class TaskService extends Service {
         real_alarm_at: Math.round(Date.now() / 1000),
         task_id: id,
       });
-      const result = await service.remind.notify(task.remind, {
+      const result = await service.remind.notify(remind, {
         alarmAt,
         brief: `#${task.id} ${task.brief}`,
         detail: task.detail,
@@ -124,9 +130,7 @@ class TaskService extends Service {
         const matches = rv.activationValue.match(pattern);
         const minutes = parseInt(matches[0]);
         logger.info(`这里应当往Redis中写入一条${minutes}分钟后执行的任务`);
-        if (task.remind) {
-          await service.queue.send(task.id, Math.round(Date.now() / 1000) + minutes * 60);
-        }
+        await service.queue.send(task.id, Math.round(Date.now() / 1000) + minutes * 60);
       } else if (rv && typeof rv.activationValue === 'string' && rv.activationValue.match(/8点时再提醒/)) {
         let consumeUntil = new Date().setHours(8, 0, 0, 0);
         while (consumeUntil < Date.now()) {
@@ -137,9 +141,7 @@ class TaskService extends Service {
         const matches = rv.activationValue.match(/([0-9]+)小时后再提醒/);
         const hours = parseInt(matches[0]);
         logger.info(`这里应当往Redis中写入一条${hours}小时后执行的任务`);
-        if (task.remind) {
-          await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60);
-        }
+        await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60);
       } else {
         await this.close(task);
       }

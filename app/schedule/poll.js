@@ -12,11 +12,12 @@ module.exports = app => {
       let message = await service.queue.poll();
       while (message) {
         const {
-          member: id,
+          remind_id: remindId,
           score: alarmAt,
         } = message;
+        const remind = await service.remind.get(remindId);
         setImmediate(async () => {
-          await service.task.remind(id, alarmAt);
+          await service.task.remind(remind.taskId, alarmAt, remind);
         });
         message = await service.queue.poll();
       }

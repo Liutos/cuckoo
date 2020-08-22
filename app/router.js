@@ -33,6 +33,5 @@ module.exports = app => {
   router.patch('/task/:id/icon', controller.task.updateIcon);
   router.post('/task/sync', controller.task.sync);
   router.post('/task/:id/duplicate', controller.task.duplicate);
-  router.post('/task/:id/remind', controller.task.remind);
   router.post('/task', controller.task.create);
 };
