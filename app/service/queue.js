@@ -21,9 +21,10 @@ class SqliteQueueService extends Service {
   async list() {
     const { sqlite } = this.app;
     const rows = await sqlite.all('SELECT * FROM task_queue ORDER BY next_trigger_time ASC', []);
-    return rows.map(({ next_trigger_time, task_id }) => {
+    return rows.map(({ next_trigger_time, remind_id, task_id }) => {
       return {
         member: task_id,
+        remind_id,
         score: next_trigger_time
       };
     });

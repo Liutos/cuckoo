@@ -16,6 +16,8 @@ module.exports = app => {
 
   router.post('/queue/poll', controller.queue.poll);
   router.post('/queue/send', controller.queue.send);
+  router.put('/queue/fill-remind-id', controller.queue.fillRemindId);
+
   router.get('/remind/log', controller.remindLog.search);
   router.get('/remind/:id', controller.remind.get);
   router.patch('/remind/:id', controller.remind.update);
