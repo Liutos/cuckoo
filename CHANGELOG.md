@@ -2,6 +2,10 @@
 
 ## [1.12.0] - 2020-08-21
 
+### Added
+
+- A new API for filling legacy objects' missing remind_id and task_id fields.
+
 ### Fixed
 
 - Generate icon's URL correctly in `PATCH /task/:id/icon` API.
