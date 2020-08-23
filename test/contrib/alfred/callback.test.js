@@ -26,11 +26,12 @@ describe('test/contrib/alfred/callback.test.js', () => {
     const stdout = await runScript('callback', '1 test');
     const data = JSON.parse(stdout);
     assert(Array.isArray(data.items));
-    const { items: [{ arg, title }] } = data;
+    const { items: [{ arg, title }, { title: dateTime }] } = data;
     assert(typeof arg === 'string');
     const query = querystring.parse(arg, ';');
     assert(query.delayMinutes === '1');
     assert(title === 'test');
+    assert(dateTime === '1分钟后提醒');
   });
 
   it('创建今天12:34分的提醒', async () => {

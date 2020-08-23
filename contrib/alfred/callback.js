@@ -19,6 +19,7 @@ function main() {
   brief = parseResult.brief;
   delayMinutes = parseResult.delayMinutes;
   subtitle = parseResult.subtitle;
+  const dateTime = subtitle;
   timestamp = parseResult.timestamp;
 
   // 从brief中提炼出重复模式
@@ -49,15 +50,47 @@ function main() {
     subtitle += ` 持续展示${duration}秒`;
   }
 
+  const arg = `delayMinutes=${delayMinutes};device=${device};duration=${duration};message=${brief};timestamp=${timestamp};type=${repeatType}`;
+  const items = [{
+    arg,
+    icon: {
+      path: ''
+    },
+    subtitle,
+    title: brief
+  }];
+  items.push({
+    arg,
+    icon: { path: '' },
+    subtitle: '',
+    title: dateTime
+  });
+  if (repeatType) {
+    items.push({
+      arg,
+      icon: { path: '' },
+      subtitle: '',
+      title: `重复模式为${repeatType}`
+    });
+  }
+  if (device === 'mobilePhone') {
+    items.push({
+      arg,
+      icon: { path: '' },
+      subtitle: '',
+      title: '将会发往微信帐号'
+    });
+  }
+  if (duration) {
+    items.push({
+      arg,
+      icon: { path: '' },
+      subtitle: '',
+      title: `持续展示${duration}秒`
+    });
+  }
   console.log(JSON.stringify({
-    items: [{
-      arg: `delayMinutes=${delayMinutes};device=${device};duration=${duration};message=${brief};timestamp=${timestamp};type=${repeatType}`,
-      icon: {
-        path: ''
-      },
-      subtitle,
-      title: brief
-    }]
+    items
   }, null, 2));
 }
 
