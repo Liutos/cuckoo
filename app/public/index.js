@@ -35,10 +35,14 @@ const allTaskTemplate = `
 
 /**
  * 拉取所有任务并展示到页面上。
+ * @param {number} pageNumber - 页码
  */
-async function fetchAllTaskAndShow() {
+async function fetchAllTaskAndShow(pageNumber) {
+  // 根据页码计算出limit和offset。页码约定从1开始递增。
+  const limit = 20;
+  const offset = (pageNumber - 1) * limit;
   // 请求接口获取任务列表
-  const url = '/task';
+  const url = `/task?limit=${limit}&offset=${offset}`;
   const response = await fetch(url);
   const body = await response.json();
   const { tasks } = body;
@@ -47,7 +51,34 @@ async function fetchAllTaskAndShow() {
   const makeTable = Handlebars.compile(allTaskTemplate);
   const tableHTML = makeTable({ tasks });
   document.getElementById('wholeTaskContainer').innerHTML = tableHTML;
+
+  setCurrentPageNumber(pageNumber);
 }
+
+function getCurrentPageNumber() {
+  const pn = parseInt(document.getElementById('currentPageNumber').innerHTML);
+  return Number.isNaN(pn) ? 1 : pn;
+}
+
+function setCurrentPageNumber(pageNumber) {
+  document.getElementById('currentPageNumber').innerHTML = pageNumber;
+}
+
+async function backward() {
+  // 获取上一个页码的任务的数据
+  const pn = getCurrentPageNumber();
+  if (pn > 1) {
+    await fetchAllTaskAndShow(pn - 1);
+  }
+}
+window.backward = backward;
+
+async function forward() {
+  // 获取上一个页码的任务的数据
+  const pn = getCurrentPageNumber();
+  await fetchAllTaskAndShow(pn + 1);
+}
+window.forward = forward;
 
 async function main() {
   // 请求接口获取任务列表
@@ -95,7 +126,7 @@ async function main() {
   console.log('tableHTML', tableHTML);
   document.getElementById('taskListContainer').innerHTML = tableHTML;
 
-  await fetchAllTaskAndShow();
+  await fetchAllTaskAndShow(1);
 }
 window.main = main;
 
