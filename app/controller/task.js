@@ -113,6 +113,8 @@ class TaskController extends Controller {
       brief: Joi.string(),
       context_id: Joi.string().regex(/[0-9]+/),
       detail: Joi.string(),
+      limit: Joi.string().regex(/[0-9]+/),
+      offset: Joi.string().regex(/[0-9]+/),
       sort: Joi.string().regex(/.*:[(asc)|(desc)]/),
       state: Joi.string()
     });
@@ -121,6 +123,8 @@ class TaskController extends Controller {
       brief,
       context_id,
       detail,
+      limit,
+      offset,
       sort = 'create_at:desc',
       state
     } = query;
@@ -128,6 +132,8 @@ class TaskController extends Controller {
       brief,
       context_id,
       detail,
+      limit,
+      offset,
       sort,
       state,
     });
