@@ -9,6 +9,7 @@
   },
   "rules": {
     "array-bracket-spacing": ["off"],
+    "arrow-parens": ["off"],
     "comma-dangle": ["off"],
     "default-case": ["off"],
     "dot-notation": ["off"],
