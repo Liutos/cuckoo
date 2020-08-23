@@ -109,9 +109,21 @@ class TaskController extends Controller {
     const { ctx, service } = this;
     const { query } = ctx;
 
-    const { brief, context_id, detail } = query;
-    const { sort = 'create_at:desc' } = query;
-    const { state } = query;
+    const schema = Joi.object({
+      brief: Joi.string(),
+      context_id: Joi.string().regex(/[0-9]+/),
+      detail: Joi.string(),
+      sort: Joi.string().regex(/.*:[(asc)|(desc)]/),
+      state: Joi.string()
+    });
+    await schema.validateAsync(query);
+    const {
+      brief,
+      context_id,
+      detail,
+      sort = 'create_at:desc',
+      state
+    } = query;
     const tasks = await service.task.search({
       brief,
       context_id,

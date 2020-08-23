@@ -114,7 +114,14 @@ class TaskService extends Service {
       values.push(query.remind_id);
     }
 
-    const sql = 'SELECT `id` FROM `t_task` WHERE ' + conditions.join(' AND ');
+    /**
+     * SQLite的SELECT语句的文档
+     * @see {@link https://www.sqlitetutorial.net/sqlite-select/}
+     */
+    let sql = 'SELECT `id` FROM `t_task` WHERE ' + conditions.join(' AND ');
+    const { limit = 20, offset = 0, sort } = query;
+    sql += ` ORDER BY ${sort.split(':')[0]} ${sort.split(':')[1].toUpperCase()}`;
+    sql += ` LIMIT ${limit} OFFSET ${offset}`;
     logger.info(`即将被执行的SQL语句为：${sql}`);
     logger.info('用于填充到SQL中的值为：', values);
     const ids = await sqlite.all(sql, values);
