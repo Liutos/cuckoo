@@ -6,13 +6,14 @@
   (let ((url (format "http://localhost:7001%s" path)))
     (apply #'request
            url
+           :encoding 'utf-8
            :error (cl-function (lambda (&rest args &key data response &allow-other-keys)
                                  (let ((status-code (request-response-status-code response)))
                                    (if (= status-code 400)
                                        (let ((data (json-read-from-string data)))
                                          (message "%s" (cdr (assoc 'message data))))
                                        (message "Got error: %S" status-code)))))
-           :parser 'buffer-string
+           :parser 'json-read
            :success success
            :sync t
            args)))
@@ -37,7 +38,7 @@
      (cl-function
       (lambda (&key data &allow-other-keys)
         (message "返回内容为：%S" data)
-        (let ((remind (json-read-from-string data)))
+        (let ((remind data))
           (setq remind-id (cdr (assoc 'id (cdr (car remind))))))))
      :data (json-encode-alist
             (list (cons "duration" duration)
@@ -61,11 +62,7 @@
      (concat "/task/" id)
      (cl-function
       (lambda (&key data &allow-other-keys)
-        ;; 这里的神来之笔就是对decode-coding-string的使用了
-        ;; 灵感来自于这篇文章：https://emacs-china.org/t/topic/2443/7
-        (setq data (decode-coding-string data 'utf-8))
-        (message "返回的内容为：%S" data)
-        (setq task (json-read-from-string data)))))
+        (setq task data))))
     (cdr (car task))))
 
 (defun cuckoo-update-remind (id timestamp)
@@ -136,7 +133,7 @@
        (cl-function
         (lambda (&key data &allow-other-keys)
           (message "data: %S" data)
-          (let ((task (json-read-from-string data)))
+          (let ((task data))
             (setq task-id (cdr (assoc 'id (cdr (car task)))))
             (message "任务%S创建完毕" task-id))))
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
@@ -242,7 +239,7 @@
      (cl-function
       (lambda (&key data &allow-other-keys)
         (message "请求完毕")
-        (let ((task (json-read-from-string (decode-coding-string data 'utf-8))))
+        (let ((task data))
           (message "任务：\n- 标题：%s\n- 详情：%s"
                    (cdr (assoc 'brief (cdr (car task))))
                    (cdr (assoc 'detail (cdr (car task)))))))))))
