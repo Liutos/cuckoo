@@ -13,7 +13,7 @@ const allTaskTemplate = `
   <tr>
     <td>{{this.id}}</td>
     <td><a href="/page/task/{{this.id}}">{{this.brief}}</a></td>
-    <td>{{this.remind.timestamp}}</td>
+    <td>{{this.remind.dateTime}}</td>
     <td>
     {{#if this.context}}
       {{this.context.name}}
@@ -34,6 +34,27 @@ const allTaskTemplate = `
 `;
 
 /**
+ * 往任务的提醒中填充可读的日期时间字符串。
+ * @param {Object} task - 任务对象
+ * @param {Object} task.remind - 提醒对象
+ * @param {number} task.remind.timestamp - 秒单位的UNIX时间戳
+ */
+function makeDateTimeString(task) {
+  const { remind } = task;
+  if (remind) {
+    const { timestamp } = remind;
+    const date = new Date(timestamp * 1000);
+    let dateTime = date.getFullYear();
+    dateTime += '-' + (date.getMonth() >= 9 ? date.getMonth() + 1 : ('0' + date.getMonth()));
+    dateTime += '-' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate()));
+    dateTime += ' ' + (date.getHours() >= 10 ? date.getHours() : ('0' + date.getHours()));
+    dateTime += ':' + (date.getMinutes() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
+    dateTime += ':' + (date.getSeconds() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
+    remind.dateTime = dateTime;
+  }
+}
+
+/**
  * 拉取所有任务并展示到页面上。
  * @param {number} pageNumber - 页码
  */
@@ -49,6 +70,10 @@ async function fetchAllTaskAndShow(pageNumber) {
   // 构造HTML插入到id为taskListContainer的div中去
   // 需要呈现的内容有：任务ID、任务简述、下一次提醒的时刻、场景要求、重复模式。
   const makeTable = Handlebars.compile(allTaskTemplate);
+  // 填充.remind.dateTime，以便在模板中展示可读的日期时间字符串。
+  tasks.forEach(task => {
+    makeDateTimeString(task);
+  });
   const tableHTML = makeTable({ tasks });
   document.getElementById('wholeTaskContainer').innerHTML = tableHTML;
 
@@ -101,8 +126,8 @@ async function main() {
 {{#each tasks}}
   <tr>
     <td>{{this.task.id}}</td>
-    <td>{{this.task.brief}}</td>
-    <td>{{this.task.remind.timestamp}}</td>
+    <td><a href="/page/task/{{this.task.id}}">{{this.task.brief}}</a></td>
+    <td>{{this.task.remind.dateTime}}</td>
     <td>
     {{#if this.task.context}}
       {{this.task.context.name}}
@@ -122,6 +147,9 @@ async function main() {
 </table>
 `;
   const makeTable = Handlebars.compile(tableTemplate);
+  tasks.forEach(({ task }) => {
+    makeDateTimeString(task);
+  });
   const tableHTML = makeTable({ tasks });
   console.log('tableHTML', tableHTML);
   document.getElementById('taskListContainer').innerHTML = tableHTML;
