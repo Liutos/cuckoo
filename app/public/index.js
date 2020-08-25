@@ -49,7 +49,7 @@ function makeDateTimeString(task) {
     dateTime += '-' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate()));
     dateTime += ' ' + (date.getHours() >= 10 ? date.getHours() : ('0' + date.getHours()));
     dateTime += ':' + (date.getMinutes() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
-    dateTime += ':' + (date.getSeconds() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
+    dateTime += ':' + (date.getSeconds() >= 10 ? date.getSeconds() : ('0' + date.getSeconds()));
     remind.dateTime = dateTime;
   }
 }
