@@ -8,7 +8,12 @@
   <body>
     <p>任务简述：{{ brief }}</p>
     <p>任务详情：{{ detail }}</p>
-    <p>任务图标：<img height="32" src="{{ icon }}" width="32"></img>
+    <p>任务图标：
+      {% if icon %}
+      <img height="32" src="{{ icon }}" width="32"></img>
+      {% else %}
+      没有图标
+      {% endif %}
       <input id="iconFile" type="file" value="选择图标文件">
       <input id="uploadIconButton" onclick="uploadIcon({{ id }})" type="button" value="上传新的图标">
     <p>
