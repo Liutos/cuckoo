@@ -154,11 +154,11 @@
   (create-task-in-cuckoo))
 
 ;;;###autoload
-(cl-defun cuckoo-org-schedule (arg)
+(cl-defun cuckoo-org-schedule (arg &optional time)
   "调用内置的org-schedule，并在带有一个prefix argument的时候关闭cuckoo中的对应任务"
-  (interactive "p")
-  (call-interactively 'org-schedule)
-  (when (= arg 1)
+  (interactive "P")
+  (org-schedule arg time)
+  (when (= (prefix-numeric-value arg) 1)
     (message "设置了SCHEDULED属性，将会创建对应的cuckoo任务和提醒。")
     (let ((scheduled (org-entry-get nil "SCHEDULED")))
       (unless (string-match " [0-9]+:[0-9]+" scheduled)
@@ -166,7 +166,7 @@
         (return-from cuckoo-org-schedule)))
     (call-interactively 'create-task-in-cuckoo))
 
-  (when (= arg 4)
+  (when (= (prefix-numeric-value arg) 4)
     (message "按下了一个prefix argument，此时应当从cuckoo中删除任务")
     (let ((id (org-entry-get nil "TASK_ID")))
       (org-cuckoo--request
