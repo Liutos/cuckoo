@@ -11,7 +11,7 @@ module.exports = app => {
     },
     async task(ctx) {
       const { logger } = ctx;
-      const { port } = app;
+      const { config: { cluster: { listen: { port } } } } = app;
       await ctx.curl(`http://localhost:${port}/task/sync`, {
         method: 'POST'
       });

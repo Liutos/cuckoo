@@ -5,6 +5,12 @@ const path = require('path');
 module.exports = appInfo => {
   const config = exports = {};
 
+  config.cluster = {
+    listen: {
+      port: 7001
+    }
+  };
+
   config.context = {
     // 检测当前场景的工具，有效值为app/lib/contextDetector/目录下的文件名。
     detector: '',
