@@ -157,6 +157,7 @@ class TaskController extends Controller {
       }
     }
     const tasks = await service.task.search({
+      limit: Number.MAX_SAFE_INTEGER,
       state: 'active',
     });
     for (const task of tasks) {
