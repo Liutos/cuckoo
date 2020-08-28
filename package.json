@@ -30,7 +30,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-cuckoo --workers=1",
+    "start": "egg-scripts start --title=egg-server-cuckoo --workers=1",
     "stop": "egg-scripts stop --title=egg-server-cuckoo",
     "dev": "egg-bin dev --port 7002",
     "debug": "egg-bin debug",
