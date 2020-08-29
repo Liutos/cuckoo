@@ -106,8 +106,6 @@ class RemindController extends Controller {
       } else if (typeof body.repeat_type === 'string') {
         remind.repeat.patch({ type: body.repeat_type });
       }
-    } else if (typeof body.repeat_type === 'string') {
-      changes.repeat = await service.repeat.create({ type: body.repeat_type });
     }
     remind.patch(changes);
     await service.remind.put(remind);

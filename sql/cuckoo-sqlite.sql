@@ -5,13 +5,6 @@ CREATE TABLE t_context (
   update_at TEXT
 );
 
-CREATE TABLE t_repeat (
-  id INTEGER PRIMARY KEY,
-  type TEXT,
-  create_at TEXT,
-  update_at TEXT
-);
-
 CREATE TABLE t_remind_log (
   id INTEGER PRIMARY KEY,
   plan_alarm_at INTEGER,
@@ -24,7 +17,6 @@ CREATE TABLE t_remind_log (
 CREATE TABLE t_remind (
   id INTEGER PRIMARY KEY,
   duration INTEGER,
-  repeat_id INTEGER,
   repeat_type TEXT,
   restricted_hours INTEGER,
   timestamp INTEGER,

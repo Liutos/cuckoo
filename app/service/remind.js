@@ -11,8 +11,8 @@ class RemindService extends Service {
     await this.put(remind);
   }
 
-  async create({ duration, repeat_id, repeatType, restricted_hours, restrictedWdays, timestamp }) {
-    return await this.ctx.service.remindRepository.create({ duration, repeat_id, repeatType, restricted_hours, restrictedWdays, timestamp });
+  async create({ duration, repeatType, restricted_hours, restrictedWdays, timestamp }) {
+    return await this.ctx.service.remindRepository.create({ duration, repeatType, restricted_hours, restrictedWdays, timestamp });
   }
 
   async delete(id) {
@@ -20,17 +20,7 @@ class RemindService extends Service {
   }
 
   async duplicate(remind) {
-    const { service } = this;
-
-    let repeatId = null;
-    if (remind.repeat) {
-      const repeat = await service.repeat.duplicate(remind.repeat);
-      repeatId = repeat.id;
-    }
-
-    return await this.create(Object.assign({}, remind, {
-      repeat_id: repeatId
-    }));
+    return await this.create(remind);
   }
 
   async get(id) {

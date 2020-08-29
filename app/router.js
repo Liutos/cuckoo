@@ -23,8 +23,6 @@ module.exports = app => {
   router.patch('/remind/:id', controller.remind.update);
   router.post('/remind/:id/close', controller.remind.close);
   router.post('/remind', controller.remind.create);
-  router.get('/repeat/:id', controller.repeat.get);
-  router.post('/repeat', controller.repeat.create);
   router.del('/task/:id', controller.task.delete);
   router.get('/task', controller.task.search);
   router.get('/task/following', controller.task.getFollowing);
