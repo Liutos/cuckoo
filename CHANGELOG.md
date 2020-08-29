@@ -1,14 +1,24 @@
 # Change Log
 
-## [1.12.0] - 2020-08-21
+## [1.12.0] - 2020-08-29
 
 ### Added
 
-- A new API for filling legacy objects' missing remind_id and task_id fields.
+- A new API for filling legacy objects' missing remind_id and task_id fields;
+- A new API `PUT /queue/fill-remind-id` for filling `remind_id` and `task_id` in legacy rows;
+- Add pagination for task list in Web UI.
+
+### Changed
+
+- More lines in `callback` Workflow's result list for describing the task and its remind to be created;
+- Display a task's remind's `timestamp` in format `yyyy-mm-dd HH:MM`;
+- Don't show a cracked picture when task has no icon;
+- Remove APIs about repeat objects.
 
 ### Fixed
 
-- Generate icon's URL correctly in `PATCH /task/:id/icon` API.
+- Generate icon's URL correctly in `PATCH /task/:id/icon` API;
+- Get application's port properly in `sync.js`.
 
 ## [1.11.0] - 2020-08-20
 
