@@ -130,18 +130,18 @@ class TaskService extends Service {
         const matches = rv.activationValue.match(pattern);
         const minutes = parseInt(matches[0]);
         logger.info(`这里应当往Redis中写入一条${minutes}分钟后执行的任务`);
-        await service.queue.send(task.id, Math.round(Date.now() / 1000) + minutes * 60);
+        await service.queue.send(task.id, Math.round(Date.now() / 1000) + minutes * 60, remind.id);
       } else if (rv && typeof rv.activationValue === 'string' && rv.activationValue.match(/8点时再提醒/)) {
         let consumeUntil = new Date().setHours(8, 0, 0, 0);
         while (consumeUntil < Date.now()) {
           consumeUntil += 12 * 60 * 60 * 1000;
         }
-        await service.queue.send(task.id, Math.round(consumeUntil / 1000));
+        await service.queue.send(task.id, Math.round(consumeUntil / 1000), remind.id);
       } else if (rv && typeof rv.activationValue === 'string' && rv.activationValue.match(/([0-9]+)小时后再提醒/)) {
         const matches = rv.activationValue.match(/([0-9]+)小时后再提醒/);
         const hours = parseInt(matches[0]);
         logger.info(`这里应当往Redis中写入一条${hours}小时后执行的任务`);
-        await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60);
+        await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60, remind.id);
       } else {
         await this.close(task);
       }

@@ -1,5 +1,11 @@
 # Change Log
 
+## [latest] - 2020-09-01
+
+### Fixed
+
+- Fix the problem of delaying a remind.
+
 ## [1.12.0] - 2020-08-29
 
 ### Added
