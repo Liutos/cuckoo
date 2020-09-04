@@ -4,6 +4,7 @@
   },
   "extends": "eslint-config-egg",
   "globals": {
+    "FullCalendar": "readonly",
     "Handlebars": "readonly",
     "axios": "readonly"
   },

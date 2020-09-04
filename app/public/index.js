@@ -1,5 +1,8 @@
 'use strict';
 
+// 全局变量定义
+let calendar = null;
+
 const allTaskTemplate = `
 <table>
   <tr>
@@ -45,7 +48,7 @@ function makeDateTimeString(task) {
     const { timestamp } = remind;
     const date = new Date(timestamp * 1000);
     let dateTime = date.getFullYear();
-    dateTime += '-' + (date.getMonth() >= 9 ? date.getMonth() + 1 : ('0' + date.getMonth()));
+    dateTime += '-' + (date.getMonth() >= 9 ? date.getMonth() + 1 : ('0' + (date.getMonth() + 1)));
     dateTime += '-' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate()));
     dateTime += ' ' + (date.getHours() >= 10 ? date.getHours() : ('0' + date.getHours()));
     dateTime += ':' + (date.getMinutes() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
@@ -155,8 +158,35 @@ async function main() {
   document.getElementById('taskListContainer').innerHTML = tableHTML;
 
   await fetchAllTaskAndShow(1);
+  setCalendar(tasks);
 }
 window.main = main;
+
+/**
+ * @param {Object[]} followingTasks - 接下来的任务
+ */
+function setCalendar(followingTasks) {
+  // 设置日历
+  const calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    expandRows: true,
+    height: 'auto',
+    initialView: 'timeGridWeek',
+    validRange: (nowDate) => {
+      return {
+        start: nowDate
+      };
+    }
+  });
+  calendar.render();
+  followingTasks.forEach(({ task }) => {
+    calendar.addEvent({
+      allDay: false,
+      start: task.remind.dateTime,
+      title: task.brief
+    });
+  });
+}
 
 async function updateRemindTimestamp(id) {
   // 计算出对应的时间戳

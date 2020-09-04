@@ -2,17 +2,20 @@
   <head>
     <title>标题</title>
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link href='css/main.css' rel='stylesheet' />
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/public/moment-with-locales.min.js"></script>
     <!-- Include Handlebars from a CDN -->
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src='js/main.js'></script>
   </head>
   <body>
     <div id="outmostContainer">
       <div>这里可以用来放创建任务的表单和按钮</div>
       <div id="taskArea">
+        <div id="calendar"></div>
         <div id="followingArea">
           <h1>后续任务的列表</h1>
           <div id="taskListContainer"></div>
