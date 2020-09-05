@@ -36,23 +36,27 @@ const allTaskTemplate = `
 </table>
 `;
 
+function makeDateTimeString(timestamp) {
+  const date = new Date(timestamp * 1000);
+  let dateTime = date.getFullYear();
+  dateTime += '-' + (date.getMonth() >= 9 ? date.getMonth() + 1 : ('0' + (date.getMonth() + 1)));
+  dateTime += '-' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate()));
+  dateTime += ' ' + (date.getHours() >= 10 ? date.getHours() : ('0' + date.getHours()));
+  dateTime += ':' + (date.getMinutes() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
+  dateTime += ':' + (date.getSeconds() >= 10 ? date.getSeconds() : ('0' + date.getSeconds()));
+  return dateTime;
+}
+
 /**
  * 往任务的提醒中填充可读的日期时间字符串。
  * @param {Object} task - 任务对象
  * @param {Object} task.remind - 提醒对象
  * @param {number} task.remind.timestamp - 秒单位的UNIX时间戳
  */
-function makeDateTimeString(task) {
+function fillDateTimeString(task) {
   const { remind } = task;
   if (remind) {
-    const { timestamp } = remind;
-    const date = new Date(timestamp * 1000);
-    let dateTime = date.getFullYear();
-    dateTime += '-' + (date.getMonth() >= 9 ? date.getMonth() + 1 : ('0' + (date.getMonth() + 1)));
-    dateTime += '-' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate()));
-    dateTime += ' ' + (date.getHours() >= 10 ? date.getHours() : ('0' + date.getHours()));
-    dateTime += ':' + (date.getMinutes() >= 10 ? date.getMinutes() : ('0' + date.getMinutes()));
-    dateTime += ':' + (date.getSeconds() >= 10 ? date.getSeconds() : ('0' + date.getSeconds()));
+    const dateTime = makeDateTimeString(remind.timestamp);
     remind.dateTime = dateTime;
   }
 }
@@ -75,7 +79,7 @@ async function fetchAllTaskAndShow(pageNumber) {
   const makeTable = Handlebars.compile(allTaskTemplate);
   // 填充.remind.dateTime，以便在模板中展示可读的日期时间字符串。
   tasks.forEach(task => {
-    makeDateTimeString(task);
+    fillDateTimeString(task);
   });
   const tableHTML = makeTable({ tasks });
   document.getElementById('wholeTaskContainer').innerHTML = tableHTML;
@@ -151,7 +155,7 @@ async function main() {
 `;
   const makeTable = Handlebars.compile(tableTemplate);
   tasks.forEach(({ task }) => {
-    makeDateTimeString(task);
+    fillDateTimeString(task);
   });
   const tableHTML = makeTable({ tasks });
   console.log('tableHTML', tableHTML);
@@ -169,9 +173,24 @@ function setCalendar(followingTasks) {
   // 设置日历
   const calendarEl = document.getElementById('calendar');
   calendar = new FullCalendar.Calendar(calendarEl, {
+    aspectRatio: 1.35,
+    eventClick: (eventClickInfo) => {
+      const { event } = eventClickInfo;
+      console.log(`点击了事件${event.id}`);
+      location.href = `/page/task/${event.id}`;
+    },
     expandRows: true,
-    height: 'auto',
-    initialView: 'timeGridWeek',
+    firstDay: new Date().getDay(),
+    initialView: 'timeGrid',
+    locale: 'zh-cn',
+    nowIndicator: true,
+    slotDuration: '00:10:00',
+    slotLabelFormat: {
+      hour: '2-digit',
+      hour12: false,
+      minute: '2-digit'
+    },
+    slotMinTime: `${new Date().getHours()}:00:00`,
     validRange: (nowDate) => {
       return {
         start: nowDate
@@ -180,11 +199,17 @@ function setCalendar(followingTasks) {
   });
   calendar.render();
   followingTasks.forEach(({ task }) => {
-    calendar.addEvent({
+    const event = {
       allDay: false,
+      id: task.id,
       start: task.remind.dateTime,
       title: task.brief
-    });
+    };
+    // if (task.remind.duration) {
+    //   event.end = makeDateTimeString(task.remind.timestamp + task.remind.duration);
+    // }
+    console.log('event', event);
+    calendar.addEvent(event);
   });
 }
 
