@@ -15,6 +15,13 @@
     <div id="outmostContainer">
       <div>这里可以用来放创建任务的表单和按钮</div>
       <div id="taskArea">
+        <div>
+          <span>这个是切换选项卡的区域</span>
+          <button onclick="showCalendar()">日历视图</button>
+          <button onclick="showFollowing()">列表视图</button>
+          <button onclick="showTasks()">所有任务</button>
+        </div>
+        <!-- 以下的三个视图都只能在同一时刻看到其中一个 -->
         <div id="calendar"></div>
         <div id="followingArea">
           <h1>后续任务的列表</h1>

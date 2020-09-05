@@ -163,6 +163,8 @@ async function main() {
 
   await fetchAllTaskAndShow(1);
   setCalendar(tasks);
+  document.getElementById('followingArea').style.display = 'none';
+  document.getElementById('wholeArea').style.display = 'none';
 }
 window.main = main;
 
@@ -181,6 +183,7 @@ function setCalendar(followingTasks) {
     },
     expandRows: true,
     firstDay: new Date().getDay(),
+    height: 'auto',
     initialView: 'timeGrid',
     locale: 'zh-cn',
     nowIndicator: true,
@@ -208,7 +211,6 @@ function setCalendar(followingTasks) {
     // if (task.remind.duration) {
     //   event.end = makeDateTimeString(task.remind.timestamp + task.remind.duration);
     // }
-    console.log('event', event);
     calendar.addEvent(event);
   });
 }
@@ -233,3 +235,24 @@ async function updateRemindTimestamp(id) {
   alert('提醒时刻修改完毕。');
 }
 window.updateRemindTimestamp = updateRemindTimestamp;
+
+window.showCalendar = function () {
+  // 隐藏列表和任务，露出日历
+  document.getElementById('followingArea').style.display = 'none';
+  document.getElementById('wholeArea').style.display = 'none';
+  document.getElementById('calendar').style.display = 'block';
+};
+
+window.showFollowing = function () {
+  // 隐藏日历和任务，露出列表
+  document.getElementById('followingArea').style.display = 'block';
+  document.getElementById('wholeArea').style.display = 'none';
+  document.getElementById('calendar').style.display = 'none';
+};
+
+window.showTasks = function () {
+  // 隐藏列表和日历，露出任务
+  document.getElementById('followingArea').style.display = 'none';
+  document.getElementById('wholeArea').style.display = 'block';
+  document.getElementById('calendar').style.display = 'none';
+};
