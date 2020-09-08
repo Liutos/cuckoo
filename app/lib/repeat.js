@@ -39,19 +39,19 @@ class Repeat {
         nextTime += 24 * 60 * 60 * 1000;
       } else if (type === 'end_of_month') {
         // 先算出2个月后的日期，再通过setDate回到上一个月的最后一天
-        const twoMonthLater = dateMath.add(new Date(current), 2, 'month');
+        const twoMonthLater = dateMath.add(new Date(nextTime), 2, 'month');
         nextTime = new Date(twoMonthLater.getTime()).setDate(0);
       } else if (type === 'hourly') {
         nextTime += 60 * 60 * 1000;
       } else if (type === 'minutely') {
         nextTime += 60 * 1000;
       } else if (type === 'monthly') {
-        const nextDate = dateMath.add(new Date(current), 1, 'month');
+        const nextDate = dateMath.add(new Date(nextTime), 1, 'month');
         nextTime = nextDate.getTime();
       } else if (type === 'weekly') {
         nextTime += 7 * 24 * 60 * 60 * 1000;
       } else if (type === 'yearly') {
-        const nextDate = dateMath.add(new Date(current), 1, 'year');
+        const nextDate = dateMath.add(new Date(nextTime), 1, 'year');
         nextTime = nextDate.getTime();
       } else if (type.match(/^every_[0-9]+_days$/)) {
         const nDays = parseInt(type.match(/^every_([0-9]+)_days$/)[1]);
