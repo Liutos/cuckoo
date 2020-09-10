@@ -174,6 +174,7 @@ window.main = main;
 function setCalendar(followingTasks) {
   // 设置日历
   const calendarEl = document.getElementById('calendar');
+  const initialDate = makeDateTimeString(Math.round(new Date().getTime() / 1000));
   calendar = new FullCalendar.Calendar(calendarEl, {
     aspectRatio: 1.35,
     eventClick: (eventClickInfo) => {
@@ -184,6 +185,7 @@ function setCalendar(followingTasks) {
     expandRows: true,
     firstDay: new Date().getDay(),
     height: 'auto',
+    initialDate,
     initialView: 'timeGrid',
     locale: 'zh-cn',
     nowIndicator: true,
@@ -194,6 +196,7 @@ function setCalendar(followingTasks) {
       minute: '2-digit'
     },
     slotMinTime: `${new Date().getHours()}:00:00`,
+    timeZone: 'zh-cn',
     validRange: (nowDate) => {
       return {
         start: nowDate
