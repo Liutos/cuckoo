@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
+    <a href="/public/index.html"><button>返回首页</button></a>
     <p>任务简述：{{ brief }}</p>
     <p>任务详情：{{ detail }}</p>
     <p>任务图标：
