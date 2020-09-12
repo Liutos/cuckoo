@@ -244,6 +244,7 @@ window.showCalendar = function () {
   document.getElementById('followingArea').style.display = 'none';
   document.getElementById('wholeArea').style.display = 'none';
   document.getElementById('calendar').style.display = 'block';
+  document.getElementById('searchResultContainer').style.display = 'none';
 };
 
 window.showFollowing = function () {
@@ -251,6 +252,7 @@ window.showFollowing = function () {
   document.getElementById('followingArea').style.display = 'block';
   document.getElementById('wholeArea').style.display = 'none';
   document.getElementById('calendar').style.display = 'none';
+  document.getElementById('searchResultContainer').style.display = 'none';
 };
 
 window.showTasks = function () {
@@ -258,4 +260,31 @@ window.showTasks = function () {
   document.getElementById('followingArea').style.display = 'none';
   document.getElementById('wholeArea').style.display = 'block';
   document.getElementById('calendar').style.display = 'none';
+  document.getElementById('searchResultContainer').style.display = 'none';
+};
+
+window.showSearchResult = function () {
+  // 露出搜索结果
+  document.getElementById('followingArea').style.display = 'none';
+  document.getElementById('wholeArea').style.display = 'none';
+  document.getElementById('calendar').style.display = 'none';
+  document.getElementById('searchResultContainer').style.display = 'block';
+};
+
+window.search = async function () {
+  console.log('点击了搜索');
+  const query = document.getElementById('query').value;
+  console.log(`query is ${query}`);
+  const url = `/task?brief=${query}`;
+  const response = await fetch(url);
+  const body = await response.json();
+  const { tasks } = body;
+  const makeTable = Handlebars.compile(allTaskTemplate);
+  // 填充.remind.dateTime，以便在模板中展示可读的日期时间字符串。
+  tasks.forEach(task => {
+    fillDateTimeString(task);
+  });
+  const tableHTML = makeTable({ tasks });
+  document.getElementById('searchResultContainer').innerHTML = tableHTML;
+  window.showSearchResult();
 };

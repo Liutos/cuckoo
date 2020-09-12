@@ -8,6 +8,27 @@
   flex-direction: row;
 }
 
+#query {
+  border: 3px solid #00B4CC;
+  border-radius: 5px 0 0 5px;
+  border-right: none;
+  /* height: 20px; */
+  outline: none;
+  padding: 5px;
+  width: 100%;
+}
+
+#searchButton {
+  background: #00B4CC;
+  border: 1px solid #00B4CC;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+#searchButton:hover {
+  background-color: #497fdf;
+}
+
 #taskArea {
   display: flex;
   flex-direction: column;
@@ -16,6 +37,10 @@
 #wholeArea {
   display: flex;
   flex-direction: column;
+}
+
+.search {
+  display: flex;
 }
 
 body {

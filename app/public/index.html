@@ -15,11 +15,16 @@
     <div id="outmostContainer">
       <div>这里可以用来放创建任务的表单和按钮</div>
       <div id="taskArea">
+        <div class="search">
+          <input id="query" onkeyup="if (event.keyCode === 13) { search(); }" placeholder="请输入搜索关键词" type="text">
+          <button id="searchButton" onclick="search()">搜索</button>
+        </div>
         <div>
           <span>这个是切换选项卡的区域</span>
           <button onclick="showCalendar()">日历视图</button>
           <button onclick="showFollowing()">列表视图</button>
           <button onclick="showTasks()">所有任务</button>
+          <button onclick="showSearchResult()">搜索结果</button>
         </div>
         <!-- 以下的三个视图都只能在同一时刻看到其中一个 -->
         <div id="calendar"></div>
@@ -35,6 +40,8 @@
             <button onclick="backward()">上一页</button>第<span id="currentPageNumber"></span>页<button onclick="forward()">下一页</button>
           </div>
         </div>
+        <!-- 以下是搜索结果的区域 -->
+        <div id="searchResultContainer"></div>
       </div>
     </div>
     <script src="/public/index.js"></script>
