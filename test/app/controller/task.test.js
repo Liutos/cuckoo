@@ -12,8 +12,7 @@ describe('test/app/controller/task.test.js', () => {
       .send({
         brief: 'test',
         detail: '',
-        device: null,
-        remind_id: 2912,
+        device: null
       })
       .expect(201);
 

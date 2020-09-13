@@ -17,6 +17,7 @@ describe('test/app/controller/remind.test.js', () => {
       .send({
         duration: null,
         repeat_type: 'daily',
+        taskId: 123,
         timestamp: 1596631200,
       })
       .expect(201);
@@ -30,6 +31,7 @@ describe('test/app/controller/remind.test.js', () => {
     assert(!body.remind.repeatId);
     assert(body.remind.repeat.type === 'daily');
     assert(body.remind.repeatType === 'daily');
+    assert(body.remind.taskId === 123);
     assert(body.remind.timestamp === 1596631200);
   });
 
