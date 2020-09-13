@@ -15,11 +15,10 @@ class TaskController extends Controller {
       device: [Joi.string(), null],
       icon: Joi.string(),
       icon_file: Joi.string(),
-      remind_id: Joi.number(),
     });
     await schema.validateAsync(body);
 
-    const { brief, context_id, detail = '', device, icon, icon_file, remind_id } = body;
+    const { brief, context_id, detail = '', device, icon, icon_file } = body;
 
     const task = await service.task.create({
       brief,
@@ -28,7 +27,6 @@ class TaskController extends Controller {
       device,
       icon,
       icon_file,
-      remind_id,
     });
 
     ctx.body = {
@@ -204,10 +202,6 @@ class TaskController extends Controller {
         Joi.string(),
         null,
       ],
-      remind_id: [
-        Joi.number(),
-        null,
-      ],
       state: Joi.string(),
     });
     await schema.validateAsync(body);
@@ -233,11 +227,6 @@ class TaskController extends Controller {
     }
     if (body.icon_file === null || typeof body.icon_file === 'string') {
       changes.icon_file = body.icon_file;
-    }
-    if (body.remind_id === null) {
-      changes.remind = null;
-    } else if (typeof body.remind_id === 'number') {
-      changes.remind = await service.remind.get(body.remind_id);
     }
     if (typeof body.state === 'string') {
       changes.state = body.state;

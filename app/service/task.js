@@ -15,17 +15,8 @@ class TaskService extends Service {
     }
   }
 
-  async create({ brief, context_id, detail, device, icon, icon_file, remind_id }) {
-    const task = await this.ctx.service.taskRepository.create({ brief, context_id, detail, device, icon, icon_file, remind_id });
-    if (task.remind) {
-      const { remind } = task;
-      remind.patch({
-        taskId: task.id,
-      });
-      await this.service.remind.put(remind);
-      task.remind = await this.service.remind.get(remind.id);
-    }
-    return task;
+  async create({ brief, context_id, detail, device, icon, icon_file }) {
+    return await this.ctx.service.taskRepository.create({ brief, context_id, detail, device, icon, icon_file });
   }
 
   async delete(id) {
