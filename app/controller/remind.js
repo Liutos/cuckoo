@@ -113,14 +113,10 @@ class RemindController extends Controller {
     await service.remind.put(remind);
 
     if (typeof body.timestamp === 'number') {
-      const tasks = await service.task.search({
-        remind_id: parseInt(id),
-      });
-      for (const task of tasks) {
-        const consumeUntil = body.timestamp;
-        await service.queue.send(task.id, consumeUntil, id);
-        logger.info(`设置延时队列中的任务${task.id}在${consumeUntil}后才被消费`);
-      }
+      const task = await service.task.get(remind.taskId);
+      const consumeUntil = body.timestamp;
+      await service.queue.send(task.id, consumeUntil, id);
+      logger.info(`设置延时队列中的任务${task.id}在${consumeUntil}后才被消费`);
     }
 
     ctx.body = '';
