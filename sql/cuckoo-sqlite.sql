@@ -32,7 +32,6 @@ CREATE TABLE t_task (
   device TEXT,
   icon TEXT,
   icon_file TEXT,
-  remind_id INTEGER,
   state TEXT,
   create_at TEXT,
   update_at TEXT
