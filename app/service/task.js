@@ -26,16 +26,18 @@ class TaskService extends Service {
   async duplicate(task) {
     const { service } = this;
 
-    let remindId = null;
-    if (task.remind) {
-      const remind = await service.remind.duplicate(task.remind);
-      remindId = remind.id;
+    const copy = await this.create(Object.assign({}, task, {
+      detail: `复制自${task.id} ` + task.detail
+    }));
+
+    const reminds = await service.remind.search({
+      taskId: task.id
+    });
+    for (const remind of reminds) {
+      await service.remind.duplicate(remind, copy.id);
     }
 
-    return await this.create(Object.assign({}, task, {
-      detail: `复制自${task.id} ` + task.detail,
-      remind_id: remindId
-    }));
+    return await this.get(copy.id);
   }
 
   async get(id) {

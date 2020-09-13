@@ -23,8 +23,10 @@ class RemindService extends Service {
     await this.ctx.service.remindRepository.delete(id);
   }
 
-  async duplicate(remind) {
-    return await this.create(remind);
+  async duplicate(remind, taskId) {
+    return await this.create(Object.assign({}, remind, {
+      taskId
+    }));
   }
 
   async get(id) {
