@@ -25,17 +25,19 @@ class RemindController extends Controller {
       repeat_type: [Joi.string(), null],
       restricted_hours: Joi.array().items(Joi.number()).length(24),
       restrictedWdays: Joi.array().items(Joi.number()).length(24),
+      taskId: Joi.number().required(),
       timestamp: Joi.number().required(),
     });
     await schema.validateAsync(body);
 
-    const { duration, repeat_type, restricted_hours, restrictedWdays, timestamp } = body;
+    const { duration, repeat_type, restricted_hours, restrictedWdays, taskId, timestamp } = body;
 
     const remind = await service.remind.create({
       duration,
       repeatType: repeat_type,
       restricted_hours,
       restrictedWdays,
+      taskId,
       timestamp,
     });
 

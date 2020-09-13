@@ -11,8 +11,12 @@ class RemindService extends Service {
     await this.put(remind);
   }
 
-  async create({ duration, repeatType, restricted_hours, restrictedWdays, timestamp }) {
-    return await this.ctx.service.remindRepository.create({ duration, repeatType, restricted_hours, restrictedWdays, timestamp });
+  async create({ duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp }) {
+    const { service } = this;
+
+    const remind = await this.ctx.service.remindRepository.create({ duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp });
+    await service.queue.send(taskId, timestamp, remind.id);
+    return remind;
   }
 
   async delete(id) {
@@ -57,6 +61,12 @@ class RemindService extends Service {
 
   async put(remind) {
     await this.ctx.service.remindRepository.put(remind);
+  }
+
+  async search(query) {
+    const { service } = this;
+
+    return await service.remindRepository.search(query);
   }
 }
 
