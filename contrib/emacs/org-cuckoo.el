@@ -29,7 +29,7 @@
     (+ (* (car lst) (expt 2 16))
        (cadr lst))))
 
-(cl-defun create-remind-in-cuckoo (timestamp
+(cl-defun create-remind-in-cuckoo (task-id timestamp
                                    &key duration)
   "往cuckoo中创建一个定时提醒并返回这个刚创建的提醒的ID"
   (let (remind-id)
@@ -42,6 +42,7 @@
           (setq remind-id (cdr (assoc 'id (cdr (car remind))))))))
      :data (json-encode-alist
             (list (cons "duration" duration)
+                  (cons "taskId" (number-to-string task-id))
                   (cons "timestamp" timestamp)))
      :headers '(("Content-Type" . "application/json"))
      :type "POST")
@@ -118,13 +119,6 @@
     (message "现在的task-id为：%S" task-id)
     (message "现在的remind-id为：%S" remind-id)
 
-    (let* ((scheduled (org-entry-get nil "SCHEDULED"))
-           (timestamp (scheduled-to-time scheduled)))
-      ;; 如果有remind-id就更新已有的提醒的触发时刻，否则就创建一个新的
-      (if remind-id
-          (cuckoo-update-remind remind-id timestamp)
-        (setq remind-id (create-remind-in-cuckoo timestamp :duration duration))))
-
     ;; 如果有task-id则同样只是更新，否则就创建一个新的
     (if task-id
         (cuckoo-update-task task-id brief detail)
@@ -139,11 +133,18 @@
        :data (encode-coding-string (json-encode (list (cons "brief" brief)
                                                       (cons "detail" detail)
                                                       (cons "device" device)
-                                                      (cons "icon_file" icon-file)
-                                                      (cons "remind_id" (format "%S" remind-id))))
+                                                      (cons "icon_file" icon-file)))
                                    'utf-8)
        :headers '(("Content-Type" . "application/json"))
        :type "POST"))
+
+    (let* ((scheduled (org-entry-get nil "SCHEDULED"))
+           (timestamp (scheduled-to-time scheduled)))
+      ;; 如果有remind-id就更新已有的提醒的触发时刻，否则就创建一个新的
+      (if remind-id
+          (cuckoo-update-remind remind-id timestamp)
+        (setq remind-id (create-remind-in-cuckoo task-id timestamp :duration duration))))
+
     (org-set-property "TASK_ID" (number-to-string task-id))))
 
 ;;;###autoload
