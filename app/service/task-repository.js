@@ -103,10 +103,6 @@ class TaskService extends Service {
       conditions.push('state = ?');
       values.push(query.state);
     }
-    if (typeof query.remind_id === 'number') {
-      conditions.push('remind_id = ?');
-      values.push(query.remind_id);
-    }
 
     /**
      * SQLite的SELECT语句的文档
