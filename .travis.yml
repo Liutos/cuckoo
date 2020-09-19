@@ -1,9 +1,12 @@
-sudo: false
 language: node_js
 node_js:
   - '8'
 install:
   - npm i
+before_script:
+  - ln -sf /usr/share/zoneinfo/Asia/ShangHai /etc/localtime
+  - echo "Asia/Shanghai" > /etc/timezone
+  - dpkg-reconfigure -f noninteractive tzdata
 script:
   - npm run ci
 after_script:
