@@ -100,6 +100,10 @@ class Remind {
     return true;
   }
 
+  isRepeated() {
+    return !!this.repeat;
+  }
+
   patch(changes) {
     const FIELDS = [
       'duration',

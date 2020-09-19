@@ -3,18 +3,6 @@
 const Service = require('egg').Service;
 
 class TaskService extends Service {
-  async close(task) {
-    const { service } = this;
-
-    task.close();
-    await this.put(task);
-    if (task.isRepeated()) {
-      task.activate();
-      await this.put(task);
-      await service.queue.send(task.id, task.remind.timestamp, task.remind.id);
-    }
-  }
-
   async create({ brief, context_id, detail, device, icon, icon_file }) {
     return await this.ctx.service.taskRepository.create({ brief, context_id, detail, device, icon, icon_file });
   }
@@ -136,17 +124,31 @@ class TaskService extends Service {
         logger.info(`这里应当往Redis中写入一条${hours}小时后执行的任务`);
         await service.queue.send(task.id, Math.round(Date.now() / 1000) + hours * 60 * 60, remind.id);
       } else {
-        await this.close(task);
+        await this._schedule(remind);
       }
     } else {
       logger.info(`当前场景（${currentContext}）与任务要求的场景（${task.context.name}）不一致，不需要弹出提醒`);
-      await this.close(task);
+      await this._schedule(remind);
     }
     logger.info(`任务${id}的提醒流程处理完毕`);
   }
 
   async search(query) {
     return await this.ctx.service.taskRepository.search(query);
+  }
+
+  /**
+   * 安排下一个提醒的时刻
+   * @param {Object} remind - 提醒的实体对象
+   */
+  async _schedule(remind) {
+    const { service } = this;
+
+    remind.close();
+    if (remind.isRepeated()) {
+      await service.remind.put(remind);
+      await service.queue.send(remind.taskId, remind.timestamp, remind.id);
+    }
   }
 }
 
