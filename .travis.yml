@@ -4,7 +4,6 @@ node_js:
 install:
   - npm i
 before_script:
-  - ln -sf /usr/share/zoneinfo/Asia/ShangHai /etc/localtime
   - echo "Asia/Shanghai" > /etc/timezone
   - dpkg-reconfigure -f noninteractive tzdata
 script:
