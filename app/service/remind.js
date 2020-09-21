@@ -11,10 +11,10 @@ class RemindService extends Service {
     await this.put(remind);
   }
 
-  async create({ duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp }) {
+  async create({ contextId, duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp }) {
     const { service } = this;
 
-    const remind = await this.ctx.service.remindRepository.create({ duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp });
+    const remind = await this.ctx.service.remindRepository.create({ contextId, duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp });
     await service.queue.send(taskId, timestamp, remind.id);
     return remind;
   }

@@ -17,6 +17,7 @@ class Remind {
   /**
    * Create a remind.
    * @param {Object} row - 从数据库返回的一行
+   * @param {number} row.context - 触发该提醒的场景对象
    * @param {string} row.create_at - 该行的创建时刻
    * @param {number} row.duration - 提醒的持续展示时间，单位为秒
    * @param {number} row.id - 该行的主键
@@ -29,6 +30,7 @@ class Remind {
    */
   constructor(row) {
     const {
+      context,
       create_at,
       duration,
       id,
@@ -40,6 +42,7 @@ class Remind {
       timestamp,
       update_at,
     } = row;
+    this.context = context;
     this.create_at = create_at;
     this.duration = duration;
     this.id = id;
@@ -106,6 +109,7 @@ class Remind {
 
   patch(changes) {
     const FIELDS = [
+      'context',
       'duration',
       'repeat',
       'repeatType',

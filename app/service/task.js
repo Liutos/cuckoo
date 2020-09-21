@@ -43,19 +43,20 @@ class TaskService extends Service {
     for (const message of messages) {
       const {
         member: id,
+        remind_id: remindId,
         score: plan_alarm_at,
       } = message;
+      const remind = await service.remind.get(remindId);
       const task = await this.get(id);
       if (task.state !== 'active') {
         logger.info(`任务${task.id}的状态为${task.state}，接下来不会弹出提醒`);
         continue;
       }
-      if (context && task.context && task.context.id !== context.id) {
+      if (context && remind.context && remind.context.id !== context.id) {
         logger.info(`任务${task.id}所要求的场景为${task.context.name}（${task.context.id}），与目标场景“${context.name}”（${context.id}）不符，接下来不会弹出提醒`);
         continue;
       }
       const hour = new Date(plan_alarm_at * 1000).getHours();
-      const { remind } = task;
       if (remind && Array.isArray(remind.restricted_hours) && !remind.restricted_hours[hour]) {
         logger.info(`任务${task.id}在${hour}时不需要弹出提醒`);
         continue;
@@ -86,7 +87,7 @@ class TaskService extends Service {
     const task = await this.get(id);
     if (task.state !== 'active') {
       logger.info(`任务${id}没有被启用，不需要弹出提醒`);
-    } else if (!task.context || currentContext === task.context.name) {
+    } else if (!remind.context || currentContext === remind.context.name) {
       await service.remindLog.create({
         plan_alarm_at: alarmAt,
         real_alarm_at: Math.round(Date.now() / 1000),
@@ -127,7 +128,7 @@ class TaskService extends Service {
         await this._schedule(remind);
       }
     } else {
-      logger.info(`当前场景（${currentContext}）与任务要求的场景（${task.context.name}）不一致，不需要弹出提醒`);
+      logger.info(`当前场景（${currentContext}）与任务要求的场景（${remind.context.name}）不一致，不需要弹出提醒`);
       await this._schedule(remind);
     }
     logger.info(`任务${id}的提醒流程处理完毕`);

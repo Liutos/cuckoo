@@ -1,5 +1,6 @@
 CREATE TABLE t_remind (
   id INTEGER PRIMARY KEY,
+  context_id INTEGER,
   duration INTEGER,
   repeat_type TEXT,
   restricted_hours INTEGER,

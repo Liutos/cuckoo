@@ -6,11 +6,12 @@ const Service = require('egg').Service;
 const dateFormat = require('dateformat');
 
 class RemindService extends Service {
-  async create({ duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp }) {
+  async create({ contextId, duration, repeatType, restricted_hours, restrictedWdays, taskId, timestamp }) {
     const { app } = this;
     const { sqlite } = app;
 
-    const result = await sqlite.run('INSERT INTO t_remind(create_at, duration, repeat_type, restricted_hours, restricted_wdays, task_id, timestamp, update_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [
+    const result = await sqlite.run('INSERT INTO t_remind(context_id, create_at, duration, repeat_type, restricted_hours, restricted_wdays, task_id, timestamp, update_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+      contextId,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       duration,
       repeatType,
@@ -32,12 +33,15 @@ class RemindService extends Service {
   }
 
   async get(id) {
-    const { app } = this;
+    const { app, service } = this;
     const { sqlite } = app;
 
     const row = await sqlite.get('SELECT * FROM t_remind WHERE id = ?', [id]);
     if (!row) {
       return null;
+    }
+    if (typeof row.context_id === 'number') {
+      row.context = await service.context.get(row.context_id);
     }
     return new Remind(row);
   }
@@ -46,7 +50,8 @@ class RemindService extends Service {
     const { app } = this;
     const { sqlite } = app;
 
-    await sqlite.run('UPDATE t_remind SET duration = ?, repeat_type = ?, restricted_hours = ?, restricted_wdays = ?, task_id = ?, timestamp = ?, update_at = ? WHERE id = ?', [
+    await sqlite.run('UPDATE t_remind SET context_id = ?, duration = ?, repeat_type = ?, restricted_hours = ?, restricted_wdays = ?, task_id = ?, timestamp = ?, update_at = ? WHERE id = ?', [
+      remind.context && remind.context.id,
       remind.duration,
       remind.repeat && remind.repeat.type,
       remind.restricted_hours && Remind.encodeHours(remind.restricted_hours),

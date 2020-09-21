@@ -21,6 +21,7 @@ class RemindController extends Controller {
     const { request: { body } } = ctx;
 
     const schema = Joi.object({
+      contextId: [Joi.number(), null],
       duration: [Joi.number(), null],
       repeat_type: [Joi.string(), null],
       restricted_hours: Joi.array().items(Joi.number()).length(24),
@@ -30,9 +31,10 @@ class RemindController extends Controller {
     });
     await schema.validateAsync(body);
 
-    const { duration, repeat_type, restricted_hours, restrictedWdays, taskId, timestamp } = body;
+    const { contextId, duration, repeat_type, restricted_hours, restrictedWdays, taskId, timestamp } = body;
 
     const remind = await service.remind.create({
+      contextId,
       duration,
       repeatType: repeat_type,
       restricted_hours,
@@ -65,6 +67,7 @@ class RemindController extends Controller {
     const { logger, params, request: { body } } = ctx;
 
     const schema = Joi.object({
+      contextId: [Joi.number(), null],
       duration: [
         Joi.number(),
         null,
@@ -84,6 +87,11 @@ class RemindController extends Controller {
 
     const { id } = params;
     const changes = {};
+    if (body.contextId === null) {
+      changes.context = null;
+    } else if (typeof body.contextId === 'number') {
+      changes.context = await service.context.get(body.contextId);
+    }
     if (body.duration === null || typeof body.duration === 'number') {
       changes.duration = body.duration;
     }
