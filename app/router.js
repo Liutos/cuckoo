@@ -23,6 +23,8 @@ module.exports = app => {
   router.patch('/remind/:id', controller.remind.update);
   router.post('/remind/:id/close', controller.remind.close);
   router.post('/remind', controller.remind.create);
+  router.put('/remind/fill-context-id', controller.remind.fillContextId);
+
   router.del('/task/:id', controller.task.delete);
   router.get('/task', controller.task.search);
   router.get('/task/following', controller.task.getFollowing);

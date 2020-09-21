@@ -49,6 +49,34 @@ class RemindController extends Controller {
     ctx.status = 201;
   }
 
+  /**
+   * 将任务的context_id填充到对应的提醒中
+   */
+  async fillContextId() {
+    const { ctx, service } = this;
+    const { logger } = ctx;
+
+    const reminds = await service.remind.search({
+      limit: Number.MAX_SAFE_INTEGER
+    });
+    for (const remind of reminds) {
+      const { context, taskId } = remind;
+      if (context) {
+        logger.info(`提醒${remind.id}已经有场景了，不需要填充。`);
+        continue;
+      }
+      const task = await service.task.get(taskId);
+      if (task && task.context) {
+        remind.patch({ context: task.context });
+        await service.remind.put(remind);
+        logger.info(`将任务${task.id}的场景ID ${task.context.id}填充到提醒${remind.id}中。`);
+      }
+    }
+
+    ctx.body = '';
+    ctx.status = 204;
+  }
+
   async get() {
     const { ctx, service } = this;
     const { params } = ctx;
