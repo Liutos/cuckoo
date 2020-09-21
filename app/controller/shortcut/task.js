@@ -35,9 +35,6 @@ class TaskController extends Controller {
       brief: body.brief,
       detail: body.detail
     };
-    if (context) {
-      taskMaterial.context_id = context.id;
-    }
     const task = await service.task.create(taskMaterial);
     // 最后创建提醒
     const remindMaterial = {
@@ -45,6 +42,9 @@ class TaskController extends Controller {
       taskId: task.id,
       timestamp: Math.trunc(new Date(body.dateTime).getTime() / 1000)
     };
+    if (context) {
+      remindMaterial.contextId = context.id;
+    }
     await service.remind.create(remindMaterial);
 
     ctx.body = {

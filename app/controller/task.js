@@ -10,7 +10,6 @@ class TaskController extends Controller {
 
     const schema = Joi.object({
       brief: Joi.string().required(),
-      context_id: Joi.number(),
       detail: Joi.string().allow(''),
       device: [Joi.string(), null],
       icon: Joi.string(),
@@ -18,11 +17,10 @@ class TaskController extends Controller {
     });
     await schema.validateAsync(body);
 
-    const { brief, context_id, detail = '', device, icon, icon_file } = body;
+    const { brief, detail = '', device, icon, icon_file } = body;
 
     const task = await service.task.create({
       brief,
-      context_id,
       detail,
       device,
       icon,
@@ -188,10 +186,6 @@ class TaskController extends Controller {
 
     const schema = Joi.object({
       brief: Joi.string(),
-      context_id: [
-        Joi.number(),
-        null,
-      ],
       detail: Joi.string().allow(''),
       device: Joi.string(),
       icon: [
@@ -210,11 +204,6 @@ class TaskController extends Controller {
     const changes = {};
     if (typeof body.brief === 'string') {
       changes.brief = body.brief;
-    }
-    if (body.context_id === null) {
-      changes.context = null;
-    } else if (typeof body.context_id === 'number') {
-      changes.context = await service.context.get(body.context_id);
     }
     if (typeof body.detail === 'string') {
       changes.detail = body.detail;

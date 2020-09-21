@@ -34,8 +34,8 @@ describe('test/app/controller/shortcut/task.test.js', () => {
     assert(task);
     taskId = task.id;
     assert(task.brief === 'test');
-    assert(task.context);
-    assert(task.context.name === 'test');
+    assert(task.remind.context);
+    assert(task.remind.context.name === 'test');
     assert(task.remind);
     assert(task.remind.timestamp === Math.trunc(new Date('2020-08-13 08:06:00').getTime() / 1000));
     assert(task.remind.repeat);

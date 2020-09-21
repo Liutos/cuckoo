@@ -3,8 +3,8 @@
 const Service = require('egg').Service;
 
 class TaskService extends Service {
-  async create({ brief, context_id, detail, device, icon, icon_file }) {
-    return await this.ctx.service.taskRepository.create({ brief, context_id, detail, device, icon, icon_file });
+  async create({ brief, detail, device, icon, icon_file }) {
+    return await this.ctx.service.taskRepository.create({ brief, detail, device, icon, icon_file });
   }
 
   async delete(id) {

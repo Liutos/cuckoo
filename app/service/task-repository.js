@@ -6,13 +6,12 @@ const Service = require('egg').Service;
 const dateFormat = require('dateformat');
 
 class TaskService extends Service {
-  async create({ brief, context_id, detail, device, icon, icon_file }) {
+  async create({ brief, detail, device, icon, icon_file }) {
     const { app } = this;
     const { sqlite } = app;
 
-    const result = await sqlite.run('INSERT INTO t_task(brief, context_id, create_at, detail, device, icon, icon_file, state, update_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+    const result = await sqlite.run('INSERT INTO t_task(brief, create_at, detail, device, icon, icon_file, state, update_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [
       brief,
-      context_id,
       dateFormat(Date.now(), 'yyyy-mm-dd HH:MM:ss'),
       detail,
       device,
@@ -64,9 +63,8 @@ class TaskService extends Service {
     if (task.remind) {
       await service.remind.put(task.remind);
     }
-    await sqlite.run('UPDATE t_task SET brief = ?, context_id = ?, detail = ?, device = ?, icon = ?, icon_file = ?, state = ?, update_at = ? WHERE id = ?', [
+    await sqlite.run('UPDATE t_task SET brief = ?, detail = ?, device = ?, icon = ?, icon_file = ?, state = ?, update_at = ? WHERE id = ?', [
       task.brief,
-      task.context && task.context.id,
       task.detail,
       task.device,
       task.icon,

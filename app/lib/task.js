@@ -3,7 +3,6 @@
 /**
  * @typedef {Object} Task
  * @property {string} brief - 任务简述
- * @property {Context} context - 该任务适用的场景
  * @property {string} create_at - 任务的创建时刻
  * @property {string} detail - 任务详情
  * @property {string} device - 任务依赖的设备
@@ -22,7 +21,6 @@ class Task {
   constructor(row) {
     const {
       brief,
-      context,
       create_at,
       detail,
       device,
@@ -34,7 +32,6 @@ class Task {
       update_at,
     } = row;
     this.brief = brief;
-    this.context = context;
     this.create_at = create_at;
     this.detail = detail;
     this.device = device;
@@ -69,7 +66,6 @@ class Task {
     }
     const FIELDS = [
       'brief',
-      'context',
       'detail',
       'device',
       'icon',
