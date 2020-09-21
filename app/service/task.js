@@ -42,12 +42,17 @@ class TaskService extends Service {
     const tasks = [];
     for (const message of messages) {
       const {
-        member: id,
         remind_id: remindId,
         score: plan_alarm_at,
       } = message;
       const remind = await service.remind.get(remindId);
-      const task = await this.get(id);
+      if (!remind) {
+        continue;
+      }
+      const task = await this.get(remind.taskId);
+      if (!task) {
+        continue;
+      }
       if (task.state !== 'active') {
         logger.info(`任务${task.id}的状态为${task.state}，接下来不会弹出提醒`);
         continue;
