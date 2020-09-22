@@ -58,7 +58,7 @@ class TaskService extends Service {
         continue;
       }
       if (context && remind.context && remind.context.id !== context.id) {
-        logger.info(`任务${task.id}所要求的场景为${task.context.name}（${task.context.id}），与目标场景“${context.name}”（${context.id}）不符，接下来不会弹出提醒`);
+        logger.info(`任务${task.id}所要求的场景为${remind.context.name}（${remind.context.id}），与目标场景“${context.name}”（${context.id}）不符，接下来不会弹出提醒`);
         continue;
       }
       const hour = new Date(plan_alarm_at * 1000).getHours();
