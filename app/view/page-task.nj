@@ -26,6 +26,13 @@
         <span>提醒时刻为：</span>
         <input id="remindDateTime" type="datetime-local" value="{{ remind.readableTimestamp }}"/>
         <button onclick="updateRemindTimestamp({{ remind.id }})">更新提醒时刻</button>
+        <span>该提醒的场景为：</span>
+        <select id="remindContextName">
+        {% for context in remind.contexts %}
+          <option {% if context.selected %}selected{% endif %} value="{{ context.id }}">{{ context.name }}</option>
+        {% endfor %}
+        </select>
+        <button onclick="updateRemindContext({{ remind.id }})">更新提醒的场景</button>
       </div>
       {% endfor %}
     </div>
