@@ -28,11 +28,14 @@
         <button onclick="updateRemindTimestamp({{ remind.id }})">更新提醒时刻</button>
         <span>该提醒的场景为：</span>
         <select id="remindContextName">
+          <option value="null"></option>
         {% for context in remind.contexts %}
           <option {% if context.selected %}selected{% endif %} value="{{ context.id }}">{{ context.name }}</option>
         {% endfor %}
         </select>
-        <button onclick="updateRemindContext({{ remind.id }})">更新提醒的场景</button>
+        <label for="remindDuration">展示持续时间</label>
+        <input id="remindDuration" value="{{ remind.duration }}" />
+        <button onclick="updateRemindContext({{ remind.id }})">更新提醒</button>
       </div>
       {% endfor %}
     </div>

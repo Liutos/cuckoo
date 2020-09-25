@@ -22,14 +22,25 @@ window.uploadIcon = async function (id) {
   location.reload();
 };
 
+/**
+ * 更新这一行提醒的属性。
+ * @param {number} id - 待更新的提醒的ID
+ */
 window.updateRemindContext = async function (id) {
   // 取出当前的场景的ID，并更新提醒的场景
   const selectElement = document.getElementById('remindContextName');
   const contextId = parseInt(selectElement.value);
+  // 取出当前的持续时长并更新
+  const durationElement = document.getElementById('remindDuration');
+  let duration = parseInt(durationElement.value);
+
+  const data = {
+    contextId,
+    duration
+  };
+  console.log('data', data);
   const response = await axios({
-    data: {
-      contextId
-    },
+    data,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
     },
@@ -37,6 +48,6 @@ window.updateRemindContext = async function (id) {
     url: `/remind/${id}`,
   });
   console.log('response', response);
-  alert('提醒的场景更新成功。');
+  alert('提醒更新成功。');
   location.reload();
 };

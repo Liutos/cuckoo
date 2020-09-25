@@ -29,6 +29,7 @@ class TaskPageController extends Controller {
               selected: remind.context && remind.context.id === context.id
             };
           }),
+          duration: typeof remind.duration === 'number' ? remind.duration : null,
           id: remind.id,
           readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd\'T\'HH:MM:ss'),
         };
