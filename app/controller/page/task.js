@@ -15,7 +15,6 @@ class TaskPageController extends Controller {
     // TODO: 这里应当有一个类专门负责生成render方法的第二个参数要求的对象。这里的对象就是一个view model，而这个类就是一个model->view model的转换工厂。
     await ctx.render('page-task.nj', {
       brief: task.brief,
-      contextName: task.context && task.context.name,
       detail: task.detail,
       icon: task.icon,
       id: task.id,
@@ -34,6 +33,11 @@ class TaskPageController extends Controller {
           readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd\'T\'HH:MM:ss'),
         };
       }),
+      states: [
+        { name: '启用', selected: task.state === 'active', value: 'active' },
+        { name: '已结束', selected: task.state === 'done', value: 'done' },
+        { name: '未启用', selected: task.state === 'inactive', value: 'inactive' },
+      ]
     });
   }
 }

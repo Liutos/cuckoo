@@ -18,7 +18,12 @@
       <input id="iconFile" type="file" value="选择图标文件">
       <input id="uploadIconButton" onclick="uploadIcon({{ id }})" type="button" value="上传新的图标">
     <p>
-    <p>场景要求：{{ contextName }}</p>
+    <label for="taskState">任务状态</label>
+    <select id="taskState" onchange="updateTaskState({{ id }})">
+    {% for state in states %}
+      <option {% if state.selected %}selected{% endif %} value="{{ state.value }}">{{ state.name }}</option>
+    {% endfor %}
+    </select>
     <div>
       <h2>该任务的提醒</h2>
       {% for remind in reminds %}

@@ -57,3 +57,21 @@ window.updateRemindContext = async function (id) {
   alert('提醒更新成功。');
   location.reload();
 };
+
+window.updateTaskState = async function (id) {
+  const stateElement = document.getElementById('taskState');
+  const state = stateElement.value;
+  const response = await axios({
+    data: {
+      state
+    },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+    method: 'patch',
+    url: `/task/${id}`,
+  });
+  console.log('response', response);
+  alert('任务状态更新成功。');
+  location.reload();
+};
