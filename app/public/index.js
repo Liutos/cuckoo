@@ -218,27 +218,6 @@ function setCalendar(followingTasks) {
   });
 }
 
-async function updateRemindTimestamp(id) {
-  // 计算出对应的时间戳
-  let timestamp = document.getElementById('remindDateTime').valueAsNumber;
-  // 减去8个小时的时区修正
-  timestamp -= 8 * 60 * 60 * 1000;
-  timestamp = Math.trunc(timestamp / 1000);
-  // 更新指定id的提醒的时刻
-  const url = `/remind/${id}`;
-  await fetch(url, {
-    body: JSON.stringify({
-      timestamp
-    }),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    method: 'PATCH'
-  });
-  alert('提醒时刻修改完毕。');
-}
-window.updateRemindTimestamp = updateRemindTimestamp;
-
 window.showCalendar = function () {
   // 隐藏列表和任务，露出日历
   document.getElementById('followingArea').style.display = 'none';

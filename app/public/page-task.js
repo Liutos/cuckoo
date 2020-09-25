@@ -27,6 +27,11 @@ window.uploadIcon = async function (id) {
  * @param {number} id - 待更新的提醒的ID
  */
 window.updateRemindContext = async function (id) {
+  // 计算出对应的时间戳
+  let timestamp = document.getElementById('remindDateTime').valueAsNumber;
+  // 减去8个小时的时区修正
+  timestamp -= 8 * 60 * 60 * 1000;
+  timestamp = Math.trunc(timestamp / 1000);
   // 取出当前的场景的ID，并更新提醒的场景
   const selectElement = document.getElementById('remindContextName');
   const contextId = parseInt(selectElement.value);
@@ -36,7 +41,8 @@ window.updateRemindContext = async function (id) {
 
   const data = {
     contextId,
-    duration
+    duration,
+    timestamp
   };
   console.log('data', data);
   const response = await axios({
