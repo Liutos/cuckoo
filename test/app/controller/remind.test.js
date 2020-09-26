@@ -77,4 +77,47 @@ describe('test/app/controller/remind.test.js', () => {
     assert(_remind.repeat.type === 'weekly');
     assert(_remind.repeatType === 'weekly');
   });
+
+  describe('测试一开始没有重复模式的情况', async () => {
+    let remind = null;
+
+    it('创建一个没有重复模式的提醒', async () => {
+      app.mockCsrf();
+      const response = await app.httpRequest()
+        .post('/remind')
+        .send({
+          taskId: 123,
+          timestamp: 1596631200,
+        })
+        .expect(201);
+
+      const { body: { remind: _remind } } = response;
+      remind = _remind;
+      assert(_remind);
+      assert(_remind.taskId === 123);
+      assert(_remind.timestamp === 1596631200);
+    });
+
+    it('设置提醒的重复模式', async () => {
+      app.mockCsrf();
+      await app.httpRequest()
+        .patch(`/remind/${remind.id}`)
+        .send({
+          repeat_type: 'daily'
+        })
+        .expect(204);
+    });
+
+    it('查看更新后的提醒', async () => {
+      app.mockCsrf();
+      const response = await app.httpRequest()
+        .get(`/remind/${remind.id}`)
+        .expect(200);
+
+      const { body: { remind: _remind } } = response;
+      assert(_remind);
+      assert(_remind.repeat);
+      assert(_remind.repeat.type === 'daily');
+    });
+  });
 });

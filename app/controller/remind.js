@@ -1,5 +1,7 @@
 'use strict';
 
+const Repeat = require('../lib/repeat');
+
 const Controller = require('egg').Controller;
 const Joi = require('@hapi/joi');
 
@@ -138,11 +140,13 @@ class RemindController extends Controller {
     }
 
     const remind = await service.remind.get(id);
-    if (remind.repeat) {
-      if (body.repeat_type === null) {
-        changes.repeat = null;
-      } else if (typeof body.repeat_type === 'string') {
+    if (body.repeat_type === null) {
+      changes.repeat = null;
+    } else if (typeof body.repeat_type === 'string') {
+      if (remind.repeat) {
         remind.repeat.patch({ type: body.repeat_type });
+      } else {
+        changes.repeat = new Repeat({ type: body.repeat_type });
       }
     }
     remind.patch(changes);
