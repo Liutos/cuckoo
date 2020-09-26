@@ -38,10 +38,14 @@ window.updateRemindContext = async function (id) {
   // 取出当前的持续时长并更新
   const durationElement = document.getElementById('remindDuration');
   let duration = parseInt(durationElement.value);
+  // 取出重复模式
+  const repeatTypeElement = document.getElementById('remindRepeatType');
+  const repeatType = repeatTypeElement.value;
 
   const data = {
     contextId,
     duration,
+    repeat_type: repeatType,
     timestamp
   };
   console.log('data', data);

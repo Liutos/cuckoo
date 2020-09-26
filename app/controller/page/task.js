@@ -31,6 +31,7 @@ class TaskPageController extends Controller {
           duration: typeof remind.duration === 'number' ? remind.duration : null,
           id: remind.id,
           readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd\'T\'HH:MM:ss'),
+          repeatType: remind.repeat && remind.repeat.type
         };
       }),
       states: [

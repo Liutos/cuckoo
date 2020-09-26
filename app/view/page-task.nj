@@ -39,6 +39,8 @@
         </select>
         <label for="remindDuration">展示持续时间</label>
         <input id="remindDuration" value="{{ remind.duration }}" />
+        <label for="remindRepeatType">重复模式</label>
+        <input id="remindRepeatType" value="{{ remind.repeatType }}" />
         <button onclick="updateRemindContext({{ remind.id }})">更新提醒</button>
       </div>
       {% endfor %}
