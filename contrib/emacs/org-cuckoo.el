@@ -155,7 +155,7 @@
   (create-task-in-cuckoo))
 
 ;;;###autoload
-(cl-defun cuckoo-org-schedule (arg &optional time)
+(cl-defun org-cuckoo-schedule (arg &optional time)
   "调用内置的org-schedule，并在带有一个prefix argument的时候关闭cuckoo中的对应任务"
   (interactive "P")
   (org-schedule arg time)
@@ -164,7 +164,7 @@
     (let ((scheduled (org-entry-get nil "SCHEDULED")))
       (unless (string-match " [0-9]+:[0-9]+" scheduled)
         (message "当前SCHEDULED属性没有小时和分钟，无法创建提醒。")
-        (return-from cuckoo-org-schedule)))
+        (return-from org-cuckoo-schedule)))
     (call-interactively 'create-task-in-cuckoo))
 
   (when (= (prefix-numeric-value arg) 4)
