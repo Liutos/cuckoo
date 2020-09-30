@@ -1,6 +1,21 @@
 # Change Log
 
-## [latest] - 2020-09-01
+## [1.13.0] - 2020-09-01
+
+### Added
+
+- Add a calendar view for displaying following tasks;
+- Provides 4 different views;
+- Add a Web UI for searching tasks;
+- Add a form for modifying a remind's properties;
+
+### Changed
+
+- Remove column `remind_id` from table `t_task`;
+- Reminding will no longer change a task's state;
+- Can set a context to each reminds;
+- Rename Elisp function `cuckoo-org-schedule` to `org-cuckoo-schedule`;
+- Switching the order of creating `remind` and `task`;
 
 ### Fixed
 

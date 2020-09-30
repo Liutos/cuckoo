@@ -1,6 +1,6 @@
 {
   "name": "cuckoo",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "description": "定时提醒工具",
   "private": true,
   "dependencies": {
