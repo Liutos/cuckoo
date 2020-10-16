@@ -1,6 +1,6 @@
 #!/bin/bash
 # 在推送代码前运行单元测试
-# 使用方法：将这个文件复制到项目根目录的 .git/hooks/ 目录下即可，示例代码： ln -s ./script/pre-push .git/hooks/pre-push
+# 使用方法：将这个文件复制到项目根目录的 .git/hooks/ 目录下即可，示例代码： cp ./script/pre-push .git/hooks/pre-push
 echo 'in pre-push script'
 npm run test-local
 if [ "${?}" = '0' ];
