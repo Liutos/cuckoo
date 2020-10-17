@@ -22,6 +22,7 @@
     "egg-bin": "^4.3.5",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.14.0",
+    "egg-ts-helper": "1.25.8",
     "eslint": "^4.11.0",
     "eslint-config-egg": "^6.0.0",
     "webstorm-disable-index": "^1.2.0"
@@ -32,7 +33,7 @@
   "scripts": {
     "start": "egg-scripts start --title=egg-server-cuckoo --workers=1",
     "stop": "egg-scripts stop --title=egg-server-cuckoo",
-    "dev": "egg-bin dev --port 7002",
+    "dev": "egg-bin dev --dts --port 7002",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test test/app",
