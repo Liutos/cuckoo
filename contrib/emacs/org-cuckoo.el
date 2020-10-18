@@ -19,6 +19,27 @@
            args)))
 
 ;;; 在cuckoo中创建光标所在任务的定时提醒
+(cl-defun org-cuckoo--scheduled-to-repeat-type (scheduled)
+  "提取TODO条目的SCHEDULED属性的重复模式。"
+  (let ((pattern "[0-9]+-[0-9]+-[0-9]+ .+ [0-9]+:[0-9]+.+\\(\\+[0-9]+[dhwy]\\)")
+        (raw-repeat-type))
+    (when (string-match-p pattern scheduled)
+      (string-match pattern scheduled)
+      (setq raw-repeat-type (match-string 1 scheduled)))
+    (unless raw-repeat-type
+      (return-from org-cuckoo--scheduled-to-repeat-type))
+    (let (n unit)
+      (string-match "\\+\\([0-9]+\\)\\([dhwy]\\)" scheduled)
+      (setq n (match-string 1 scheduled)
+            unit (match-string 2 scheduled))
+      ;; 把org-mode的重复模式的“单位”转换为cuckoo的单位
+      (setq unit (cond ((string= unit "d") "days")
+                       ((string= unit "h") "hours")
+                       ((string= unit "w") "weeks")
+                       ((string= unit "y") "years")
+                       (t (error "Unrecognized unit: %s" unit))))
+      (format "every_%s_%s" n unit))))
+
 (defun scheduled-to-time (scheduled)
   "将TODO条目的SCHEDULED属性转换为UNIX时间戳"
   ;; 为了能够支持形如<2019-06-15 Sat 14:25-14:55>这样的时间戳，会先用正则表达式提取date-to-time能够处理的部分
@@ -30,7 +51,7 @@
        (cadr lst))))
 
 (cl-defun create-remind-in-cuckoo (task-id timestamp
-                                   &key duration)
+                                   &key duration repeat-type)
   "往cuckoo中创建一个定时提醒并返回这个刚创建的提醒的ID"
   (let (remind-id)
     (org-cuckoo--request
@@ -42,6 +63,7 @@
           (setq remind-id (cdr (assoc 'id (cdr (car remind))))))))
      :data (json-encode-alist
             (list (cons "duration" duration)
+                  (cons "repeat_type" repeat-type)
                   (cons "taskId" (number-to-string task-id))
                   (cons "timestamp" timestamp)))
      :headers '(("Content-Type" . "application/json"))
@@ -66,14 +88,15 @@
         (setq task data))))
     (cdr (car task))))
 
-(defun cuckoo-update-remind (id timestamp)
+(defun cuckoo-update-remind (id repeat-type timestamp)
   "更新指定的提醒的触发时间戳为TIMESTAMP"
   (org-cuckoo--request
    (concat "/remind/" (number-to-string id))
    (cl-function
     (lambda (&key data &allow-other-keys)
       (message "更新了提醒的触发时刻")))
-   :data (json-encode (list (cons "timestamp" timestamp)))
+   :data (json-encode (list (cons "repeat_type" repeat-type)
+                            (cons "timestamp" timestamp)))
    :headers '(("Content-Type" . "application/json"))
    :type "PATCH")
   t)
@@ -139,11 +162,12 @@
        :type "POST"))
 
     (let* ((scheduled (org-entry-get nil "SCHEDULED"))
+           (repeat-type (org-cuckoo--scheduled-to-repeat-type scheduled))
            (timestamp (scheduled-to-time scheduled)))
       ;; 如果有remind-id就更新已有的提醒的触发时刻，否则就创建一个新的
       (if remind-id
-          (cuckoo-update-remind remind-id timestamp)
-        (setq remind-id (create-remind-in-cuckoo task-id timestamp :duration duration))))
+          (cuckoo-update-remind remind-id repeat-type timestamp)
+        (setq remind-id (create-remind-in-cuckoo task-id timestamp :duration duration :repeat-type repeat-type))))
 
     (org-set-property "TASK_ID" (number-to-string task-id))))
 
