@@ -102,7 +102,10 @@ class RemindController extends Controller {
         Joi.number(),
         null,
       ],
-      repeat_type: Joi.string(),
+      repeat_type: [
+        Joi.string(),
+        null,
+      ],
       restricted_hours: [
         Joi.array().items(Joi.number()).length(24),
         null,
