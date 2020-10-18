@@ -1,5 +1,11 @@
 # Change Log
 
+## [latest] - 2020-10-18
+
+### Added
+
+- Can set `repeatType` of a remind when creating from within `org-cuckoo` for a TODO entry.
+
 ## [1.13.0] - 2020-09-01
 
 ### Added
