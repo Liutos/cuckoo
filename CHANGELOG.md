@@ -6,6 +6,10 @@
 
 - Can set `repeatType` of a remind when creating from within `org-cuckoo` for a TODO entry.
 
+### Changed
+
+- Reserve the seconds part when creating reminds from Alfred Workflow.
+
 ## [1.13.0] - 2020-09-01
 
 ### Added

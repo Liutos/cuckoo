@@ -36,7 +36,7 @@ async function main() {
   let timestamp = parseInt(query.timestamp);
   if (Number.isNaN(timestamp)) {
     const nMinutes = parseInt(query.delayMinutes);
-    timestamp = Math.round(new Date(Date.now() + nMinutes * 60 * 1000).setSeconds(0, 0) / 1000);
+    timestamp = Math.round(new Date(Date.now() + nMinutes * 60 * 1000) / 1000);
   } else {
     timestamp = Math.round(timestamp / 1000);
   }
