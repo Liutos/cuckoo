@@ -47,6 +47,11 @@ module.exports = appInfo => {
   };
 
   config.reminder = {
+    alerter: {
+      actions: [
+        // Menu to show at dropdown list
+      ]
+    },
     type: 'applescript'
   };
 
