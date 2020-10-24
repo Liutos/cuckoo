@@ -15,6 +15,7 @@ describe('test/app/service/queue.test.js', () => {
     });
     const ctx = app.mockContext();
     await Reminder.create('alerter', ctx.service.gateway.shell).notify({
+      actions: [],
       alarmAt: Date.now(),
       brief: 'abc',
       detail: 'def',
