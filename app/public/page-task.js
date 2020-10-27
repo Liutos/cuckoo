@@ -41,10 +41,19 @@ window.updateRemindContext = async function (id) {
   // 取出重复模式
   const repeatTypeElement = document.getElementById('remindRepeatType');
   const repeatType = repeatTypeElement.value;
+  // 取出小时的限定条件
+  // 因为数量是固定的，所以直接构造出id然后逐个获取即可。
+  const restrictedHours = [];
+  for (let i = 0; i < 24; i++) {
+    const id = `rh${i}`;
+    const element = document.getElementById(id);
+    restrictedHours.push(element.checked ? 1 : 0);
+  }
 
   const data = {
     contextId,
     duration,
+    restricted_hours: restrictedHours,
     repeat_type: repeatType,
     timestamp
   };

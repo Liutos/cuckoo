@@ -19,6 +19,20 @@ class TaskPageController extends Controller {
       icon: task.icon,
       id: task.id,
       reminds: (task.remind ? [task.remind] : []).map(remind => {
+        let { restricted_hours } = remind;
+        if (!restricted_hours || restricted_hours.length === 0) {
+          restricted_hours = [];
+          for (let i = 0; i < 24; i++) {
+            restricted_hours.push(0);
+          }
+        }
+        const restrictedHours = restricted_hours.map((v, i) => {
+          return {
+            checked: v === 1,
+            index: i,
+            label: i < 10 ? `0${i}:00` : `${i}:00`
+          };
+        });
         return {
           contextName: remind.context && remind.context.name,
           contexts: contexts.map(context => {
@@ -31,7 +45,8 @@ class TaskPageController extends Controller {
           duration: typeof remind.duration === 'number' ? remind.duration : null,
           id: remind.id,
           readableTimestamp: dateFormat(remind.timestamp * 1000, 'yyyy-mm-dd\'T\'HH:MM:ss'),
-          repeatType: remind.repeat && remind.repeat.type
+          repeatType: remind.repeat && remind.repeat.type,
+          restrictedHours
         };
       }),
       states: [

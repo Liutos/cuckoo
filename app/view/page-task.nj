@@ -44,6 +44,10 @@
         <input id="remindDuration" value="{{ remind.duration }}" />
         <label for="remindRepeatType">重复模式</label>
         <input id="remindRepeatType" value="{{ remind.repeatType }}" />
+        {% for restrictedHour in remind.restrictedHours %}
+        <input {% if restrictedHour.checked %}checked{% endif %} id="rh{{ restrictedHour.index }}" type="checkbox">
+        <label for="rh{{ restrictedHour.index }}">{{ restrictedHour.label }}</label>
+        {% endfor %}
         <button class="btn btn-danger" onclick="updateRemindContext({{ remind.id }})">更新提醒</button>
       </div>
       {% endfor %}
