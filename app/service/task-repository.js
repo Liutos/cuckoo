@@ -97,6 +97,10 @@ class TaskService extends Service {
       conditions.push('detail LIKE ?');
       values.push(`%${query.detail}%`);
     }
+    if (typeof query.id === 'number') {
+      conditions.push('id = ?');
+      values.push(query.id);
+    }
     if (typeof query.state === 'string') {
       conditions.push('state = ?');
       values.push(query.state);
@@ -112,10 +116,7 @@ class TaskService extends Service {
     sql += ` LIMIT ${limit} OFFSET ${offset}`;
     logger.info(`即将被执行的SQL语句为：${sql}`);
     logger.info('用于填充到SQL中的值为：', values);
-    const ids = await sqlite.all(sql, values);
-    return await Promise.all(ids.map(async ({ id }) => {
-      return await this.get(id);
-    }));
+    return await sqlite.all(sql, values);
   }
 }
 

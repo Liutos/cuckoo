@@ -10,6 +10,7 @@
  * @property {string} icon_file - 用于Alfred Workflow展示的图片路径
  * @property {id} id - 任务主键
  * @property {Remind} remind - 任务的提醒配置
+ * @property {Remind[]} reminds
  * @property {string} state - 任务的状态
  * @property {string} update_at - 任务的最后一次修改的时刻
  */

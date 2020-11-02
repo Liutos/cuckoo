@@ -29,7 +29,14 @@ class TaskService extends Service {
   }
 
   async get(id) {
-    return await this.ctx.service.taskRepository.get(id);
+    const { service } = this;
+
+    const task = await service.taskRepository.get(id);
+    const reminds = await service.remind.search({
+      taskId: id
+    });
+    task.reminds = reminds;
+    return task;
   }
 
   /**
@@ -140,7 +147,10 @@ class TaskService extends Service {
   }
 
   async search(query) {
-    return await this.ctx.service.taskRepository.search(query);
+    const ids = await this.ctx.service.taskRepository.search(query);
+    return await Promise.all(ids.map(async ({ id }) => {
+      return await this.get(id);
+    }));
   }
 
   /**

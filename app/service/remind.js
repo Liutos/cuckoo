@@ -66,6 +66,10 @@ class RemindService extends Service {
     await this.ctx.service.remindRepository.put(remind);
   }
 
+  /**
+   * @param {Object} query
+   * @param {number} [query.taskId]
+   */
   async search(query) {
     const { service } = this;
 
