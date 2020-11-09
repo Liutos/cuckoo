@@ -32,10 +32,12 @@ class TaskService extends Service {
     const { service } = this;
 
     const task = await service.taskRepository.get(id);
-    const reminds = await service.remind.search({
-      taskId: id
-    });
-    task.reminds = reminds;
+    if (task) {
+      const reminds = await service.remind.search({
+        taskId: id
+      });
+      task.reminds = reminds;
+    }
     return task;
   }
 

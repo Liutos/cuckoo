@@ -146,8 +146,11 @@ class TaskController extends Controller {
     const messages = await service.queue.list();
     logger.info(`当前的延迟消息数为${messages.length}`);
     for (const { member: id } of messages) {
+      if (!id) {
+        continue;
+      }
       const task = await service.task.get(id);
-      if (task.state !== 'active') {
+      if (!task || task.state !== 'active') {
         logger.info(`任务${id}不是活跃状态，应当从延迟队列中移除`);
         await service.queue.remove(id);
       }
@@ -163,7 +166,7 @@ class TaskController extends Controller {
       }
       const { remind } = task;
       const score = await service.queue.getScore(task.id);
-      let { remindId, repeat, timestamp } = remind;
+      let { id: remindId, repeat, timestamp } = remind;
       if (repeat && timestamp * 1000 < Date.now()) {
         timestamp = Math.round(repeat.nextTimestamp(timestamp * 1000) / 1000);
       }
