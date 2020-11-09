@@ -167,6 +167,10 @@ class TaskController extends Controller {
       const { remind } = task;
       const score = await service.queue.getScore(task.id);
       let { id: remindId, repeat, timestamp } = remind;
+      if (!repeat && timestamp * 1000 < Date.now()) {
+        logger.info('提醒设定在过去并且不重复，不需要重新写入队列。');
+        continue;
+      }
       if (repeat && timestamp * 1000 < Date.now()) {
         timestamp = Math.round(repeat.nextTimestamp(timestamp * 1000) / 1000);
       }
