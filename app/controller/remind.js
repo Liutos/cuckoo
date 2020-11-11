@@ -103,7 +103,7 @@ class RemindController extends Controller {
         null,
       ],
       repeat_type: [
-        Joi.string(),
+        Joi.string().allow(''),
         null,
       ],
       restricted_hours: [

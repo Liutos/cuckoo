@@ -119,5 +119,15 @@ describe('test/app/controller/remind.test.js', () => {
       assert(_remind.repeat);
       assert(_remind.repeat.type === 'daily');
     });
+
+    it('设置提醒的重复模式为空', async () => {
+      app.mockCsrf();
+      await app.httpRequest()
+        .patch(`/remind/${remind.id}`)
+        .send({
+          repeat_type: ''
+        })
+        .expect(204);
+    });
   });
 });
