@@ -10,11 +10,11 @@ class SqliteQueueService extends Service {
   }
 
   /**
-   * @param {number} member - 任务ID
+   * @param {number} remindId - 提醒ID
    */
-  async getScore(member) {
+  async getScore(remindId) {
     const { sqlite } = this.app;
-    const row = await sqlite.get('SELECT next_trigger_time FROM task_queue WHERE task_id = ?', [member]);
+    const row = await sqlite.get('SELECT next_trigger_time FROM task_queue WHERE remind_id = ?', [remindId]);
     return row && row.next_trigger_time;
   }
 
@@ -59,9 +59,9 @@ class SqliteQueueService extends Service {
   /**
    * @param {number} message - 任务ID
    * @param {number} consumeUntil - 下一次被触发的时刻
-   * @param {null|number} [remindId] - 导致本次提醒的remind对象的ID
+   * @param {number} remindId - 导致本次提醒的remind对象的ID
    */
-  async send(message, consumeUntil, remindId = null) {
+  async send(message, consumeUntil, remindId) {
     const { sqlite } = this.app;
     const oldRow = await this._getTask(message);
     if (oldRow) {

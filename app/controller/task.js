@@ -160,26 +160,28 @@ class TaskController extends Controller {
       state: 'active',
     });
     for (const task of tasks) {
-      if (!task.remind) {
+      const { reminds } = task;
+      if (!reminds || reminds.length === 0) {
         logger.info(`任务${task.id}处于活跃状态但没有设定提醒时间`);
         continue;
       }
-      const { remind } = task;
-      const score = await service.queue.getScore(task.id);
-      let { id: remindId, repeat, timestamp } = remind;
-      if (!repeat && timestamp * 1000 < Date.now()) {
-        logger.info('提醒设定在过去并且不重复，不需要重新写入队列。');
-        continue;
-      }
-      if (repeat && timestamp * 1000 < Date.now()) {
-        timestamp = Math.round(repeat.nextTimestamp(timestamp * 1000) / 1000);
-      }
-      if (!score) {
-        logger.info(`将任务${task.id}补充到延迟队列中`);
-        await service.queue.send(task.id, timestamp, remindId);
-      } else if (score !== timestamp) {
-        logger.info(`调整任务${task.id}在延迟队列中的提醒时间，从${score}调整为${timestamp}`);
-        await service.queue.send(task.id, timestamp, remindId);
+      for (const remind of reminds) {
+        let { id: remindId, repeat, timestamp } = remind;
+        if (!repeat && timestamp * 1000 < Date.now()) {
+          logger.info('提醒设定在过去并且不重复，不需要重新写入队列。');
+          continue;
+        }
+        if (repeat && timestamp * 1000 < Date.now()) {
+          timestamp = Math.round(repeat.nextTimestamp(timestamp * 1000) / 1000);
+        }
+        const score = await service.queue.getScore(remindId);
+        if (!score) {
+          logger.info(`将任务${task.id}补充到延迟队列中`);
+          await service.queue.send(task.id, timestamp, remindId);
+        } else if (score !== timestamp) {
+          logger.info(`调整任务${task.id}在延迟队列中的提醒时间，从${score}调整为${timestamp}`);
+          await service.queue.send(task.id, timestamp, remindId);
+        }
       }
     }
 

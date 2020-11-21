@@ -10,7 +10,7 @@ describe('test/app/service/queue.test.js', () => {
 
   it('往队列发送任务', async function () {
     const ctx = app.mockContext();
-    await ctx.service.queue.send(1, 1577808000);
+    await ctx.service.queue.send(1, 1577808000, 1);
   });
 
   it('获取任务触发时刻', async function () {
