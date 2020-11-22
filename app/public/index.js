@@ -8,27 +8,17 @@ const allTaskTemplate = `
   <tr>
     <th>任务ID</th>
     <th>任务简述</th>
-    <th>下一次提醒的时刻</th>
     <th>场景要求</th>
-    <th>重复模式</th>
   </tr>
 {{#each tasks}}
   <tr>
     <td>{{this.id}}</td>
     <td><a href="/page/task/{{this.id}}">{{this.brief}}</a></td>
-    <td>{{this.remind.dateTime}}</td>
     <td>
     {{#if this.context}}
       {{this.context.name}}
     {{else}}
       无要求
-    {{/if}}
-    </td>
-    <td>
-    {{#if this.remind.repeat}}
-      {{this.remind.repeat.type}}
-    {{else}}
-      不重复
     {{/if}}
     </td>
   </tr>
@@ -77,10 +67,6 @@ async function fetchAllTaskAndShow(pageNumber) {
   // 构造HTML插入到id为taskListContainer的div中去
   // 需要呈现的内容有：任务ID、任务简述、下一次提醒的时刻、场景要求、重复模式。
   const makeTable = Handlebars.compile(allTaskTemplate);
-  // 填充.remind.dateTime，以便在模板中展示可读的日期时间字符串。
-  tasks.forEach(task => {
-    fillDateTimeString(task);
-  });
   const tableHTML = makeTable({ tasks });
   document.getElementById('wholeTaskContainer').innerHTML = tableHTML;
 
@@ -126,15 +112,12 @@ async function main() {
   <tr>
     <th>任务ID</th>
     <th>任务简述</th>
-    <th>下一次提醒的时刻</th>
     <th>场景要求</th>
-    <th>重复模式</th>
   </tr>
 {{#each tasks}}
   <tr>
     <td>{{this.task.id}}</td>
     <td><a href="/page/task/{{this.task.id}}">{{this.task.brief}}</a></td>
-    <td>{{this.task.remind.dateTime}}</td>
     <td>
     {{#if this.task.context}}
       {{this.task.context.name}}
@@ -142,21 +125,11 @@ async function main() {
       无要求
     {{/if}}
     </td>
-    <td>
-    {{#if this.task.remind.repeat}}
-      {{this.task.remind.repeat.type}}
-    {{else}}
-      不重复
-    {{/if}}
-    </td>
   </tr>
 {{/each}}
 </table>
 `;
   const makeTable = Handlebars.compile(tableTemplate);
-  tasks.forEach(({ task }) => {
-    fillDateTimeString(task);
-  });
   const tableHTML = makeTable({ tasks });
   console.log('tableHTML', tableHTML);
   document.getElementById('taskListContainer').innerHTML = tableHTML;
@@ -259,10 +232,6 @@ window.search = async function () {
   const body = await response.json();
   const { tasks } = body;
   const makeTable = Handlebars.compile(allTaskTemplate);
-  // 填充.remind.dateTime，以便在模板中展示可读的日期时间字符串。
-  tasks.forEach(task => {
-    fillDateTimeString(task);
-  });
   const tableHTML = makeTable({ tasks });
   document.getElementById('searchResultContainer').innerHTML = tableHTML;
   window.showSearchResult();

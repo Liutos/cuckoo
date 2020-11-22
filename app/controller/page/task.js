@@ -18,7 +18,7 @@ class TaskPageController extends Controller {
       detail: task.detail,
       icon: task.icon,
       id: task.id,
-      reminds: (task.remind ? [task.remind] : []).map(remind => {
+      reminds: task.reminds.map(remind => {
         let { restricted_hours } = remind;
         if (!restricted_hours || restricted_hours.length === 0) {
           restricted_hours = [];
