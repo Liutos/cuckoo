@@ -39,16 +39,11 @@ function makeDateTimeString(timestamp) {
 
 /**
  * 往任务的提醒中填充可读的日期时间字符串。
- * @param {Object} task - 任务对象
- * @param {Object} task.remind - 提醒对象
- * @param {number} task.remind.timestamp - 秒单位的UNIX时间戳
+ * @param {Object} remind - 任务对象
+ * @param {number} remind.planAlarmAt - 秒单位的UNIX时间戳
  */
-function fillDateTimeString(task) {
-  const { remind } = task;
-  if (remind) {
-    const dateTime = makeDateTimeString(remind.timestamp);
-    remind.dateTime = dateTime;
-  }
+function fillDateTimeString(remind) {
+  remind.dateTime = makeDateTimeString(remind.planAlarmAt);
 }
 
 /**
@@ -103,48 +98,51 @@ async function main() {
   const url = '/task/following';
   const response = await fetch(url);
   const body = await response.json();
-  const { tasks } = body;
-  console.log(tasks);
+  const { reminds } = body;
+  console.log(reminds);
   // 构造HTML插入到id为taskListContainer的div中去
   // 需要呈现的内容有：任务ID、任务简述、下一次提醒的时刻、场景要求、重复模式。
   const tableTemplate = `
 <table>
   <tr>
+    <th>提醒ID</th>
+    <th>触发时刻</th>
+    <th>重复模式</th>
     <th>任务ID</th>
     <th>任务简述</th>
     <th>场景要求</th>
   </tr>
-{{#each tasks}}
+{{#each reminds}}
   <tr>
-    <td>{{this.task.id}}</td>
-    <td><a href="/page/task/{{this.task.id}}">{{this.task.brief}}</a></td>
-    <td>
-    {{#if this.task.context}}
-      {{this.task.context.name}}
-    {{else}}
-      无要求
-    {{/if}}
-    </td>
+    <td>{{this.id}}</td>
+    <td>{{this.dateTime}}</td>
+    <td>{{this.repeatType}}</td>
+    <td>{{this.taskId}}</td>
+    <td><a href="/page/task/{{this.taskId}}">{{this.taskBrief}}</a></td>
+    <td>{{this.contextName}}</td>
   </tr>
 {{/each}}
 </table>
 `;
   const makeTable = Handlebars.compile(tableTemplate);
-  const tableHTML = makeTable({ tasks });
+  reminds.forEach(remind => {
+    fillDateTimeString(remind);
+  });
+  const tableHTML = makeTable({ reminds });
   console.log('tableHTML', tableHTML);
   document.getElementById('taskListContainer').innerHTML = tableHTML;
 
   await fetchAllTaskAndShow(1);
-  setCalendar(tasks);
+  setCalendar(reminds);
   document.getElementById('followingArea').style.display = 'none';
   document.getElementById('wholeArea').style.display = 'none';
 }
 window.main = main;
 
 /**
- * @param {Object[]} followingTasks - 接下来的任务
+ * @param {Object[]} followingReminds - 接下来的提醒
  */
-function setCalendar(followingTasks) {
+function setCalendar(followingReminds) {
   // 设置日历
   const calendarEl = document.getElementById('calendar');
   const initialDate = makeDateTimeString(Math.round(new Date().getTime() / 1000));
@@ -177,12 +175,12 @@ function setCalendar(followingTasks) {
     }
   });
   calendar.render();
-  followingTasks.forEach(({ task }) => {
+  followingReminds.forEach((remind) => {
     const event = {
       allDay: false,
-      id: task.id,
-      start: task.remind.dateTime,
-      title: task.brief
+      id: remind.taskId,
+      start: remind.dateTime,
+      title: remind.taskBrief
     };
     // if (task.remind.duration) {
     //   event.end = makeDateTimeString(task.remind.timestamp + task.remind.duration);
