@@ -48,7 +48,7 @@ class TaskService extends Service {
     const { logger, service } = this;
 
     const messages = await service.queue.list();
-    const tasks = [];
+    const reminds = [];
     for (const message of messages) {
       const {
         remind_id: remindId,
@@ -75,12 +75,16 @@ class TaskService extends Service {
         logger.info(`任务${task.id}在${hour}时不需要弹出提醒`);
         continue;
       }
-      tasks.push({
-        plan_alarm_at,
-        task,
+      reminds.push({
+        contextName: remind.context && remind.context.name,
+        id: remindId,
+        planAlarmAt: plan_alarm_at,
+        repeatType: remind.repeatType,
+        taskId: remind.taskId,
+        taskBrief: task.brief
       });
     }
-    return tasks;
+    return reminds;
   }
 
   async put(task) {

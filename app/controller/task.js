@@ -94,10 +94,10 @@ class TaskController extends Controller {
       }))[0];
     }
 
-    const tasks = await service.task.getFollowing(context);
+    const reminds = await service.task.getFollowing(context);
 
     ctx.body = {
-      tasks,
+      reminds,
     };
   }
 
