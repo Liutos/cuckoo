@@ -17,13 +17,13 @@ async function main() {
     qs,
     url
   });
-  const { tasks } = response.body;
+  const { reminds } = response.body;
   const items = [];
   let lastDate = null;
-  for (const t of tasks) {
-    const { plan_alarm_at, task } = t;
+  for (const remind of reminds) {
+    const { contextName, iconFile, planAlarmAt, repeatType, taskBrief, taskId } = remind;
 
-    const currentDate = dateFormat(plan_alarm_at * 1000, 'yyyy-mm-dd');
+    const currentDate = dateFormat(planAlarmAt * 1000, 'yyyy-mm-dd');
     if (!lastDate || lastDate !== currentDate) {
       // 更新lastDate并写入items中，以作为下拉列表的一行显示。
       lastDate = currentDate;
@@ -33,18 +33,18 @@ async function main() {
       });
     }
     // subtitle展示的是任务下一次提醒的时刻，以及它的重复模式
-    let subtitle = dateFormat(plan_alarm_at * 1000, 'yyyy-mm-dd HH:MM:ss');
-    if (task.remind && task.remind.repeat) {
-      subtitle += ` *${task.remind.repeat.type}`;
+    let subtitle = dateFormat(planAlarmAt * 1000, 'yyyy-mm-dd HH:MM:ss');
+    if (repeatType) {
+      subtitle += ` *${repeatType}`;
     }
 
     items.push({
-      arg: `${task.id}`,
+      arg: `${taskId}`,
       icon: {
-        path: task.icon_file || ''
+        path: iconFile || ''
       },
       subtitle,
-      title: `#${task.id} ${task.brief} ${task.context ? '@' + task.context.name : ''}`
+      title: `#${taskId} ${taskBrief} ${contextName ? '@' + contextName : ''}`
     });
   }
   console.log(JSON.stringify({ items }, null, 2));

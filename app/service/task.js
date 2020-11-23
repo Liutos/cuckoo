@@ -77,6 +77,7 @@ class TaskService extends Service {
       }
       reminds.push({
         contextName: remind.context && remind.context.name,
+        iconFile: task.icon_file,
         id: remindId,
         planAlarmAt: plan_alarm_at,
         repeatType: remind.repeatType,
