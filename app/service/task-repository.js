@@ -30,10 +30,10 @@ class TaskService extends Service {
     const { app, logger, service } = this;
     const { sqlite } = app;
 
-    const task = await this.get(id);
-    if (task && task.remind) {
-      await service.queue.remove(id);
-      await service.remind.delete(task.remind.id);
+    const reminds = await service.remind.search({ taskId: id });
+    for (const { id: remindId } of reminds) {
+      await service.queue.remove(remindId);
+      await service.remind.delete(remindId);
     }
     await sqlite.run('DELETE FROM t_task WHERE id = ?', [id]);
     logger.info(`删除t_task表中id列为${id}的行`);

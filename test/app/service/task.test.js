@@ -67,4 +67,20 @@ describe('test/app/service/task.test.js', () => {
     assert(Array.isArray(_tasks[0].reminds));
     assert(_tasks[0].reminds.length === 2);
   });
+
+  it('删除任务', async () => {
+    const ctx = app.mockContext();
+    await ctx.service.task.delete(task.id);
+    const _task = await ctx.service.task.get(task.id);
+    assert(!_task);
+  });
+
+  it('提醒也被一并删除了', async () => {
+    const ctx = app.mockContext();
+    const reminds = await ctx.service.remind.search({
+      taskId: task.id
+    });
+    assert(Array.isArray(reminds));
+    assert(reminds.length === 0);
+  });
 });

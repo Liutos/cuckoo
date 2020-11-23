@@ -49,11 +49,11 @@ class SqliteQueueService extends Service {
   }
 
   /**
-   * @param {number} message - 任务ID
+   * @param {number} remindId - 提醒ID
    */
-  async remove(message) {
+  async remove(remindId) {
     const { sqlite } = this.app;
-    await sqlite.run('DELETE FROM task_queue WHERE task_id = ?', [message]);
+    await sqlite.run('DELETE FROM task_queue WHERE remind_id = ?', [remindId]);
   }
 
   /**
