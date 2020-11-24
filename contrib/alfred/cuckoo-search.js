@@ -3,7 +3,6 @@
  */
 const config = require('./config');
 
-const dateFormat = require('dateformat');
 const request = require('co-request');
 
 async function main() {
@@ -23,7 +22,7 @@ async function main() {
       icon: {
         path: task.icon_file
       },
-      subtitle: `${task.remind && dateFormat(task.remind.timestamp * 1000, 'yyyy-mm-dd HH:MM:ss')}`,
+      subtitle: task.detail,
       title: `#${task.id} ${task.brief} ${task.context ? '@' + task.context.name : ''}`,
       uid: `${task.id}`,
       valid: true
