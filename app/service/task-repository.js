@@ -50,9 +50,6 @@ class TaskService extends Service {
     if (row.context_id) {
       row.context = await service.context.get(row.context_id);
     }
-    row.remind = (await service.remind.search({
-      taskId: row.id
-    }))[0];
     return new Task(row);
   }
 

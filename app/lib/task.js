@@ -9,7 +9,6 @@
  * @property {string} icon - 弹出提醒时的图标
  * @property {string} icon_file - 用于Alfred Workflow展示的图片路径
  * @property {id} id - 任务主键
- * @property {Remind} remind - 任务的提醒配置
  * @property {Remind[]} reminds
  * @property {string} state - 任务的状态
  * @property {string} update_at - 任务的最后一次修改的时刻
@@ -28,7 +27,6 @@ class Task {
       icon,
       icon_file,
       id,
-      remind,
       state,
       update_at,
     } = row;
@@ -39,7 +37,6 @@ class Task {
     this.icon = icon;
     this.icon_file = icon_file;
     this.id = id;
-    this.remind = remind;
     this.state = state;
     this.update_at = update_at;
   }
@@ -50,15 +47,8 @@ class Task {
   }
 
   close() {
-    if (this.remind) {
-      this.remind.close();
-    }
     this.state = 'done';
     this.update_at = new Date();
-  }
-
-  isRepeated() {
-    return this.remind && !!this.remind.repeat;
   }
 
   patch(changes) {
@@ -71,7 +61,6 @@ class Task {
       'device',
       'icon',
       'icon_file',
-      'remind',
       'state',
     ];
     for (const field of FIELDS) {
