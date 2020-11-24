@@ -34,11 +34,11 @@ describe('test/app/controller/shortcut/task.test.js', () => {
     assert(task);
     taskId = task.id;
     assert(task.brief === 'test');
-    assert(task.remind.context);
-    assert(task.remind.context.name === 'test');
-    assert(task.remind);
-    assert(task.remind.timestamp === Math.trunc(new Date('2020-08-13 08:06:00').getTime() / 1000));
-    assert(task.remind.repeat);
-    assert(task.remind.repeat.type === 'daily');
+    assert(task.reminds[0].context);
+    assert(task.reminds[0].context.name === 'test');
+    assert(task.reminds[0]);
+    assert(task.reminds[0].timestamp === Math.trunc(new Date('2020-08-13 08:06:00').getTime() / 1000));
+    assert(task.reminds[0].repeat);
+    assert(task.reminds[0].repeat.type === 'daily');
   });
 });
