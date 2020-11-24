@@ -68,6 +68,18 @@ describe('test/app/service/task.test.js', () => {
     assert(_tasks[0].reminds.length === 2);
   });
 
+  it('修改任务', async () => {
+    const ctx = app.mockContext();
+    const brief = '改一下任务简述';
+    task.patch({
+      brief
+    });
+    await ctx.service.task.put(task);
+    const _task = await ctx.service.task.get(task.id);
+    assert(_task);
+    assert(_task.brief === brief);
+  });
+
   it('删除任务', async () => {
     const ctx = app.mockContext();
     await ctx.service.task.delete(task.id);

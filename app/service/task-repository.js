@@ -57,12 +57,9 @@ class TaskService extends Service {
   }
 
   async put(task) {
-    const { app, service } = this;
+    const { app } = this;
     const { sqlite } = app;
 
-    if (task.remind) {
-      await service.remind.put(task.remind);
-    }
     await sqlite.run('UPDATE t_task SET brief = ?, detail = ?, device = ?, icon = ?, icon_file = ?, state = ?, update_at = ? WHERE id = ?', [
       task.brief,
       task.detail,
