@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/Liutos/cuckoo/develop/docs/noun_Wall_Clock_1481965.png)
+
 > A reminder designed for programmers.
 
 [![Build Status](https://travis-ci.com/Shylock-Hg/ABI.svg?branch=master)](https://travis-ci.org/github/Liutos/cuckoo)
