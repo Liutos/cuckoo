@@ -1,14 +1,18 @@
 # Change Log
 
-## [latest] - 2020-10-18
+## [1.14.0] - 2020-10-18
 
 ### Added
 
-- Can set `repeatType` of a remind when creating from within `org-cuckoo` for a TODO entry.
+- Can set `repeatType` of a remind when creating from within `org-cuckoo` for a TODO entry;
+- Can customize dropdown menu of `alerter` in configuration item `reminder.alerter.actions`;
+- Can check/uncheck a remind's restricted hours in Web UI;
+- Add a logo in README.
 
 ### Changed
 
-- Reserve the seconds part when creating reminds from Alfred Workflow.
+- Reserve the seconds part when creating reminds from Alfred Workflow;
+- Can create multiple reminds for a single task.
 
 ## [1.13.0] - 2020-09-01
 
