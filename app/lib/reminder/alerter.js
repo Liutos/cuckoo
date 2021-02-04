@@ -12,12 +12,13 @@ class AlerterReminder {
       detail,
       duration,
       icon,
+      taskId,
     } = options;
     let command = `/usr/local/bin/alerter -actions \'${actions.join(',')}\'`;
     if (typeof icon === 'string' && icon !== '') {
       command += ` -appIcon ${icon}`;
     }
-    command += ' -closeLabel \'好的\' -dropdownLabel \'或者\' -json';
+    command += ` -closeLabel '好的' -dropdownLabel '或者' -group ${taskId} -json`;
     let message = detail;
     if (typeof duration === 'number') {
       message += `\n持续展示${duration}秒`;
